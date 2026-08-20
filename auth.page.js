@@ -12,7 +12,11 @@
   const userAdminRoles = new Set(['coordinator', 'admin']);
 
   function safeNext(raw) {
-    const allowed = new Set(['/', '/index.html', '/catalog.html', '/course.html', '/lesson.html', '/instructor.html', '/users.html', '/student.html', '/certificate.html', '/account.html']);
+    const allowed = new Set([
+      '/', '/index.html', '/catalog', '/catalog.html', '/course', '/course.html', '/lesson', '/lesson.html',
+      '/instructor', '/instructor.html', '/users', '/users.html', '/student', '/student.html',
+      '/certificate', '/certificate.html', '/account', '/account.html'
+    ]);
     try {
       const url = new URL(raw || '/index.html', location.origin);
       if (url.origin !== location.origin || !allowed.has(url.pathname)) return '/index.html';
@@ -22,9 +26,10 @@
 
   function destinationFor(session, requested) {
     const role = session?.user?.role;
-    if ((requested === '/users.html' || requested.startsWith('/student.html')) && !userAdminRoles.has(role)) return '/index.html';
-    if (requested === '/instructor.html' && !teachingRoles.has(role)) return '/index.html';
-    if ((requested === '/index.html' || requested === '/') && teachingRoles.has(role)) return '/instructor.html';
+    const path = requested.split('?')[0].split('#')[0];
+    if ((path === '/users' || path === '/users.html' || path === '/student' || path === '/student.html') && !userAdminRoles.has(role)) return '/index.html';
+    if ((path === '/instructor' || path === '/instructor.html') && !teachingRoles.has(role)) return '/index.html';
+    if ((path === '/index.html' || path === '/') && teachingRoles.has(role)) return '/instructor.html';
     return requested;
   }
 
