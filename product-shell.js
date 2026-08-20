@@ -29,8 +29,8 @@
       <a data-route="course" href="./catalog.html"><b>◇</b>Rutas de aprendizaje</a>
       <a data-route="lesson" href="./course.html?course=phishing#modules"><b>⌘</b>Laboratorios</a>
       <a href="./lesson.html?mode=live"><b>◉</b>Eventos en vivo</a>
-      <a href="./student.html"><b>◔</b>Mi progreso</a>
-      <a href="./student.html"><b>⌁</b>Skill Graph</a>
+      <a data-route="progress" href="./progress.html"><b>◔</b>Mi progreso</a>
+      <a href="./progress.html"><b>⌁</b>Skill Graph</a>
       <a href="./certificate.html"><b>◈</b>Certificaciones</a>
       <span class="product-shell-divider"></span>
       ${canTeach ? '<a data-route="instructor" href="./instructor.html"><b>⚙</b>Instructor Console</a>' : ''}
