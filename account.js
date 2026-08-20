@@ -4,17 +4,21 @@
   if (!session) return;
 
   const user = session.user || {};
+  const remote = session.provider === 'crohnoz-academy';
   const initials = String(user.display_name || user.username || 'CA').trim().split(/\s+/).slice(0,2).map(part => part[0]).join('').toUpperCase();
+  const displayNameInput = document.getElementById('displayName');
   document.getElementById('accountAvatar').textContent = initials || 'CA';
   document.getElementById('accountName').textContent = user.display_name || user.username || 'Cuenta Academy';
   document.getElementById('accountMeta').textContent = `${user.role || 'learner'} · ${session.provider}`;
-  document.getElementById('displayName').value = user.display_name || '';
+  displayNameInput.value = user.display_name || '';
+  displayNameInput.disabled = remote;
+  if (remote) displayNameInput.title = 'El nombre visible es administrado por Crohnoz Academy Core.';
   document.getElementById('accountEmail').value = user.email || '';
   document.getElementById('locale').value = user.locale === 'en' ? 'en' : 'es';
-  document.getElementById('providerValue').textContent = session.provider === 'crohnoz-academy' ? 'Academy Core' : 'Preview Demo';
+  document.getElementById('providerValue').textContent = remote ? 'Academy Core' : 'Preview Demo';
   document.getElementById('roleValue').textContent = user.role || 'learner';
   document.getElementById('issuedAt').textContent = session.issuedAt ? new Date(session.issuedAt).toLocaleString('es-CL') : '—';
-  document.getElementById('sessionDetail').textContent = session.provider === 'crohnoz-academy'
+  document.getElementById('sessionDetail').textContent = remote
     ? 'Sesión autenticada por Crohnoz Academy Core. El token vive en sessionStorage y se invalida al cerrar sesión.'
     : 'Preview local con identidad sintética. No representa una credencial productiva.';
 
@@ -25,12 +29,12 @@
     feedback.className = 'feedback'; feedback.textContent = '';
     button.disabled = true;
     try {
-      const result = await auth.updateProfile({
-        display_name: document.getElementById('displayName').value.trim(),
-        locale: document.getElementById('locale').value
-      });
-      document.getElementById('accountName').textContent = result.user.display_name;
-      feedback.className = 'feedback good'; feedback.textContent = 'Perfil actualizado.';
+      const payload = { locale: document.getElementById('locale').value };
+      if (!remote) payload.display_name = displayNameInput.value.trim();
+      const result = await auth.updateProfile(payload);
+      document.getElementById('accountName').textContent = result.user.display_name || result.user.username;
+      feedback.className = 'feedback good';
+      feedback.textContent = remote ? 'Preferencias de perfil actualizadas.' : 'Perfil actualizado.';
     } catch { feedback.textContent = 'No pudimos actualizar el perfil.'; }
     finally { button.disabled = false; }
   });
