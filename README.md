@@ -33,6 +33,8 @@ La demo utiliza identidades, dominios, targets y evidencia **sintéticos**. No i
 /catalog.html        Academy y rutas
 /course.html         Curso
 /lesson.html         Video / live / awareness / lab / quiz
+/container-lab.html  OWASP Juice Shop · Container Lab preview
+/api-lab.html        VAmPI · API Container Lab preview
 /progress.html       Mi Progreso + Skill Graph
 /certificate.html    Estado de certificación
 /account.html        Cuenta y seguridad
@@ -77,6 +79,7 @@ La v1 incluye:
 - clases grabadas y sesiones live simuladas;
 - awareness visual y phishing con dominios `.example`;
 - laboratorios controlados y objetivos sintéticos;
+- **Container Labs** con previews de OWASP Juice Shop y VAmPI;
 - checkpoints y feedback inmediato;
 - Skill Graph, XP, readiness, racha y actividad reciente;
 - Next Best Action;
@@ -84,6 +87,23 @@ La v1 incluye:
 - Command Palette con `Ctrl/Cmd + K`;
 - navegación móvil y Modo foco en Lesson Player;
 - onboarding de tres pasos para nuevos alumnos.
+
+## Container Labs
+
+La familia **Container Labs** permite mostrar cómo se integrarán aplicaciones deliberadamente vulnerables dentro del Campus sin exponerlas directamente desde el hosting público.
+
+Preview v1:
+
+- `OWASP Juice Shop` → `bkimminich/juice-shop:20.2.0` → Web Security / OWASP Top 10.
+- `VAmPI` → `brightsec/vampi:latest` → API Security / OpenAPI 3 / autorización.
+
+La allowlist vive en `content/container-labs.json` y mantiene `runtimeEnabled: false` durante el release candidate público. Los previews muestran workspace, objetivos, aislamiento y evidencia pedagógica, pero **no arrancan contenedores vulnerables reales en Internet**.
+
+El futuro launcher deberá usar sesiones efímeras por alumno, imágenes aprobadas/fijadas, cuotas, expiración automática, dataset sintético y `deny-egress` por defecto. La arquitectura está documentada en:
+
+```text
+docs/CONTAINER_LABS.md
+```
 
 ## Teacher Intranet
 
@@ -94,7 +114,8 @@ La vista diaria del profesor prioriza claridad operacional:
 - ritmo de cohortes;
 - alumnos con señales de apoyo;
 - contenidos pendientes;
-- recomendación de qué enseñar después.
+- recomendación de qué enseñar después;
+- evidencia proveniente de Container Labs cuando el launcher esté habilitado.
 
 La consola avanzada se mantiene separada para no convertir la experiencia cotidiana en un panel técnico sobrecargado.
 
@@ -106,6 +127,7 @@ Principios activos en esta versión:
 - sin credenciales reales en phishing;
 - sin arbitrary external targets;
 - Cyber Range real feature-gated y fuera de esta demo;
+- Container Lab runtime real deshabilitado en el RC;
 - remote analytics OFF por defecto;
 - consentimiento explícito para una futura analítica remota;
 - session recording OFF;
@@ -123,6 +145,7 @@ SECURITY.md
 docs/THREAT_MODEL.md
 docs/OBSERVABILITY.md
 docs/PLATFORM_ROLES.md
+docs/CONTAINER_LABS.md
 docs/V1_E2E_READINESS.md
 ```
 
@@ -142,6 +165,7 @@ Ese gate revisa, entre otros:
 - separación público/privado;
 - RBAC crítico;
 - rutas alumno/profesor;
+- Container Labs allowlisted, efímeros y `deny-egress`;
 - ausencia de rutas legacy `type=` en Mission Control;
 - ausencia de proxies raw externos;
 - patrones obvios de secretos;
@@ -183,6 +207,7 @@ Esta es una **v1 comercial/demostrativa completa**, no el backend multiusuario p
 - Academy Core remoto permanece deshabilitado en el preview público;
 - MFA productivo continúa como gate de backend;
 - el Cyber Range real permanece feature-gated;
+- Container Lab Launcher permanece deshabilitado en el preview público;
 - la persistencia principal de la demo sigue siendo local;
 - no se conectan proveedores sensibles ni secretos desde el repositorio público.
 
