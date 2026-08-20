@@ -28,7 +28,7 @@ window.CCA_CONFIG = Object.freeze({
   const file = rawFile.includes('.') ? rawFile : `${rawFile}.html`;
   const protectedRoutes = new Map([
     ['dashboard.html', []], ['index.html', []], ['lab.html', []], ['catalog.html', []], ['course.html', []], ['lesson.html', []], ['progress.html', []],
-    ['container-lab.html', []], ['api-lab.html', []],
+    ['container-lab.html', []], ['api-lab.html', []], ['webgoat-lab.html', []],
     ['onboarding.html', ['learner']], ['teacher.html', ['instructor','coordinator','admin']], ['instructor.html', ['instructor','coordinator','admin']],
     ['studio.html', ['author','coordinator','admin']], ['student.html', ['coordinator','admin']], ['users.html', ['coordinator','admin']],
     ['certificate.html', []], ['account.html', []], ['privacy.html', []]
