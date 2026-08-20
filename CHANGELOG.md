@@ -2,6 +2,65 @@
 
 All notable product changes for Cristian Cyber Academy are documented here.
 
+## [0.3.1] — 2026-08-19
+
+### Added
+
+- Identity & Cohort Operations at `/users` for coordinator/admin roles.
+- Academic user directory with role, cohort, onboarding and progress posture.
+- Invitation creation/revocation and one-time activation-link fallback.
+- `/activate` account activation flow.
+- Preview-created identities with PBKDF2-SHA256, random salt and Web Crypto.
+- Preview invitation lifecycle: activation, profile creation, optional cohort assignment and immediate login.
+- Academy Core operations adapter for profiles, invitations, cohorts, memberships, enrollments, certificates and audit events.
+- Explicit permission model separating `teach` from `manage_users` and `manage_cohorts`.
+- Identity administration contract tests.
+- Identity operations architecture/runbook.
+
+### Security
+
+- Cristian preview operator is represented as `coordinator`, not an overpowered generic instructor.
+- Instructor Console now enforces instructor/coordinator/admin access.
+- Only coordinator/admin receives the user-administration entry point.
+- Administrators never enter or see learner passwords.
+- Preview-created passwords are not persisted in plaintext.
+- Account activation consumes invitation state.
+- Existing same-origin allowlist protects post-login `next` routing against open redirects.
+
+### Academy Core integration
+
+A separate Academy Core draft PR extends the reusable account lifecycle with:
+
+- password reset request/confirmation;
+- invitation email delivery through configurable SMTP;
+- tenant-specific activation/reset frontend URLs;
+- login `last_login` update;
+- successful-login audit event;
+- read-only activity posture in managed profiles.
+
+### Known gates
+
+- Identity contract tests are committed but not claimed as executed in this runner.
+- Academy Core Django/PostgreSQL release gates remain mandatory before merge.
+- SMTP delivery is not configured in the public preview.
+- MFA/step-up authentication remains a production roadmap gate.
+
+## [0.3.0] — 2026-08-19
+
+### Added
+
+- Crohnoz Academy Core adapter and reusable academic-core boundary.
+- `/login` role-aware access portal.
+- `/account` profile/session/security panel.
+- `/reset-password` recovery confirmation UI.
+- Session state in `sessionStorage`.
+- Learner/instructor routing and account navigation.
+- Netlify clean routes for identity surfaces.
+
+### Changed
+
+- Cristian Cyber Academy became a specialized cyber tenant on top of Crohnoz Academy rather than a second independent LMS.
+
 ## [0.2.1] — 2026-08-19
 
 ### Added
