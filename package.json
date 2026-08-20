@@ -1,17 +1,18 @@
 {
   "name": "cristian-cyber-academy",
-  "version": "0.6.0",
+  "version": "0.7.0",
   "private": true,
   "description": "Premium privacy-first practical cybersecurity training platform powered by Crohnoz Labs.",
   "scripts": {
-    "test": "node tests/smoke.mjs && node tests/academy-core-contract.mjs && node tests/auth-contract.mjs && node tests/identity-admin-contract.mjs && node tests/student360-contract.mjs && node tests/visual-academy-contract.mjs && node tests/mission-control-contract.mjs",
+    "test": "node tests/smoke.mjs && node tests/academy-core-contract.mjs && node tests/auth-contract.mjs && node tests/identity-admin-contract.mjs && node tests/student360-contract.mjs && node tests/visual-academy-contract.mjs && node tests/mission-control-contract.mjs && node tests/unified-product-contract.mjs",
     "test:smoke": "node tests/smoke.mjs",
     "test:academy-core": "node tests/academy-core-contract.mjs",
     "test:auth": "node tests/auth-contract.mjs",
     "test:identity": "node tests/identity-admin-contract.mjs",
     "test:student360": "node tests/student360-contract.mjs",
     "test:visual-academy": "node tests/visual-academy-contract.mjs",
-    "test:mission-control": "node tests/mission-control-contract.mjs"
+    "test:mission-control": "node tests/mission-control-contract.mjs",
+    "test:unified-product": "node tests/unified-product-contract.mjs"
   },
   "engines": {
     "node": ">=18"
