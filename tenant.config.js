@@ -17,9 +17,9 @@ window.CCA_CONFIG = Object.freeze({
     mode: 'white-label'
   },
   product: {
-    version: '0.12.0-teacher-intranet-preview',
-    northStar: 'Read → Structure → Practice → Explain → Score → Certify',
-    modules: ['teacher-intranet', 'content-studio', 'xml-content', 'docker-runtime', 'clarity-guidance', 'learner-progress', 'premium-polish', 'public-showcase', 'mission-control', 'unified-product-shell', 'immersive-learning', 'visual-academy', 'academy', 'phishing', 'range', 'achievements', 'account', 'identity-ops', 'student-360']
+    version: '1.0.0-rc.1',
+    northStar: 'Learn → Practice → Explain → Score → Certify',
+    modules: ['learner-onboarding', 'teacher-intranet', 'privacy-hardening', 'content-studio', 'xml-content', 'docker-runtime', 'clarity-guidance', 'learner-progress', 'premium-polish', 'public-showcase', 'mission-control', 'unified-product-shell', 'immersive-learning', 'visual-academy', 'academy', 'phishing', 'range', 'achievements', 'account', 'identity-ops', 'student-360']
   },
   content: {
     exchangeFormat: 'xml',
@@ -77,11 +77,15 @@ window.CCA_CONFIG = Object.freeze({
     ['course.html', []],
     ['lesson.html', []],
     ['progress.html', []],
+    ['onboarding.html', ['learner']],
     ['teacher.html', ['instructor', 'coordinator', 'admin']],
     ['instructor.html', ['instructor', 'coordinator', 'admin']],
     ['studio.html', ['author', 'coordinator', 'admin']],
     ['student.html', ['coordinator', 'admin']],
-    ['certificate.html', []]
+    ['users.html', ['coordinator', 'admin']],
+    ['certificate.html', []],
+    ['account.html', []],
+    ['privacy.html', []]
   ]);
   if (!protectedRoutes.has(file)) return;
 
@@ -114,11 +118,14 @@ window.CCA_CONFIG = Object.freeze({
         await import('./xml-content.js');
       }
       if (file === 'index.html') {
-        const loadNoAiSurface = () => import('./no-ai.js');
+        const loadIndexHardening = async () => {
+          await import('./no-ai.js');
+          await import('./privacy-hardening.js');
+        };
         if (document.readyState === 'loading') {
-          window.addEventListener('DOMContentLoaded', loadNoAiSurface, { once: true });
+          window.addEventListener('DOMContentLoaded', loadIndexHardening, { once: true });
         } else {
-          await loadNoAiSurface();
+          await loadIndexHardening();
         }
       }
       if (file === 'instructor.html' && !document.querySelector('link[data-instructor-unified]')) {
