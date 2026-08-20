@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<academy tenant="cristian-demo" version="1">
+  <course id="course-api-security" slug="api-security-foundations" level="foundation" locale="es" workflow="draft">
+    <title>API Security Foundations</title>
+    <summary>Fundamentos de autenticación, autorización y controles verificables en APIs.</summary>
+    <module id="module-authz" order="1">
+      <title>Authorization Essentials</title>
+      <objective>Distinguir autenticación de autorización y reconocer controles a nivel de objeto.</objective>
+      <lesson id="lesson-authn-authz" order="1" type="lesson" duration="8">
+        <title>AuthN vs AuthZ</title>
+        <body>Lectura breve sobre identidad, permisos y decisiones de acceso en el servidor.</body>
+      </lesson>
+      <lesson id="lesson-bola" order="2" type="lab" duration="18">
+        <title>BOLA: lectura de evidencia</title>
+        <body>Escenario aislado para identificar autorización insuficiente a nivel de objeto usando datos sintéticos.</body>
+      </lesson>
+    </module>
+  </course>
+</academy>
