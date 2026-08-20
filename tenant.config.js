@@ -113,7 +113,12 @@ window.CCA_CONFIG = Object.freeze({
         await import('./xml-content.js');
       }
       if (file === 'index.html') {
-        window.addEventListener('DOMContentLoaded', () => import('./no-ai.js'), { once: true });
+        const loadNoAiSurface = () => import('./no-ai.js');
+        if (document.readyState === 'loading') {
+          window.addEventListener('DOMContentLoaded', loadNoAiSurface, { once: true });
+        } else {
+          await loadNoAiSurface();
+        }
       }
       if (file === 'instructor.html' && !document.querySelector('link[data-instructor-unified]')) {
         const theme = document.createElement('link');
