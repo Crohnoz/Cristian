@@ -4,7 +4,7 @@ Plataforma white-label de entrenamiento práctico en ciberseguridad desarrollada
 
 > **Learn → Practice → Attack/Defend → Explain → Score → Certify**
 
-## Estado actual — Premium MVP v0.2.0
+## Estado actual — Premium MVP v0.2.1
 
 La rama `feat/cyber-academy-mvp` contiene una demo end-to-end funcional, sin backend sensible ni secretos, con:
 
@@ -23,10 +23,16 @@ La rama `feat/cyber-academy-mvp` contiene una demo end-to-end funcional, sin bac
 - live learner signal;
 - evidencia exportable CSV;
 - certificado demostrativo con gate de progreso;
+- Privacy & Data Control Center;
 - configuración white-label por tenant;
 - telemetría Crohnoz local y privacy-safe;
+- adapter de analytics con consentimiento y allowlists;
+- feature flags PostHog para premium, AI Mentor real y Cyber Range real;
 - PWA instalable + offline application shell;
+- currículo y catálogo de labs versionados como datos;
+- schemas JSON para learning events y lab manifests;
 - contrato SQL multi-tenant con RLS;
+- threat model y contrato de observabilidad;
 - smoke tests sin dependencias;
 - CSP y security headers defensivos para Vercel.
 
@@ -37,6 +43,7 @@ La rama `feat/cyber-academy-mvp` contiene una demo end-to-end funcional, sin bac
 | `/` | Mission Control / experiencia del alumno |
 | `/instructor` | Teaching Command Center |
 | `/certificate` | Estado de certificación demo |
+| `/privacy` | Privacy & Data Control Center |
 
 ## White-label
 
@@ -46,15 +53,49 @@ La personalización pública y no sensible vive en:
 tenant.config.js
 ```
 
-Permite adaptar marca, instructor, tenant, ambiente y metadata de producto sin reescribir la experiencia. Nunca deben almacenarse secretos en este archivo.
+Permite adaptar marca, instructor, tenant, ambiente, política de observabilidad, feature flags y metadata de producto sin reescribir la experiencia. Nunca deben almacenarse secretos en este archivo.
 
-## Telemetría
+## Observabilidad y privacidad
 
-`telemetry.js` implementa un bus local de eventos Crohnoz. En demo no envía datos a terceros: guarda un buffer acotado en `localStorage` y emite eventos `crohnoz:telemetry` para permitir una futura integración con observabilidad/analytics mediante adapter.
+`telemetry.js` implementa un bus local de eventos Crohnoz con allowlist de propiedades. En demo no envía datos a terceros.
+
+`analytics.js` define la frontera para cualquier proveedor remoto:
+
+- remote analytics OFF por defecto;
+- consentimiento explícito requerido;
+- eventos y propiedades allowlisted;
+- PII prohibida;
+- prompts completos prohibidos;
+- session recording OFF.
+
+La política está documentada en `docs/OBSERVABILITY.md` y puede inspeccionarse desde `/privacy`.
+
+### Feature flags
+
+PostHog mantiene tres rollout gates:
+
+- `cca-premium-experience` — habilitada;
+- `cca-ai-mentor-live` — deshabilitada;
+- `cca-cyber-range-live` — deshabilitada.
+
+Las capacidades de mayor riesgo quedan apagadas hasta completar backend, privacidad y security sign-off.
 
 ## PWA / Offline
 
-`manifest.webmanifest` + `sw.js` convierten la plataforma en una aplicación instalable y mantienen disponible el application shell local. El service worker solo cachea recursos first-party del producto.
+`manifest.webmanifest` + `sw.js` convierten la plataforma en una aplicación instalable y mantienen disponible el application shell local, incluido Privacy Center. El service worker solo cachea recursos first-party del producto.
+
+## Content contracts
+
+El contenido deja de depender exclusivamente de markup hardcoded:
+
+```text
+content/learning-paths.json
+content/labs.json
+schemas/learning-event.schema.json
+schemas/lab-manifest.schema.json
+```
+
+Estos contratos permiten que Academy, AI Mentor y Cyber Range compartan una fuente versionada y validable.
 
 ## Ejecutar localmente
 
@@ -88,9 +129,18 @@ La migración productiva debe realizarse mediante un adapter de persistencia, re
 - Sin targets externos arbitrarios.
 - Secrets y API keys nunca se versionan.
 - CSP estricta, framing denegado y `object-src 'none'`.
-- El futuro Cyber Range debe usar sesiones efímeras, deny-egress por defecto, límites de recursos y destrucción automática.
+- Analytics no recibe prompts, emails, secretos ni contenido sensible de labs.
+- Session recording permanece deshabilitado.
+- El futuro Cyber Range usa manifests validados, sesiones efímeras, deny-egress por defecto, límites de recursos y destrucción automática.
 
-Ver `SECURITY.md` y `docs/ARCHITECTURE.md`.
+Ver:
+
+```text
+SECURITY.md
+docs/ARCHITECTURE.md
+docs/THREAT_MODEL.md
+docs/OBSERVABILITY.md
+```
 
 ## Demo comercial
 
@@ -102,15 +152,16 @@ docs/DEMO_RUNBOOK.md
 
 ## Deployment
 
-Vercel es el target primario. Existe un fallback autocontenido READY rastreado en issue #3; el objetivo operativo sigue siendo desplegar directamente la rama multiarchivo como fuente única y validar visualmente `/`, `/instructor` y `/certificate` antes de merge/production.
+Vercel es el target primario. Existe un preview premium autocontenido READY rastreado en el PR/issue #3; el objetivo operativo sigue siendo desplegar directamente la rama multiarchivo como fuente única y validar visualmente todas las rutas antes de merge/production.
 
 ## Próxima transición
 
 1. resolver preview canónico multiarchivo;
 2. validar desktop/mobile y headers;
 3. mover el repositorio a privado antes de conectar servicios sensibles;
-4. conectar Supabase/Auth mediante adapter remoto;
-5. integrar observabilidad/analytics con consentimiento y tenant scoping;
-6. conectar AI Mentor real con retrieval, guardrails y evaluación;
-7. levantar Cyber Range en infraestructura separada;
-8. promover a producción solo después de QA y revisión de seguridad.
+4. elegir explícitamente organización/entorno Supabase de staging y aplicar schema;
+5. conectar Auth + adapter remoto;
+6. activar analítica remota únicamente tras consentimiento y policy review;
+7. conectar AI Mentor real detrás de `cca-ai-mentor-live`;
+8. levantar Cyber Range separado detrás de `cca-cyber-range-live`;
+9. promover a producción solo después de QA y revisión de seguridad.
