@@ -80,6 +80,13 @@ window.CCA_CONFIG = Object.freeze({
       if (['catalog.html','course.html','lesson.html'].includes(file)) {
         await import('./product-shell.js');
       }
+      if (file === 'instructor.html' && !document.querySelector('link[data-instructor-unified]')) {
+        const theme = document.createElement('link');
+        theme.rel = 'stylesheet';
+        theme.href = './instructor-unified.css';
+        theme.dataset.instructorUnified = 'true';
+        document.head.appendChild(theme);
+      }
 
       setTimeout(() => {
         const academyNav = document.querySelector('.nav-item[data-view="academy"]');
