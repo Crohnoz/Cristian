@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Cristian Cyber Academy — Content Studio para diseñar cursos, módulos y lecciones." />
+  <meta name="theme-color" content="#07100f" />
+  <title>Content Studio · Cristian Cyber Academy</title>
+  <link rel="icon" href="./brand.svg" type="image/svg+xml" />
+  <link rel="manifest" href="./manifest.webmanifest" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./styles.css" />
+  <link rel="stylesheet" href="./studio.css" />
+</head>
+<body>
+  <a class="skip-link" href="#studioMain">Saltar al editor</a>
+  <div class="studio-shell">
+    <aside class="studio-sidebar">
+      <a class="studio-brand" href="./instructor.html" aria-label="Volver a Instructor Console">
+        <img src="./brand.svg" alt="" />
+        <span><strong>CRISTIAN</strong><small>CONTENT STUDIO</small></span>
+      </a>
+      <div class="studio-context"><span>ACADEMY CORE</span><strong id="studioMode">LOCAL DRAFT ENGINE</strong></div>
+      <nav aria-label="Content Studio">
+        <button class="studio-nav active" type="button" data-panel="catalog"><span>01</span>Catálogo</button>
+        <button class="studio-nav" type="button" data-panel="structure"><span>02</span>Estructura</button>
+        <button class="studio-nav" type="button" data-panel="preview"><span>03</span>Preview</button>
+      </nav>
+      <div class="studio-sidebar-footer">
+        <div class="workflow-mini"><span>DRAFT</span><i></i><span>REVIEW</span><i></i><span>PUBLISH</span></div>
+        <p>Publicación real permanece bloqueada hasta conectar Academy Core y completar revisión.</p>
+        <a href="./instructor.html">← Teaching Command Center</a>
+      </div>
+    </aside>
+
+    <main id="studioMain" class="studio-main">
+      <header class="studio-topbar">
+        <div>
+          <span class="eyebrow">CONTENT OPERATIONS</span>
+          <h1>Course Studio</h1>
+          <p>Diseña contenido reusable sin tocar código ni romper la experiencia del alumno.</p>
+        </div>
+        <div class="studio-actions">
+          <span class="save-state" id="saveState"><i></i>Guardado local</span>
+          <button class="secondary" id="newCourse" type="button">Nuevo curso</button>
+          <button class="primary" id="saveCourse" type="button">Guardar borrador</button>
+        </div>
+      </header>
+
+      <section class="studio-panel active" data-studio-panel="catalog">
+        <div class="studio-grid catalog-layout">
+          <article class="studio-card catalog-card">
+            <div class="studio-card-head">
+              <div><span class="eyebrow">COURSE LIBRARY</span><h2>Mis cursos</h2></div>
+              <span class="count-chip" id="courseCount">0</span>
+            </div>
+            <div class="course-list" id="courseList"></div>
+          </article>
+
+          <article class="studio-card editor-card">
+            <div class="studio-card-head">
+              <div><span class="eyebrow">COURSE IDENTITY</span><h2>Ficha del curso</h2></div>
+              <span class="status-chip" id="courseStatusChip">DRAFT</span>
+            </div>
+            <div class="form-grid">
+              <label class="field field-wide">Título
+                <input id="courseTitle" maxlength="120" autocomplete="off" placeholder="Ej. Web Security Foundations" />
+              </label>
+              <label class="field">Slug
+                <input id="courseSlug" maxlength="80" autocomplete="off" placeholder="web-security-foundations" />
+              </label>
+              <label class="field">Nivel
+                <select id="courseLevel"><option value="foundation">Foundation</option><option value="intermediate">Intermediate</option><option value="advanced">Advanced</option></select>
+              </label>
+              <label class="field field-wide">Descripción
+                <textarea id="courseSummary" rows="5" maxlength="700" placeholder="Qué aprenderá el alumno y por qué importa."></textarea>
+              </label>
+              <label class="field">Idioma
+                <select id="courseLocale"><option value="es">Español</option><option value="en">English</option></select>
+              </label>
+              <label class="field">Workflow
+                <select id="courseWorkflow"><option value="draft">Draft</option><option value="review">Ready for review</option></select>
+              </label>
+            </div>
+            <div class="editor-footer">
+              <span id="courseMeta">Sin curso seleccionado</span>
+              <button class="danger-quiet" id="deleteCourse" type="button">Eliminar borrador</button>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="studio-panel" data-studio-panel="structure">
+        <div class="structure-heading">
+          <div><span class="eyebrow">CURRICULUM BUILDER</span><h2 id="structureTitle">Estructura del curso</h2><p>Módulos y lecciones ordenados para una experiencia progresiva.</p></div>
+          <button class="primary" id="addModule" type="button">+ Módulo</button>
+        </div>
+        <div class="studio-grid structure-layout">
+          <article class="studio-card modules-card">
+            <div class="studio-card-head"><div><span class="eyebrow">MODULES</span><h3>Mapa de aprendizaje</h3></div><span class="count-chip" id="moduleCount">0</span></div>
+            <div id="moduleList" class="module-list"></div>
+          </article>
+          <article class="studio-card module-editor-card">
+            <div id="emptyModule" class="empty-state"><strong>Selecciona o crea un módulo</strong><p>Luego podrás definir objetivo y lecciones.</p></div>
+            <div id="moduleEditor" hidden>
+              <div class="studio-card-head"><div><span class="eyebrow">MODULE EDITOR</span><h3>Contenido del módulo</h3></div><button class="danger-quiet" id="deleteModule" type="button">Eliminar módulo</button></div>
+              <div class="form-grid">
+                <label class="field">Título<input id="moduleTitle" maxlength="120" autocomplete="off" /></label>
+                <label class="field">Objetivo<textarea id="moduleObjective" rows="3" maxlength="500"></textarea></label>
+              </div>
+              <div class="lesson-heading"><div><span class="eyebrow">LESSONS</span><h4>Lecciones</h4></div><button class="secondary" id="addLesson" type="button">+ Lección</button></div>
+              <div id="lessonList" class="lesson-list"></div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="studio-panel" data-studio-panel="preview">
+        <div class="structure-heading"><div><span class="eyebrow">LEARNER PREVIEW</span><h2>Vista previa del curso</h2><p>Comprueba jerarquía, carga cognitiva y recorrido antes de revisión.</p></div><span class="status-chip" id="previewStatus">DRAFT</span></div>
+        <div class="preview-shell">
+          <article class="preview-hero">
+            <span class="preview-kicker" id="previewKicker">CYBERSECURITY · FOUNDATION</span>
+            <h2 id="previewTitle">Nuevo curso</h2>
+            <p id="previewSummary">Agrega una descripción para explicar el resultado de aprendizaje.</p>
+            <div class="preview-metrics"><span><b id="previewModules">0</b> módulos</span><span><b id="previewLessons">0</b> lecciones</span><span><b id="previewMinutes">0</b> min</span></div>
+          </article>
+          <div id="previewOutline" class="preview-outline"></div>
+        </div>
+      </section>
+    </main>
+  </div>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script src="./tenant.config.js"></script>
+  <script src="./academy-core.adapter.js"></script>
+  <script src="./auth.session.js"></script>
+  <script src="./telemetry.js"></script>
+  <script src="./studio.js"></script>
+</body>
+</html>
