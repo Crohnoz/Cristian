@@ -1,167 +1,200 @@
 # Cristian Cyber Academy
 
-Plataforma white-label de entrenamiento práctico en ciberseguridad desarrollada por **Crohnoz Labs**.
+**Cristian Cyber Academy** es una experiencia white-label de aprendizaje práctico en ciberseguridad desarrollada por **Crohnoz Labs**.
 
-> **Learn → Practice → Attack/Defend → Explain → Score → Certify**
+> **Learn → Practice → Explain → Score → Certify**
 
-## Estado actual — Premium MVP v0.2.1
+## Estado — v1.0.0 Release Candidate
 
-La rama `feat/cyber-academy-mvp` contiene una demo end-to-end funcional, sin backend sensible ni secretos, con:
+La versión 1 organiza el producto en cuatro superficies claramente separadas:
 
-- Mission Control del alumno;
-- Academy con learning paths;
-- Phishing Lab con 6 escenarios ficticios y dominios `.example`;
-- Cyber Range defensivo/simulado;
-- AI Mentor local con guardrails pedagógicos;
-- Crohnoz Skill Graph y señal adaptativa;
-- XP, scoring, achievements y readiness;
-- progreso persistente en `localStorage`;
-- learning event trail;
-- Crohnoz Command Deck (`Ctrl/Cmd + K`);
-- deep-links por vista;
-- Instructor Teaching Command Center;
-- live learner signal;
-- evidencia exportable CSV;
-- certificado demostrativo con gate de progreso;
-- Privacy & Data Control Center;
-- configuración white-label por tenant;
-- telemetría Crohnoz local y privacy-safe;
-- adapter de analytics con consentimiento y allowlists;
-- feature flags PostHog para premium, AI Mentor real y Cyber Range real;
-- PWA instalable + offline application shell;
-- currículo y catálogo de labs versionados como datos;
-- schemas JSON para learning events y lab manifests;
-- contrato SQL multi-tenant con RLS;
-- threat model y contrato de observabilidad;
-- smoke tests sin dependencias;
-- CSP y security headers defensivos para Vercel.
+1. **Vitrina pública** — propuesta de valor, cursos, metodología e instructor. No requiere autenticación.
+2. **Campus del alumno** — onboarding, Mission Control, Academy, clases, laboratorios, progreso, Skill Graph, cuenta y certificación.
+3. **Teacher Intranet** — agenda docente, cohortes, estudiantes que requieren apoyo, contenido y recomendaciones pedagógicas.
+4. **Operations** — Student 360, Identity Ops, Content Studio y consola avanzada, limitados por rol.
 
-## Rutas
+La demo utiliza identidades, dominios, targets y evidencia **sintéticos**. No incorpora secretos productivos ni permite operar contra objetivos externos.
 
-| Ruta | Función |
-|---|---|
-| `/` | Mission Control / experiencia del alumno |
-| `/instructor` | Teaching Command Center |
-| `/certificate` | Estado de certificación demo |
-| `/privacy` | Privacy & Data Control Center |
+## Recorridos principales
 
-## White-label
-
-La personalización pública y no sensible vive en:
+### Público
 
 ```text
-tenant.config.js
+/                    Vitrina pública
+/showcase.html       Vitrina pública alternativa
+/auth.html           Acceso al campus
 ```
 
-Permite adaptar marca, instructor, tenant, ambiente, política de observabilidad, feature flags y metadata de producto sin reescribir la experiencia. Nunca deben almacenarse secretos en este archivo.
+### Alumno
 
-## Observabilidad y privacidad
+```text
+/onboarding.html     Primera configuración guiada
+/dashboard.html      Mission Control
+/catalog.html        Academy y rutas
+/course.html         Curso
+/lesson.html         Video / live / awareness / lab / quiz
+/progress.html       Mi Progreso + Skill Graph
+/certificate.html    Estado de certificación
+/account.html        Cuenta y seguridad
+/privacy.html        Privacy & Data Controls
+```
 
-`telemetry.js` implementa un bus local de eventos Crohnoz con allowlist de propiedades. En demo no envía datos a terceros.
+### Profesor / coordinación
 
-`analytics.js` define la frontera para cualquier proveedor remoto:
+```text
+/teacher.html        Teacher Intranet
+/instructor.html     Operations Console avanzada
+/student.html        Student 360 · coordinator/admin
+/users.html          Usuarios & Accesos · coordinator/admin
+/studio.html         Content Studio · author/coordinator/admin
+```
 
+El build de producción conserva además `/lab.html` como shell de entrenamiento legado autenticado. No es la portada pública.
+
+## Autenticación y roles
+
+La capa de tenant aplica autorización temprana antes de mostrar superficies protegidas.
+
+Roles disponibles:
+
+- `learner`
+- `instructor`
+- `author`
+- `reviewer`
+- `coordinator`
+- `admin`
+
+El alumno entra por onboarding la primera vez. Los roles docentes aterrizan en **Teacher Intranet**. Student 360 y la administración de identidades permanecen reservados para `coordinator/admin`.
+
+El preview local contiene únicamente cuentas demostrativas sintéticas. Las cuentas creadas por invitación local almacenan contraseñas derivadas con **PBKDF2-SHA256 + salt aleatorio mediante Web Crypto**. La arquitectura productiva real se delega a Crohnoz Academy Core.
+
+## Experiencia de aprendizaje
+
+La v1 incluye:
+
+- Mission Control guiado por siguiente acción;
+- cuatro rutas visuales de aprendizaje;
+- clases grabadas y sesiones live simuladas;
+- awareness visual y phishing con dominios `.example`;
+- laboratorios controlados y objetivos sintéticos;
+- checkpoints y feedback inmediato;
+- Skill Graph, XP, readiness, racha y actividad reciente;
+- Next Best Action;
+- evidencia local y certificación demostrativa;
+- Command Palette con `Ctrl/Cmd + K`;
+- navegación móvil y Modo foco en Lesson Player;
+- onboarding de tres pasos para nuevos alumnos.
+
+## Teacher Intranet
+
+La vista diaria del profesor prioriza claridad operacional:
+
+- próxima clase live;
+- agenda;
+- ritmo de cohortes;
+- alumnos con señales de apoyo;
+- contenidos pendientes;
+- recomendación de qué enseñar después.
+
+La consola avanzada se mantiene separada para no convertir la experiencia cotidiana en un panel técnico sobrecargado.
+
+## Privacidad y seguridad
+
+Principios activos en esta versión:
+
+- datos e identidades de laboratorio sintéticos;
+- sin credenciales reales en phishing;
+- sin arbitrary external targets;
+- Cyber Range real feature-gated y fuera de esta demo;
 - remote analytics OFF por defecto;
-- consentimiento explícito requerido;
-- eventos y propiedades allowlisted;
-- PII prohibida;
-- prompts completos prohibidos;
-- session recording OFF.
+- consentimiento explícito para una futura analítica remota;
+- session recording OFF;
+- prompts completos prohibidos en telemetría;
+- preguntas al mentor persistidas únicamente como `topic_category`;
+- sesión de preview en `sessionStorage`;
+- CSP, `nosniff`, framing denegado, Permissions Policy y CORP en Vercel;
+- Service Worker first-party con namespace versionado y sin cachear respuestas fallidas;
+- ningún proxy RawGit/GitHack/Raw GitHub forma parte de producción.
 
-La política está documentada en `docs/OBSERVABILITY.md` y puede inspeccionarse desde `/privacy`.
-
-### Feature flags
-
-PostHog mantiene tres rollout gates:
-
-- `cca-premium-experience` — habilitada;
-- `cca-ai-mentor-live` — deshabilitada;
-- `cca-cyber-range-live` — deshabilitada.
-
-Las capacidades de mayor riesgo quedan apagadas hasta completar backend, privacidad y security sign-off.
-
-## PWA / Offline
-
-`manifest.webmanifest` + `sw.js` convierten la plataforma en una aplicación instalable y mantienen disponible el application shell local, incluido Privacy Center. El service worker solo cachea recursos first-party del producto.
-
-## Content contracts
-
-El contenido deja de depender exclusivamente de markup hardcoded:
+Ver también:
 
 ```text
-content/learning-paths.json
-content/labs.json
-schemas/learning-event.schema.json
-schemas/lab-manifest.schema.json
+SECURITY.md
+docs/THREAT_MODEL.md
+docs/OBSERVABILITY.md
+docs/PLATFORM_ROLES.md
+docs/V1_E2E_READINESS.md
 ```
 
-Estos contratos permiten que Academy, AI Mentor y Cyber Range compartan una fuente versionada y validable.
+## QA y release gate
 
-## Ejecutar localmente
-
-No requiere instalación de dependencias para la demo estática. Puede servirse con cualquier servidor HTTP estático.
-
-Para validar invariantes del repositorio:
+La v1 tiene un gate consolidado independiente de GitHub Actions:
 
 ```bash
 npm test
 ```
 
-El test usa únicamente Node.js >= 18.
+Ese gate revisa, entre otros:
 
-## Backend productivo
+- existencia de archivos runtime;
+- referencias locales rotas en HTML;
+- precache del Service Worker;
+- separación público/privado;
+- RBAC crítico;
+- rutas alumno/profesor;
+- ausencia de rutas legacy `type=` en Mission Control;
+- ausencia de proxies raw externos;
+- patrones obvios de secretos;
+- CSP y headers defensivos;
+- certificación autenticada;
+- privacidad del mentor.
 
-La demo usa `localStorage` deliberadamente para mostrar el flujo completo sin infraestructura sensible. El contrato del backend real está en:
+El deployment ejecuta:
 
-```text
-supabase/001_core_schema.sql
+```bash
+npm run build
 ```
 
-Incluye tenants, memberships/roles, cohorts, modules, labs, assignments, attempts, skill scores, learning events, certificates y Row Level Security.
+que primero ejecuta el release gate y solo después genera `dist/`. Si el gate falla, **Vercel no publica**.
 
-La migración productiva debe realizarse mediante un adapter de persistencia, reemplazando almacenamiento local sin reescribir UX.
+La suite histórica pre-v1 se conserva en:
 
-## Seguridad
-
-- Laboratorios ofensivos reales únicamente en entornos aislados y autorizados.
-- Sin credenciales reales en simulaciones.
-- Phishing con identidades y dominios ficticios.
-- Sin targets externos arbitrarios.
-- Secrets y API keys nunca se versionan.
-- CSP estricta, framing denegado y `object-src 'none'`.
-- Analytics no recibe prompts, emails, secretos ni contenido sensible de labs.
-- Session recording permanece deshabilitado.
-- El futuro Cyber Range usa manifests validados, sesiones efímeras, deny-egress por defecto, límites de recursos y destrucción automática.
-
-Ver:
-
-```text
-SECURITY.md
-docs/ARCHITECTURE.md
-docs/THREAT_MODEL.md
-docs/OBSERVABILITY.md
+```bash
+npm run test:legacy
 ```
 
-## Demo comercial
+Algunos contratos históricos contienen expectativas de versionado antiguas y no son el gate autoritativo de v1 hasta completar su migración.
 
-El recorrido recomendado está documentado en:
+## Build de producción
 
-```text
-docs/DEMO_RUNBOOK.md
+`scripts/build-static.mjs` genera un artefacto estático mínimo:
+
+- excluye tests, documentación, schemas, OpenAPI, Supabase y archivos de desarrollo;
+- publica `showcase.html` como `/index.html`;
+- conserva el shell de entrenamiento anterior como `/lab.html`;
+- exige que las superficies críticas existan antes de completar el build.
+
+Vercel utiliza `vercel.json` con `buildCommand: npm run build` y `outputDirectory: dist`.
+
+## Límites de esta v1
+
+Esta es una **v1 comercial/demostrativa completa**, no el backend multiusuario productivo final. En particular:
+
+- Academy Core remoto permanece deshabilitado en el preview público;
+- MFA productivo continúa como gate de backend;
+- el Cyber Range real permanece feature-gated;
+- la persistencia principal de la demo sigue siendo local;
+- no se conectan proveedores sensibles ni secretos desde el repositorio público.
+
+La transición a producción real debe reemplazar la persistencia local por Academy Core sin reescribir la experiencia de usuario.
+
+## Desarrollo local
+
+Requiere Node.js 18+ para QA. La interfaz es estática y puede servirse con cualquier servidor HTTP.
+
+```bash
+npm test
+npm run build
 ```
 
-## Deployment
-
-Vercel es el target primario. Existe un preview premium autocontenido READY rastreado en el PR/issue #3; el objetivo operativo sigue siendo desplegar directamente la rama multiarchivo como fuente única y validar visualmente todas las rutas antes de merge/production.
-
-## Próxima transición
-
-1. resolver preview canónico multiarchivo;
-2. validar desktop/mobile y headers;
-3. mover el repositorio a privado antes de conectar servicios sensibles;
-4. elegir explícitamente organización/entorno Supabase de staging y aplicar schema;
-5. conectar Auth + adapter remoto;
-6. activar analítica remota únicamente tras consentimiento y policy review;
-7. conectar AI Mentor real detrás de `cca-ai-mentor-live`;
-8. levantar Cyber Range separado detrás de `cca-cyber-range-live`;
-9. promover a producción solo después de QA y revisión de seguridad.
+El objetivo de release es que **lo que se ve, lo que se navega y lo que Vercel publica correspondan al mismo artefacto versionado**.
