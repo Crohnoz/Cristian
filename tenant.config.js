@@ -17,22 +17,23 @@ window.CCA_CONFIG = Object.freeze({
     mode: 'white-label'
   },
   product: {
-    version: '0.3.0-auth-preview',
+    version: '0.3.1-identity-ops-preview',
     northStar: 'Learn → Practice → Attack/Defend → Explain → Score → Certify',
-    modules: ['academy', 'phishing', 'range', 'mentor', 'achievements', 'account']
+    modules: ['academy', 'phishing', 'range', 'mentor', 'achievements', 'account', 'identity-ops']
   },
   academyCore: {
     provider: 'crohnoz-academy',
     enabled: false,
     apiBaseUrl: '',
     localFallback: true,
-    owns: ['auth', 'profiles', 'catalog', 'enrollments', 'progress', 'assessments', 'certificates', 'cohorts', 'content-studio', 'academic-audit']
+    owns: ['auth', 'profiles', 'catalog', 'enrollments', 'progress', 'assessments', 'certificates', 'cohorts', 'content-studio', 'academic-audit', 'invitations']
   },
   authentication: {
     provider: 'crohnoz-academy',
     sessionStorageOnly: true,
     minimumPasswordLength: 12,
     passwordReset: true,
+    invitationActivation: true,
     roleAwareRouting: true,
     productionMfa: 'planned'
   },
@@ -55,7 +56,7 @@ window.CCA_CONFIG = Object.freeze({
   const file = location.pathname.split('/').filter(Boolean).pop() || 'index.html';
   const protectedRoutes = new Map([
     ['index.html', []],
-    ['instructor.html', ['instructor']],
+    ['instructor.html', ['instructor', 'coordinator', 'admin']],
     ['certificate.html', []]
   ]);
   if (!protectedRoutes.has(file)) return;
@@ -82,8 +83,9 @@ window.CCA_CONFIG = Object.freeze({
           const role = profile.querySelector('.profile-copy span');
           const avatar = profile.querySelector('.avatar');
           const displayName = session.user?.display_name || session.user?.username || 'Usuario Academy';
+          const roleLabels = { learner:'Security Apprentice', instructor:'Cybersecurity Instructor', coordinator:'Academy Coordinator', admin:'Academy Administrator', author:'Content Author', reviewer:'Content Reviewer' };
           if (name) name.textContent = displayName;
-          if (role) role.textContent = session.user?.role === 'instructor' ? 'Cybersecurity Instructor' : 'Security Apprentice';
+          if (role) role.textContent = roleLabels[session.user?.role] || 'Academy User';
           if (avatar) avatar.textContent = displayName.trim().split(/\s+/).slice(0, 2).map(part => part[0]).join('').toUpperCase() || 'CA';
         }
       }, 0);
