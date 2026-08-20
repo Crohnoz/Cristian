@@ -1,4 +1,4 @@
-const CACHE = 'cca-shell-v18-docker-xml-no-agent';
+const CACHE = 'cca-shell-v20-v1-release-candidate';
 const SHELL = [
   '/',
   '/dashboard.html',
@@ -11,11 +11,11 @@ const SHELL = [
   '/clarity-ui.js',
   '/product-shell.css',
   '/product-shell.js',
-  '/instructor-unified.css',
   '/index.html',
   '/styles.css',
   '/app.js',
   '/no-ai.js',
+  '/privacy-hardening.js',
   '/tenant.config.js',
   '/telemetry.js',
   '/analytics.js',
@@ -24,6 +24,9 @@ const SHELL = [
   '/auth.html',
   '/auth.css',
   '/auth.page.js',
+  '/onboarding.html',
+  '/onboarding.css',
+  '/onboarding.js',
   '/account.html',
   '/account.js',
   '/reset-password.html',
@@ -53,20 +56,13 @@ const SHELL = [
   '/showcase.css',
   '/showcase-premium.css',
   '/public-preview.html',
-  '/art/cristian-avatar.svg',
-  '/art/course-phishing.svg',
-  '/art/course-web-security.svg',
-  '/art/course-soc.svg',
-  '/art/course-cloud-identity.svg',
-  '/art/lesson-phishing-email.svg',
-  '/art/lesson-phishing-inbox.svg',
-  '/art/lesson-live-class.svg',
-  '/art/lesson-video-replay.svg',
-  '/art/lesson-lab-workspace.svg',
-  '/art/lesson-quiz-signals.svg',
+  '/teacher.html',
+  '/teacher.css',
+  '/teacher.js',
   '/instructor.html',
   '/instructor.css',
   '/instructor.js',
+  '/instructor-unified.css',
   '/studio.html',
   '/studio.css',
   '/studio.js',
@@ -77,7 +73,18 @@ const SHELL = [
   '/privacy.html',
   '/privacy.js',
   '/brand.svg',
-  '/manifest.webmanifest'
+  '/manifest.webmanifest',
+  '/art/cristian-avatar.svg',
+  '/art/course-phishing.svg',
+  '/art/course-web-security.svg',
+  '/art/course-soc.svg',
+  '/art/course-cloud-identity.svg',
+  '/art/lesson-phishing-email.svg',
+  '/art/lesson-phishing-inbox.svg',
+  '/art/lesson-live-class.svg',
+  '/art/lesson-video-replay.svg',
+  '/art/lesson-lab-workspace.svg',
+  '/art/lesson-quiz-signals.svg'
 ];
 
 self.addEventListener('install', event => {
@@ -100,8 +107,10 @@ self.addEventListener('fetch', event => {
   event.respondWith(
     fetch(event.request)
       .then(response => {
-        const copy = response.clone();
-        caches.open(CACHE).then(cache => cache.put(event.request, copy));
+        if (response.ok) {
+          const copy = response.clone();
+          caches.open(CACHE).then(cache => cache.put(event.request, copy));
+        }
         return response;
       })
       .catch(() => caches.match(event.request).then(hit => hit || caches.match('/auth.html')))
