@@ -38,7 +38,40 @@
   if (topRole) topRole.textContent = roleLabels[user.role] || 'Academy User';
   if (welcomeName) welcomeName.textContent = firstName;
 
-  if (['instructor','coordinator','admin'].includes(user.role)) document.body.classList.add('role-management');
+  const canTeach = ['instructor','coordinator','admin'].includes(user.role);
+  if (canTeach) {
+    document.body.classList.add('role-management');
+    const firstAdmin = document.querySelector('.admin-nav a[href="./instructor.html"]');
+    if (firstAdmin) {
+      firstAdmin.href = './teacher.html';
+      firstAdmin.lastChild.textContent = 'Teacher Intranet';
+      const advanced = document.createElement('a');
+      advanced.href = './instructor.html';
+      const icon = document.createElement('span'); icon.textContent = '⌘';
+      advanced.append(icon, document.createTextNode('Operations Console'));
+      firstAdmin.insertAdjacentElement('afterend', advanced);
+    }
+  }
+
+  if (user.role === 'learner') {
+    document.querySelectorAll('a[href="./student.html"]').forEach(link => {
+      link.href = './progress.html';
+      if (/analytics/i.test(link.textContent)) return;
+      if (/mi progreso|skill graph|ver todo/i.test(link.textContent)) link.setAttribute('aria-label', `${link.textContent.trim()} del alumno`);
+    });
+  }
+
+  document.querySelectorAll('a[href*="lesson.html?"]').forEach(link => {
+    try {
+      const url = new URL(link.href, location.href);
+      const legacy = url.searchParams.get('type');
+      if (!legacy) return;
+      const map = { live:'live', lab:'lab', simulation:'awareness', checkpoint:'quiz' };
+      url.searchParams.delete('type');
+      url.searchParams.set('mode', map[legacy] || legacy);
+      link.href = `./lesson.html?${url.searchParams.toString()}${url.hash}`;
+    } catch {}
+  });
 
   const todayLabel = document.getElementById('todayLabel');
   const timeLabel = document.getElementById('timeLabel');
@@ -62,7 +95,7 @@
     else if (query.includes('web') || query.includes('owasp')) location.href = './course.html?course=web';
     else if (query.includes('soc') || query.includes('incident')) location.href = './course.html?course=soc';
     else if (query.includes('cloud') || query.includes('identity')) location.href = './course.html?course=cloud';
-    else if (query.includes('lab')) location.href = './index.html#range';
+    else if (query.includes('lab')) location.href = './lesson.html?mode=lab&course=web';
     else location.href = './catalog.html';
   };
   search?.addEventListener('keydown', event => { if (event.key === 'Enter') goSearch(); });
