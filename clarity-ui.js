@@ -38,7 +38,7 @@
     wrap.append(
       createCard({primary:true,icon:'▶',kicker:'CONTINUAR DONDE QUEDASTE',title:'Web Application Security · Módulo 06',meta:'12 min restantes · después: práctica guiada',href:'./lesson.html?course=web&mode=video',action:'Continuar →'}),
       createCard({icon:'◉',kicker:'PRÓXIMO EN TU AGENDA',title:'Threat Hunting en la práctica',meta:'Clase live · hoy 18:00',href:'./lesson.html?course=soc&mode=live',action:'Ver clase'}),
-      createCard({icon:'✓',kicker:'ESTADO DE LA SEMANA',title:'3 de 5 objetivos completos',meta:'Vas al día · 2 actividades pendientes',href:'./student.html',action:'Ver progreso'})
+      createCard({icon:'✓',kicker:'ESTADO DE LA SEMANA',title:'3 de 5 objetivos completos',meta:'Vas al día · 2 actividades pendientes',href:'./progress.html',action:'Ver progreso'})
     );
     welcome.insertAdjacentElement('afterend',wrap);
   };
