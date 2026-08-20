@@ -27,6 +27,10 @@ function installIdentityOperations(){
     const link=document.createElement('a'); link.id='identityOpsLink'; link.className='nav-item'; link.href='./users.html';
     const icon=document.createElement('span'); icon.textContent='♙'; link.append(icon,document.createTextNode('Usuarios & Accesos')); nav.appendChild(link);
   }
+  if(nav && ['coordinator','admin'].includes(session.user?.role) && !document.getElementById('contentStudioLink')){
+    const link=document.createElement('a'); link.id='contentStudioLink'; link.className='nav-item'; link.href='./studio.html';
+    const icon=document.createElement('span'); icon.textContent='✦'; link.append(icon,document.createTextNode('Content Studio')); nav.appendChild(link);
+  }
   const profile=document.querySelector('.topbar .profile');
   if(profile){profile.tabIndex=0;profile.setAttribute('role','link');profile.setAttribute('aria-label','Abrir mi cuenta');profile.style.cursor='pointer';const open=()=>location.href='./account.html';profile.addEventListener('click',open);profile.addEventListener('keydown',event=>{if(event.key==='Enter'||event.key===' '){event.preventDefault();open();}});}
   const tenantCard=document.querySelector('.sidebar-card .level-row span');
@@ -69,7 +73,10 @@ function assignRecommended() {
 }
 
 document.getElementById('assignRecommended')?.addEventListener('click',assignRecommended);
-document.getElementById('createModule')?.addEventListener('click',()=>showToast('Content Engine listo para conectar al backend de módulos'));
+document.getElementById('createModule')?.addEventListener('click',()=>{
+  if(['coordinator','admin'].includes(session.user?.role)){location.href='./studio.html';return;}
+  showToast('Content Studio requiere rol de author, coordinator o admin.');
+});
 
 function exportEvidence() {
   const state=loadLearner(); const events=Array.isArray(state.events)?state.events:[];
