@@ -21,8 +21,8 @@ assert.match(js, /requireAuth/, 'dashboard should require an authenticated sessi
 assert.match(js, /role-management/, 'management navigation should be role-aware');
 assert.match(authPage, /\/dashboard\.html/, 'login should allow and default to Mission Control');
 assert.match(tenant, /\['dashboard\.html', \[\]\]/, 'Mission Control should be an authenticated protected route');
-assert.match(tenant, /0\.6\.0-mission-control-preview/, 'tenant should identify Mission Control release');
-assert.match(sw, /cca-shell-v12-mission-control/, 'PWA cache should include new Mission Control shell');
+assert.match(tenant, /0\.7\.0-unified-product-preview/, 'tenant should identify unified product release');
+assert.match(sw, /cca-shell-v13-unified-product/, 'PWA cache should include unified Mission Control shell');
 assert.match(sw, /dashboard\.html/, 'PWA cache should include dashboard assets');
 assert.match(sw, /lesson-phishing-email\.svg/, 'PWA cache should include dashboard phishing artwork');
 assert.match(manifest, /"start_url": "\/dashboard\.html"/, 'installed app should start at Mission Control');
