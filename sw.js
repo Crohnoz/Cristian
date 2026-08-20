@@ -1,4 +1,4 @@
-const CACHE = 'cca-shell-v16-learner-clarity';
+const CACHE = 'cca-shell-v17-content-studio';
 const SHELL = [
   '/',
   '/dashboard.html',
@@ -66,6 +66,9 @@ const SHELL = [
   '/instructor.html',
   '/instructor.css',
   '/instructor.js',
+  '/studio.html',
+  '/studio.css',
+  '/studio.js',
   '/certificate.html',
   '/certificate.js',
   '/privacy.html',
