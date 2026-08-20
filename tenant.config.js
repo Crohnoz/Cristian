@@ -17,9 +17,9 @@ window.CCA_CONFIG = Object.freeze({
     mode: 'white-label'
   },
   product: {
-    version: '0.6.0-mission-control-preview',
+    version: '0.7.0-unified-product-preview',
     northStar: 'Learn → Practice → Attack/Defend → Explain → Score → Certify',
-    modules: ['mission-control', 'immersive-learning', 'visual-academy', 'academy', 'phishing', 'range', 'mentor', 'achievements', 'account', 'identity-ops', 'student-360']
+    modules: ['mission-control', 'unified-product-shell', 'immersive-learning', 'visual-academy', 'academy', 'phishing', 'range', 'mentor', 'achievements', 'account', 'identity-ops', 'student-360']
   },
   academyCore: {
     provider: 'crohnoz-academy',
@@ -59,6 +59,9 @@ window.CCA_CONFIG = Object.freeze({
   const protectedRoutes = new Map([
     ['dashboard.html', []],
     ['index.html', []],
+    ['catalog.html', []],
+    ['course.html', []],
+    ['lesson.html', []],
     ['instructor.html', ['instructor', 'coordinator', 'admin']],
     ['student.html', ['coordinator', 'admin']],
     ['certificate.html', []]
@@ -69,10 +72,15 @@ window.CCA_CONFIG = Object.freeze({
   Promise.resolve()
     .then(() => import('./academy-core.adapter.js'))
     .then(() => import('./auth.session.js'))
-    .then(() => {
+    .then(async () => {
       const session = window.CCAAuth?.requireAuth({ roles: protectedRoutes.get(file) });
       if (!session) return;
       document.documentElement.style.visibility = '';
+
+      if (['catalog.html','course.html','lesson.html'].includes(file)) {
+        await import('./product-shell.js');
+      }
+
       setTimeout(() => {
         const academyNav = document.querySelector('.nav-item[data-view="academy"]');
         if (academyNav) academyNav.addEventListener('click', () => { location.href = './catalog.html'; });
