@@ -1,6 +1,9 @@
-const CACHE = 'cca-shell-v11-lesson-showcase';
+const CACHE = 'cca-shell-v12-mission-control';
 const SHELL = [
   '/',
+  '/dashboard.html',
+  '/dashboard.css',
+  '/dashboard.js',
   '/index.html',
   '/styles.css',
   '/app.js',
@@ -34,6 +37,7 @@ const SHELL = [
   '/lesson.html',
   '/lesson.css',
   '/lesson.js',
+  '/art/cristian-avatar.svg',
   '/art/course-phishing.svg',
   '/art/course-web-security.svg',
   '/art/course-soc.svg',
