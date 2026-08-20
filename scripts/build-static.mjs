@@ -4,8 +4,8 @@ import { fileURLToPath } from 'node:url';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const out = path.join(root, 'dist');
-const excludedDirs = new Set(['.git','.github','node_modules','dist','tests','docs','schemas','supabase','openapi','scripts']);
-const excludedFiles = new Set(['package.json','package-lock.json','README.md','CHANGELOG.md','BITACORA.md','SECURITY.md','Dockerfile','docker-compose.yml','.dockerignore','.gitignore']);
+const excludedDirs = new Set(['.git','.github','.vercel','node_modules','dist','tests','docs','schemas','supabase','openapi','scripts']);
+const excludedFiles = new Set(['package.json','package-lock.json','README.md','CHANGELOG.md','BITACORA.md','SECURITY.md','Dockerfile','docker-compose.yml','.dockerignore','.gitignore','vercel.json']);
 const allowedExtensions = new Set(['.html','.css','.js','.svg','.webmanifest','.xml','.json']);
 
 fs.rmSync(out, { recursive:true, force:true });
@@ -32,10 +32,20 @@ function copyTree(source, destination) {
 }
 
 copyTree(root, out);
-if (!fs.existsSync(path.join(out, 'showcase.html'))) throw new Error('build missing showcase.html');
-if (!fs.existsSync(path.join(out, 'auth.html'))) throw new Error('build missing auth.html');
-if (!fs.existsSync(path.join(out, 'dashboard.html'))) throw new Error('build missing dashboard.html');
-if (!fs.existsSync(path.join(out, 'teacher.html'))) throw new Error('build missing teacher.html');
-if (!fs.existsSync(path.join(out, 'tenant.config.js'))) throw new Error('build missing tenant.config.js');
 
-console.log(`static production artifact: ${copied} files copied to dist/`);
+const sourceLegacy = path.join(out, 'index.html');
+const publicShowcase = path.join(out, 'showcase.html');
+if (!fs.existsSync(sourceLegacy)) throw new Error('build missing legacy training shell');
+if (!fs.existsSync(publicShowcase)) throw new Error('build missing showcase.html');
+fs.copyFileSync(sourceLegacy, path.join(out, 'lab.html'));
+fs.copyFileSync(publicShowcase, path.join(out, 'index.html'));
+
+for (const file of ['index.html','showcase.html','auth.html','dashboard.html','teacher.html','tenant.config.js','sw.js']) {
+  if (!fs.existsSync(path.join(out, file))) throw new Error(`build missing ${file}`);
+}
+
+const rootHtml = fs.readFileSync(path.join(out, 'index.html'), 'utf8');
+if (!/DEMO PÚBLICA|demo pública/i.test(rootHtml)) throw new Error('production root is not the public showcase');
+if (/auth\.session\.js|users\.js|student\.js|teacher\.js/.test(rootHtml)) throw new Error('production root includes private operations code');
+
+console.log(`static production artifact: ${copied} source files copied; public showcase promoted to /; legacy lab isolated at /lab.html`);
