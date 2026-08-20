@@ -6,6 +6,8 @@
   const eventCount = document.getElementById('eventCount');
   const eventList = document.getElementById('eventList');
   const notice = document.getElementById('notice');
+  const back = document.querySelector('.back[href="./index.html"]');
+  if (back) back.href = './dashboard.html';
 
   function safe(value, max = 100) { return String(value ?? '').slice(0, max); }
 
@@ -21,8 +23,7 @@
     eventCount.textContent = String(events.length);
     eventList.textContent = '';
     if (!events.length) {
-      const empty = document.createElement('div');
-      empty.className = 'event';
+      const empty = document.createElement('div'); empty.className = 'event';
       const copy = document.createElement('div');
       const title = document.createElement('strong'); title.textContent = 'Sin eventos locales';
       const detail = document.createElement('small'); detail.textContent = 'Interactúa con la academia para generar telemetría permitida.';
@@ -46,20 +47,17 @@
     notice.textContent = 'Preferencia guardada. El repositorio público no contiene provider remoto, por lo que no se transmitirá nada hasta una integración productiva aprobada.';
     renderConsent();
   });
-
   document.getElementById('deny').addEventListener('click', () => {
     analytics?.consent.set('denied');
     notice.textContent = 'Preferencia guardada: solo telemetría local en este navegador.';
     renderConsent();
   });
-
   document.getElementById('clear').addEventListener('click', () => {
     if (!confirm('¿Eliminar la telemetría local de esta academia en este navegador?')) return;
     telemetry?.clear();
     notice.textContent = 'Telemetría local eliminada.';
     renderEvents();
   });
-
   document.getElementById('export').addEventListener('click', () => {
     const events = telemetry?.exportEvents() || [];
     const blob = new Blob([JSON.stringify({ exportedAt:new Date().toISOString(), events }, null, 2)], { type:'application/json' });
