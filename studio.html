@@ -30,7 +30,7 @@
       </nav>
       <div class="studio-sidebar-footer">
         <div class="workflow-mini"><span>DRAFT</span><i></i><span>REVIEW</span><i></i><span>PUBLISH</span></div>
-        <p>Publicación real permanece bloqueada hasta conectar Academy Core y completar revisión.</p>
+        <p>El Studio puede sincronizar borradores con Academy Core. Aprobación y publicación permanecen gobernadas por el backend y sus roles.</p>
         <a href="./instructor.html">← Teaching Command Center</a>
       </div>
     </aside>
@@ -44,6 +44,10 @@
         </div>
         <div class="studio-actions">
           <span class="save-state" id="saveState"><i></i>Guardado local</span>
+          <span class="save-state" id="remoteState"><i></i>Core desconectado</span>
+          <button class="secondary" id="loadCore" type="button" hidden>Cargar Core</button>
+          <button class="secondary" id="syncCourse" type="button" hidden>Sincronizar Core</button>
+          <button class="primary" id="submitReview" type="button" hidden>Enviar a revisión</button>
           <button class="secondary" id="newCourse" type="button">Nuevo curso</button>
           <button class="primary" id="saveCourse" type="button">Guardar borrador</button>
         </div>
@@ -108,7 +112,7 @@
               <div class="studio-card-head"><div><span class="eyebrow">MODULE EDITOR</span><h3>Contenido del módulo</h3></div><button class="danger-quiet" id="deleteModule" type="button">Eliminar módulo</button></div>
               <div class="form-grid">
                 <label class="field">Título<input id="moduleTitle" maxlength="120" autocomplete="off" /></label>
-                <label class="field">Objetivo<textarea id="moduleObjective" rows="3" maxlength="500"></textarea></label>
+                <label class="field">Objetivo local<textarea id="moduleObjective" rows="3" maxlength="500"></textarea></label>
               </div>
               <div class="lesson-heading"><div><span class="eyebrow">LESSONS</span><h4>Lecciones</h4></div><button class="secondary" id="addLesson" type="button">+ Lección</button></div>
               <div id="lessonList" class="lesson-list"></div>
