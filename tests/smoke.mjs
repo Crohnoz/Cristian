@@ -2,10 +2,10 @@ import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 
 const read = (path) => readFile(new URL(`../${path}`, import.meta.url), 'utf8');
-const [index, app, instructor, instructorJs, certificate, certificateJs, vercel, security, tenant, telemetry, manifest, sw] = await Promise.all([
+const [index, app, instructor, instructorJs, certificate, certificateJs, vercel, security, tenant, telemetry, analytics, manifest, sw, observability] = await Promise.all([
   read('index.html'), read('app.js'), read('instructor.html'), read('instructor.js'),
   read('certificate.html'), read('certificate.js'), read('vercel.json'), read('SECURITY.md'),
-  read('tenant.config.js'), read('telemetry.js'), read('manifest.webmanifest'), read('sw.js')
+  read('tenant.config.js'), read('telemetry.js'), read('analytics.js'), read('manifest.webmanifest'), read('sw.js'), read('docs/OBSERVABILITY.md')
 ]);
 
 assert.match(index, /Cristian Cyber Academy/i, 'student experience should be branded');
@@ -38,9 +38,25 @@ assert.match(instructorJs, /text\/csv/, 'instructor should export learning evide
 assert.match(certificateJs, /readiness >= 75/, 'certificate should require readiness threshold');
 
 assert.match(tenant, /white-label/, 'tenant config should explicitly support white-label mode');
+assert.match(tenant, /remoteAnalyticsDefault:\s*false/, 'remote analytics must default off');
+assert.match(tenant, /consentRequired:\s*true/, 'remote analytics must require consent');
+assert.match(tenant, /sessionRecording:\s*false/, 'session recording must remain disabled');
+assert.match(tenant, /cca-premium-experience/, 'premium rollout flag should be declared');
+assert.match(tenant, /cca-ai-mentor-live/, 'live AI mentor gate should be declared');
+assert.match(tenant, /cca-cyber-range-live/, 'live range gate should be declared');
 assert.doesNotMatch(tenant, /(api[_-]?key|secret|token)\s*:/i, 'tenant config must not expose secrets');
+
 assert.match(telemetry, /localStorage/, 'telemetry should remain local in demo mode');
 assert.match(telemetry, /crohnoz:telemetry/, 'telemetry should expose a local event bus');
+assert.match(telemetry, /SAFE_KEYS/, 'local telemetry must filter properties');
+assert.doesNotMatch(telemetry, /['"]topic['"]\s*,/, 'raw mentor topic text must not be allowlisted in telemetry');
+assert.match(analytics, /CONSENT_KEY/, 'analytics adapter should maintain explicit consent state');
+assert.match(analytics, /ALLOWED_EVENTS/, 'analytics adapter should allowlist event names');
+assert.match(analytics, /PROPERTY_ALLOWLIST/, 'analytics adapter should allowlist properties');
+assert.match(analytics, /remoteDefault:\s*false/, 'analytics adapter must keep remote provider off by default');
+assert.match(analytics, /sessionRecording:\s*false/, 'analytics adapter must reject session recording by policy');
+assert.match(observability, /Nunca enviar/i, 'observability contract should enumerate prohibited data');
+assert.match(observability, /Session recording debe permanecer deshabilitado/i, 'observability contract should keep recording disabled');
 
 const pwa = JSON.parse(manifest);
 assert.equal(pwa.display, 'standalone', 'PWA should run standalone');
@@ -58,10 +74,11 @@ assert.equal(headerMap['x-content-type-options'], 'nosniff', 'nosniff should be 
 assert.equal(headerMap['x-frame-options'], 'DENY', 'clickjacking protection should be enabled');
 assert.match(headerMap['content-security-policy'] || '', /script-src 'self'/, 'CSP should only allow first-party scripts');
 assert.match(headerMap['content-security-policy'] || '', /frame-ancestors 'none'/, 'CSP should deny framing');
+assert.match(headerMap['content-security-policy'] || '', /object-src 'none'/, 'CSP should block plugin content');
 
 assert.match(security, /aislad/i, 'security policy should require isolated offensive labs');
 assert.match(security, /credenciales reales/i, 'security policy should prohibit real credentials');
 
 console.log('✓ Cristian Cyber Academy premium smoke tests passed');
 console.log(`✓ ${externalTrainingDomains.length} reserved training-domain references validated`);
-console.log('✓ White-label, PWA, local telemetry and instructor evidence invariants validated');
+console.log('✓ White-label, PWA, privacy-safe telemetry, analytics policy and instructor evidence invariants validated');
