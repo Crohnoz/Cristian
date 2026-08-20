@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Cristian Cyber Academy — entrenamiento práctico en ciberseguridad, powered by Crohnoz Labs." />
+  <title>Cristian Cyber Academy</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <div class="shell">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-mark">C</div>
+        <div>
+          <strong>CRISTIAN</strong>
+          <span>CYBER ACADEMY</span>
+        </div>
+      </div>
+
+      <nav class="nav" aria-label="Principal">
+        <button class="nav-item active" data-view="dashboard">Overview</button>
+        <button class="nav-item" data-view="academy">Academy</button>
+        <button class="nav-item" data-view="phishing">Phishing Lab</button>
+        <button class="nav-item" data-view="range">Cyber Range</button>
+        <button class="nav-item" data-view="mentor">AI Mentor</button>
+      </nav>
+
+      <div class="sidebar-card">
+        <span class="eyebrow">TRAINING STATUS</span>
+        <strong>Level 08</strong>
+        <div class="progress"><i style="width:72%"></i></div>
+        <small>3,420 XP · 580 para Level 09</small>
+      </div>
+
+      <div class="powered">Powered by <strong>Crohnoz Labs</strong></div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <div>
+          <span class="eyebrow">SECURITY TRAINING PLATFORM</span>
+          <h1 id="pageTitle">Bienvenido al Cyber Range</h1>
+        </div>
+        <div class="profile">
+          <div class="profile-copy">
+            <strong>Alumno Demo</strong>
+            <span>Security Apprentice</span>
+          </div>
+          <div class="avatar">AD</div>
+        </div>
+      </header>
+
+      <section class="view active" id="dashboard">
+        <div class="hero">
+          <div>
+            <span class="pill pill-green">SYSTEM ONLINE</span>
+            <h2>Aprende seguridad<br><em>practicando seguridad.</em></h2>
+            <p>Microlearning, simulaciones seguras y laboratorios aislados con feedback inmediato.</p>
+            <div class="hero-actions">
+              <button class="primary" data-jump="phishing">Continuar entrenamiento</button>
+              <button class="secondary" data-jump="academy">Ver ruta completa</button>
+            </div>
+          </div>
+          <div class="radar-card">
+            <div class="radar-ring r1"></div>
+            <div class="radar-ring r2"></div>
+            <div class="radar-ring r3"></div>
+            <div class="radar-cross x"></div>
+            <div class="radar-cross y"></div>
+            <div class="radar-dot d1"></div>
+            <div class="radar-dot d2"></div>
+            <div class="radar-dot d3"></div>
+            <div class="radar-center">72</div>
+            <span>CYBER READINESS</span>
+          </div>
+        </div>
+
+        <div class="stats">
+          <article><span>Labs completados</span><strong>18</strong><small>+4 esta semana</small></article>
+          <article><span>Precisión phishing</span><strong>91%</strong><small>Top skill actual</small></article>
+          <article><span>Racha</span><strong>7 días</strong><small>Personal best</small></article>
+          <article><span>Risk score</span><strong class="accent">B+</strong><small>Mejorando</small></article>
+        </div>
+
+        <div class="grid-2">
+          <article class="panel">
+            <div class="panel-head"><div><span class="eyebrow">SKILL GRAPH</span><h3>Competencias</h3></div><span class="muted">Actualizado hoy</span></div>
+            <div class="skills">
+              <div class="skill"><div><span>Phishing & Social Engineering</span><b>91</b></div><div class="bar"><i style="width:91%"></i></div></div>
+              <div class="skill"><div><span>Web Security</span><b>78</b></div><div class="bar"><i style="width:78%"></i></div></div>
+              <div class="skill"><div><span>OSINT</span><b>67</b></div><div class="bar"><i style="width:67%"></i></div></div>
+              <div class="skill"><div><span>API Security</span><b>48</b></div><div class="bar warning"><i style="width:48%"></i></div></div>
+            </div>
+          </article>
+
+          <article class="panel next-mission">
+            <div class="panel-head"><div><span class="eyebrow">NEXT MISSION</span><h3>Inbox Under Attack</h3></div><span class="difficulty">INTERMEDIATE</span></div>
+            <p>Analiza seis mensajes y detecta indicadores de ingeniería social antes de que expire el tiempo.</p>
+            <ul>
+              <li>6 correos simulados</li>
+              <li>12 señales potenciales</li>
+              <li>Feedback explicado por IA</li>
+            </ul>
+            <button class="primary full" data-jump="phishing">Iniciar misión</button>
+          </article>
+        </div>
+      </section>
+
+      <section class="view" id="academy">
+        <div class="section-heading"><div><span class="eyebrow">LEARNING PATHS</span><h2>Academy</h2><p>Rutas cortas, progresivas y orientadas a práctica.</p></div><span class="pill">4 rutas activas</span></div>
+        <div class="course-grid">
+          <article class="course-card"><span class="course-index">01</span><div><span class="pill pill-green">72% COMPLETE</span><h3>Phishing & Social Engineering</h3><p>Identificación, análisis, reporting y defensa contra manipulación.</p></div><button data-jump="phishing">Continuar</button></article>
+          <article class="course-card"><span class="course-index">02</span><div><span class="pill">58% COMPLETE</span><h3>OWASP Web Security</h3><p>XSS, access control, authentication, injection y mitigaciones.</p></div><button data-jump="range">Entrar al range</button></article>
+          <article class="course-card"><span class="course-index">03</span><div><span class="pill">34% COMPLETE</span><h3>API Security</h3><p>Autorización, validación, rate limiting, tokens y threat modeling.</p></div><button>Continuar</button></article>
+          <article class="course-card"><span class="course-index">04</span><div><span class="pill">NEW</span><h3>OSINT Fundamentals</h3><p>Recolección responsable, verificación y minimización de exposición.</p></div><button>Comenzar</button></article>
+        </div>
+      </section>
+
+      <section class="view" id="phishing">
+        <div class="section-heading"><div><span class="eyebrow">SAFE SIMULATION</span><h2>Phishing Lab</h2><p>Todos los mensajes, dominios y personas de este laboratorio son ficticios.</p></div><span class="pill pill-green">SANDBOX</span></div>
+        <div class="mail-layout">
+          <div class="mail-list" id="mailList"></div>
+          <article class="mail-reader" id="mailReader">
+            <div class="empty-state"><div class="shield">⌁</div><h3>Selecciona un mensaje</h3><p>Inspecciona remitente, intención y señales antes de clasificarlo.</p></div>
+          </article>
+        </div>
+      </section>
+
+      <section class="view" id="range">
+        <div class="section-heading"><div><span class="eyebrow">ISOLATED LAB</span><h2>Cyber Range</h2><p>Laboratorio educativo simulado. No interactúa con sistemas externos.</p></div><span class="pill pill-green">CONTAINED</span></div>
+        <div class="range-layout">
+          <article class="panel mission-brief"><span class="eyebrow">LAB 04</span><h3>Reflected XSS: detecta y corrige</h3><p>La aplicación de práctica refleja contenido ingresado sin un tratamiento seguro. Tu misión es identificar la causa y elegir la mitigación correcta.</p><div class="objectives"><span>✓ Identificar source y sink</span><span>○ Explicar impacto</span><span>○ Seleccionar mitigación</span></div></article>
+          <article class="terminal-card">
+            <div class="terminal-top"><span></span><span></span><span></span><b>crohnoz-range / lab-04</b></div>
+            <pre><code>$ range status
+LAB_ID      lab-04-xss
+NETWORK     isolated
+TARGET      training-app.local
+DATA        synthetic
+STATUS      ready
+
+$ hint
+> Revisa dónde termina el valor del parámetro "q".
+> Busca una salida HTML construida sin encoding contextual.
+
+$ _</code></pre>
+          </article>
+          <article class="panel mitigation">
+            <span class="eyebrow">DEFENDER MODE</span><h3>¿Cuál es la corrección más adecuada?</h3>
+            <button class="answer">A · Desactivar JavaScript en el navegador</button>
+            <button class="answer correct">B · Encoding contextual de salida + plantillas seguras</button>
+            <button class="answer">C · Ocultar el parámetro de la URL</button>
+            <div class="answer-feedback" id="answerFeedback">Selecciona una alternativa para recibir feedback.</div>
+          </article>
+        </div>
+      </section>
+
+      <section class="view" id="mentor">
+        <div class="section-heading"><div><span class="eyebrow">AI INSTRUCTOR</span><h2>Mentor de Cristian</h2><p>Asistente educativo para explicar conceptos, dar pistas y generar práctica.</p></div><span class="pill">DEMO MODE</span></div>
+        <div class="mentor-layout">
+          <article class="mentor-profile"><div class="mentor-avatar">CG</div><span class="pill pill-green">ONLINE</span><h3>Cristian · Cyber Mentor</h3><p>Especialista virtual de acompañamiento. Diseñado para enseñar sin entregar inmediatamente la respuesta.</p><div class="mentor-tags"><span>OWASP</span><span>AppSec</span><span>Blue Team</span><span>Secure Coding</span></div></article>
+          <article class="chat-panel">
+            <div class="chat" id="chat"><div class="message mentor-msg"><b>Cristian AI</b><p>Bienvenido. Puedo explicarte conceptos, darte pistas sobre un laboratorio o evaluarte con preguntas breves. ¿Qué quieres practicar?</p></div></div>
+            <form class="chat-form" id="chatForm"><input id="chatInput" autocomplete="off" placeholder="Ej: ¿Por qué el output encoding ayuda contra XSS?" /><button>Enviar</button></form>
+          </article>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="./app.js"></script>
+</body>
+</html>
