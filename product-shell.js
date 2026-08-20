@@ -33,7 +33,7 @@
       <a href="./progress.html"><b>⌁</b>Skill Graph</a>
       <a href="./certificate.html"><b>◈</b>Certificaciones</a>
       <span class="product-shell-divider"></span>
-      ${canTeach ? '<a data-route="instructor" href="./instructor.html"><b>⚙</b>Instructor Console</a>' : ''}
+      ${canTeach ? '<a data-route="teacher" href="./teacher.html"><b>◫</b>Teacher Intranet</a><a data-route="instructor" href="./instructor.html"><b>⌘</b>Operations Console</a>' : ''}
       ${isManager ? '<a href="./users.html"><b>◎</b>Usuarios & Cohortes</a><a href="./student.html"><b>↗</b>Student 360</a>' : ''}
     </nav>
     <div class="product-shell-bottom"><a href="./account.html">⚙ Ajustes / cuenta</a><a href="./privacy.html">? Ayuda & privacidad</a></div>`;
