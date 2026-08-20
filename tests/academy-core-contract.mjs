@@ -12,7 +12,8 @@ assert.match(tenant, /provider:\s*'crohnoz-academy'/, 'Cristian must declare Cro
 assert.match(tenant, /enabled:\s*false/, 'Academy Core must remain disabled until an explicit API environment is configured');
 assert.match(tenant, /apiBaseUrl:\s*''/, 'No production/staging Academy API URL should be hardcoded in the public tenant config');
 assert.match(tenant, /localFallback:\s*true/, 'Premium demo must retain safe local fallback while Academy Core is disabled');
-assert.match(tenant, /contentTenantScoped:\s*false/, 'Remote Content Studio must remain gated until backend content is tenant scoped');
+assert.match(tenant, /contentTenantScoped:\s*false/, 'Remote Content Studio must remain gated until backend tenant scope passes release review');
+assert.match(tenant, /organizationSlug:\s*'cristian-demo'/, 'Cristian must declare an explicit Academy organization slug before remote activation');
 assert.match(tenant, /\['studio\.html',\s*\['author',\s*'coordinator',\s*'admin'\]\]/, 'Studio route must be role-gated centrally');
 
 for (const endpoint of [
@@ -32,15 +33,22 @@ for (const endpoint of [
 }
 
 for (const method of [
+  'createEnrollment', 'createLessonProgress', 'updateLessonProgress', 'createAssessmentAttempt',
   'createStudioCourse', 'updateStudioCourse', 'deleteStudioCourse', 'transitionStudioCourse',
   'createStudioModule', 'updateStudioModule', 'deleteStudioModule',
   'createStudioLesson', 'updateStudioLesson', 'deleteStudioLesson',
   'createStudioAssessment', 'updateStudioAssessment', 'deleteStudioAssessment'
 ]) {
-  assert.match(adapter, new RegExp(`\\b${method}\\b`), `Adapter should expose verified Content Studio method ${method}`);
+  assert.match(adapter, new RegExp(`\\b${method}\\b`), `Adapter should expose verified Academy method ${method}`);
 }
 
-assert.match(adapter, /transition\/.*\{ status \}/, 'Publication workflow must use the backend transition action rather than editing status directly');
+assert.match(adapter, /X-Academy-Organization/, 'Tenant-scoped Academy calls must carry the server-recognized organization header');
+assert.match(adapter, /tenantScoped\s*&&\s*!tenantScopeReady/, 'Adapter must fail closed when a tenant-scoped call is attempted without a configured content scope');
+assert.match(adapter, /courses:\s*\(\)\s*=>\s*scopedGet\('\/api\/v1\/courses\/'\)/, 'Learner catalog must use tenant-scoped transport');
+assert.match(adapter, /studioResource[\s\S]*scopedGet\(path\)[\s\S]*scopedPost\(path, data\)/, 'Content Studio resources must use tenant-scoped transport');
+assert.match(adapter, /login\(username, password\)[\s\S]*post\('\/api\/v1\/auth\/token\/'/, 'Authentication must remain outside content-tenant transport');
+assert.match(adapter, /transitionStudioCourse:[\s\S]*scopedPost/, 'Publication workflow transition must preserve tenant context');
+assert.doesNotMatch(adapter, /transitionStudioCourse:[^\n]*patch/, 'Publication state must not be edited directly through PATCH');
 assert.doesNotMatch(adapter, /(service[_-]?role|secret|private[_-]?key|password\s*[:=]\s*['"][^'"]+)/i, 'Academy Core adapter must not contain secrets');
 assert.doesNotMatch(adapter, /score\s*:/i, 'Browser adapter must not send authoritative assessment scores');
 assert.match(integration, /Generic education|Academy Core/i, 'Integration decision should define Academy as reusable academic core');
