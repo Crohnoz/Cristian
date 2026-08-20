@@ -24,6 +24,7 @@ assert.match(tenant, /\['dashboard\.html', \[\]\]/, 'Mission Control should be a
 assert.match(tenant, /0\.6\.0-mission-control-preview/, 'tenant should identify Mission Control release');
 assert.match(sw, /cca-shell-v12-mission-control/, 'PWA cache should include new Mission Control shell');
 assert.match(sw, /dashboard\.html/, 'PWA cache should include dashboard assets');
+assert.match(sw, /lesson-phishing-email\.svg/, 'PWA cache should include dashboard phishing artwork');
 assert.match(manifest, /"start_url": "\/dashboard\.html"/, 'installed app should start at Mission Control');
 
 console.log('✓ Mission Control redesign contracts passed');
