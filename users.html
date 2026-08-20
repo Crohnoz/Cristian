@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="theme-color" content="#07100f" />
+  <meta name="color-scheme" content="dark" />
+  <meta name="description" content="Cristian Cyber Academy — administración de usuarios, accesos y cohortes." />
+  <title>Usuarios & Accesos · Cristian Cyber Academy</title>
+  <link rel="icon" href="./brand.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./styles.css" />
+  <link rel="stylesheet" href="./users.css" />
+</head>
+<body>
+  <a class="skip-link" href="#userDirectory">Saltar al directorio</a>
+  <div class="ambient ambient-a" aria-hidden="true"></div>
+  <div class="ambient ambient-b" aria-hidden="true"></div>
+
+  <main class="admin-shell">
+    <header class="admin-topbar">
+      <div class="brand"><img class="brand-mark" src="./brand.svg" alt="" /><div><strong>CRISTIAN</strong><span>IDENTITY OPERATIONS</span></div></div>
+      <nav class="admin-nav" aria-label="Navegación administrativa">
+        <a href="./instructor.html">← Teaching Console</a>
+        <a href="./account.html">Mi cuenta</a>
+        <a href="./privacy.html">Privacy</a>
+      </nav>
+    </header>
+
+    <section class="admin-hero">
+      <div>
+        <span class="eyebrow">ACADEMY CONTROL PLANE</span>
+        <h1>Usuarios, accesos<br><em>y cohortes.</em></h1>
+        <p>Administra identidades académicas sin conocer contraseñas de alumnos. El acceso se provisiona mediante invitaciones temporales y roles con privilegio mínimo.</p>
+      </div>
+      <div class="identity-posture">
+        <span>IDENTITY PROVIDER</span>
+        <strong id="identityProvider">PREVIEW DEMO</strong>
+        <small id="operatorLabel">Operador: Cristian · coordinator</small>
+      </div>
+    </section>
+
+    <section class="admin-kpis" aria-label="Indicadores de identidad">
+      <article><span>Usuarios</span><strong id="usersKpi">0</strong><small>perfiles visibles</small></article>
+      <article><span>Invitaciones pendientes</span><strong id="invitesKpi">0</strong><small>acceso aún no activado</small></article>
+      <article><span>Cohortes</span><strong id="cohortsKpi">0</strong><small>grupos académicos</small></article>
+      <article><span>Onboarding</span><strong id="onboardingKpi">0%</strong><small>perfiles completados</small></article>
+    </section>
+
+    <section class="admin-grid invite-grid">
+      <article class="admin-panel">
+        <div class="panel-title"><div><span class="eyebrow">ACCESS PROVISIONING</span><h2>Invitar usuario</h2></div><span class="safe-badge">NO PASSWORD SHARING</span></div>
+        <form id="inviteForm" class="invite-form">
+          <label>Correo<input id="inviteEmail" name="email" type="email" autocomplete="email" required placeholder="alumno@empresa.cl"></label>
+          <label>Rol<select id="inviteRole" name="role"><option value="learner">Learner</option><option value="instructor">Instructor</option><option value="author">Author</option><option value="reviewer">Reviewer</option><option value="coordinator">Coordinator</option></select></label>
+          <label>Idioma<select id="inviteLocale" name="locale"><option value="es">Español</option><option value="en">English</option></select></label>
+          <label>Cohorte inicial<select id="inviteCohort" name="cohort"><option value="">Sin asignar</option></select></label>
+          <button class="primary" type="submit">Crear invitación →</button>
+        </form>
+        <p class="admin-feedback" id="inviteFeedback" role="status"></p>
+        <div class="activation-result" id="activationResult" hidden>
+          <span class="eyebrow">ACTIVATION LINK · SHOWN ONCE</span>
+          <code id="activationLink"></code>
+          <button class="secondary" id="copyActivation" type="button">Copiar enlace</button>
+        </div>
+      </article>
+
+      <article class="admin-panel policy-panel">
+        <span class="eyebrow">ACCESS POLICY</span><h2>Separación de responsabilidades</h2>
+        <div class="policy-list">
+          <div><i></i><span><b>Learner</b><small>Campus, labs, cuenta y certificados propios.</small></span></div>
+          <div><i></i><span><b>Instructor</b><small>Docencia y cohortes asignadas, sin administrar identidades.</small></span></div>
+          <div><i></i><span><b>Coordinator</b><small>Usuarios, cohortes, operación académica y contenido.</small></span></div>
+          <div><i></i><span><b>Admin</b><small>Control institucional completo; no delegable por coordinadores.</small></span></div>
+        </div>
+        <div class="security-note"><strong>Regla Crohnoz</strong><p>El operador invita. El usuario define su propia contraseña. Las credenciales nunca se muestran en este panel.</p></div>
+      </article>
+    </section>
+
+    <section class="admin-panel directory-panel" id="userDirectory">
+      <div class="panel-title directory-title"><div><span class="eyebrow">IDENTITY DIRECTORY</span><h2>Directorio académico</h2></div><div class="directory-tools"><input id="userSearch" type="search" placeholder="Buscar nombre, usuario o correo…" autocomplete="off"><select id="roleFilter"><option value="">Todos los roles</option><option value="learner">Learner</option><option value="instructor">Instructor</option><option value="author">Author</option><option value="reviewer">Reviewer</option><option value="coordinator">Coordinator</option><option value="admin">Admin</option></select></div></div>
+      <div class="user-table" id="userTable"></div>
+    </section>
+
+    <section class="admin-grid lower-grid">
+      <article class="admin-panel">
+        <div class="panel-title"><div><span class="eyebrow">PENDING ACCESS</span><h2>Invitaciones</h2></div><span class="count-pill" id="pendingInviteCount">0 PENDING</span></div>
+        <div class="invite-list" id="inviteList"></div>
+      </article>
+      <article class="admin-panel">
+        <div class="panel-title"><div><span class="eyebrow">COHORT OPERATIONS</span><h2>Cohortes</h2></div><span class="count-pill" id="cohortCount">0 ACTIVE</span></div>
+        <div class="cohort-list" id="cohortList"></div>
+      </article>
+    </section>
+
+    <section class="admin-panel audit-panel">
+      <div class="panel-title"><div><span class="eyebrow">AUDIT TRAIL</span><h2>Últimas operaciones</h2></div><span class="safe-badge">AUDITABLE</span></div>
+      <div class="audit-list" id="auditList"></div>
+    </section>
+  </main>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script src="./tenant.config.js"></script>
+  <script src="./academy-core.adapter.js"></script>
+  <script src="./auth.session.js"></script>
+  <script src="./users.js"></script>
+</body>
+</html>
