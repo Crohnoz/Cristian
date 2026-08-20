@@ -1,0 +1,17 @@
+{
+  "name": "Cristian Cyber Academy",
+  "short_name": "CCA",
+  "description": "Entrenamiento práctico en ciberseguridad, powered by Crohnoz Labs.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#07100f",
+  "theme_color": "#07100f",
+  "icons": [
+    {
+      "src": "/brand.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
