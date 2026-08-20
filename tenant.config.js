@@ -17,9 +17,9 @@ window.CCA_CONFIG = Object.freeze({
     mode: 'white-label'
   },
   product: {
-    version: '0.3.2-account-lifecycle-preview',
+    version: '0.3.3-learner-intelligence-preview',
     northStar: 'Learn → Practice → Attack/Defend → Explain → Score → Certify',
-    modules: ['academy', 'phishing', 'range', 'mentor', 'achievements', 'account', 'identity-ops']
+    modules: ['academy', 'phishing', 'range', 'mentor', 'achievements', 'account', 'identity-ops', 'student-360']
   },
   academyCore: {
     provider: 'crohnoz-academy',
@@ -58,6 +58,7 @@ window.CCA_CONFIG = Object.freeze({
   const protectedRoutes = new Map([
     ['index.html', []],
     ['instructor.html', ['instructor', 'coordinator', 'admin']],
+    ['student.html', ['coordinator', 'admin']],
     ['certificate.html', []]
   ]);
   if (!protectedRoutes.has(file)) return;
