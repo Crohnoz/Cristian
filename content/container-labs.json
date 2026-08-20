@@ -1,0 +1,30 @@
+{
+  "version": 1,
+  "runtimeEnabled": false,
+  "labs": [
+    {
+      "id": "owasp-juice-shop",
+      "title": "OWASP Juice Shop",
+      "image": "bkimminich/juice-shop:20.2.0",
+      "category": "web-security",
+      "previewPath": "/container-lab.html",
+      "sessionMinutes": 45,
+      "networkPolicy": "deny-egress",
+      "dataPolicy": "synthetic-only",
+      "ephemeral": true,
+      "status": "preview-only"
+    },
+    {
+      "id": "vampi",
+      "title": "VAmPI",
+      "image": "brightsec/vampi:latest",
+      "category": "api-security",
+      "previewPath": "/api-lab.html",
+      "sessionMinutes": 40,
+      "networkPolicy": "deny-egress",
+      "dataPolicy": "dummy-dataset-only",
+      "ephemeral": true,
+      "status": "preview-only"
+    }
+  ]
+}
