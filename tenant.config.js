@@ -3,8 +3,8 @@ window.CCA_CONFIG = Object.freeze({
     name: 'Cristian Cyber Academy',
     shortName: 'CCA',
     poweredBy: 'Crohnoz Labs',
-    accent: '#2be6a5',
-    themeColor: '#07100f'
+    accent: '#819c8e',
+    themeColor: '#111715'
   },
   instructor: {
     displayName: 'Cristian',
@@ -17,9 +17,9 @@ window.CCA_CONFIG = Object.freeze({
     mode: 'white-label'
   },
   product: {
-    version: '0.4.0-visual-academy-preview',
+    version: '0.5.0-immersive-learning-preview',
     northStar: 'Learn → Practice → Attack/Defend → Explain → Score → Certify',
-    modules: ['visual-academy', 'academy', 'phishing', 'range', 'mentor', 'achievements', 'account', 'identity-ops', 'student-360']
+    modules: ['immersive-learning', 'visual-academy', 'academy', 'phishing', 'range', 'mentor', 'achievements', 'account', 'identity-ops', 'student-360']
   },
   academyCore: {
     provider: 'crohnoz-academy',
