@@ -1,9 +1,12 @@
-const CACHE = 'cca-shell-v13-unified-product';
+const CACHE = 'cca-shell-v14-premium-polish';
 const SHELL = [
   '/',
   '/dashboard.html',
   '/dashboard.css',
   '/dashboard.js',
+  '/premium-ui.css',
+  '/premium-layout.css',
+  '/premium-ui.js',
   '/product-shell.css',
   '/product-shell.js',
   '/instructor-unified.css',
@@ -40,6 +43,9 @@ const SHELL = [
   '/lesson.html',
   '/lesson.css',
   '/lesson.js',
+  '/showcase.html',
+  '/showcase.css',
+  '/public-preview.html',
   '/art/cristian-avatar.svg',
   '/art/course-phishing.svg',
   '/art/course-web-security.svg',
