@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://crohnoz.example/schemas/lab-manifest.schema.json",
+  "title": "Crohnoz Cyber Range Lab Manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "title", "skill", "mode", "target_type", "network_policy", "secrets", "objectives"],
+  "properties": {
+    "id": { "type": "string", "pattern": "^[a-z0-9-]{3,80}$" },
+    "title": { "type": "string", "maxLength": 120 },
+    "skill": { "type": "string", "enum": ["phishing", "web", "api", "osint", "incident-response", "blue-team"] },
+    "level": { "type": "string", "enum": ["foundation", "intermediate", "advanced"] },
+    "mode": { "type": "string", "enum": ["defender", "analysis", "guided"] },
+    "status": { "type": "string", "enum": ["planned", "demo-ready", "feature-gated", "production-ready"] },
+    "feature_flag": { "type": "string", "maxLength": 100 },
+    "target_type": { "const": "synthetic" },
+    "network_policy": { "const": "isolated-no-egress" },
+    "secrets": { "const": "none" },
+    "objectives": { "type": "array", "minItems": 1, "maxItems": 12, "items": { "type": "string", "maxLength": 100 } },
+    "allowed_capabilities": { "type": "array", "items": { "type": "string", "maxLength": 100 } },
+    "prohibited_capabilities": { "type": "array", "items": { "type": "string", "maxLength": 100 } }
+  }
+}
