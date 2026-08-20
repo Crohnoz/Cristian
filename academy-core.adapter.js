@@ -37,7 +37,9 @@
     const payload = await response.json().catch(() => ({}));
     if (!response.ok) {
       if (response.status === 401 && token()) clearToken('expired');
-      const error = new Error(payload.detail || `ACADEMY_CORE_HTTP_${response.status}`);
+      const detail = payload.detail || payload.non_field_errors?.[0]
+        || Object.values(payload || {}).flat().find(value => typeof value === 'string');
+      const error = new Error(detail || `ACADEMY_CORE_HTTP_${response.status}`);
       error.status = response.status;
       error.payload = payload;
       throw error;
@@ -48,6 +50,7 @@
   const get = path => request(path);
   const post = (path, data = {}) => request(path, { method: 'POST', body: JSON.stringify(data) });
   const patch = (path, data = {}) => request(path, { method: 'PATCH', body: JSON.stringify(data) });
+  const del = path => request(path, { method: 'DELETE' });
 
   async function login(username, password) {
     const payload = await post('/api/v1/auth/token/', { username, password });
@@ -75,6 +78,8 @@
     health: () => get('/api/v1/health/'),
     me: () => get('/api/v1/me/'),
     updateMe: data => patch('/api/v1/me/', data),
+
+    // Learner academic core.
     courses: () => get('/api/v1/courses/'),
     learningPaths: () => get('/api/v1/learning-paths/'),
     enrollments: () => get('/api/v1/enrollments/'),
@@ -82,11 +87,34 @@
     assessmentAttempts: () => get('/api/v1/assessment-attempts/'),
     certificates: () => get('/api/v1/certificates/'),
     verifyCertificate: code => get(`/api/v1/certificates/verify/${encodeURIComponent(code)}/`),
+
+    // Identity and account lifecycle.
     login,
     logout,
     changePassword: data => post('/api/v1/auth/change-password/', data),
     requestPasswordReset: email => post('/api/v1/auth/password-reset/request/', { email }),
-    confirmPasswordReset: data => post('/api/v1/auth/password-reset/confirm/', data)
+    confirmPasswordReset: data => post('/api/v1/auth/password-reset/confirm/', data),
+    invitations: () => get('/api/v1/ops/invitations/'),
+    createInvitation: data => post('/api/v1/ops/invitations/', data),
+    revokeInvitation: id => post(`/api/v1/ops/invitations/${encodeURIComponent(id)}/revoke/`, {}),
+
+    // Academic operations / tenant administration.
+    opsProfiles: () => get('/api/v1/ops/profiles/'),
+    updateOpsProfile: (id, data) => patch(`/api/v1/ops/profiles/${encodeURIComponent(id)}/`, data),
+    opsCohorts: () => get('/api/v1/ops/cohorts/'),
+    createCohort: data => post('/api/v1/ops/cohorts/', data),
+    updateCohort: (id, data) => patch(`/api/v1/ops/cohorts/${encodeURIComponent(id)}/`, data),
+    deleteCohort: id => del(`/api/v1/ops/cohorts/${encodeURIComponent(id)}/`),
+    opsMemberships: () => get('/api/v1/ops/cohort-memberships/'),
+    createMembership: data => post('/api/v1/ops/cohort-memberships/', data),
+    updateMembership: (id, data) => patch(`/api/v1/ops/cohort-memberships/${encodeURIComponent(id)}/`, data),
+    opsEnrollments: () => get('/api/v1/ops/enrollments/'),
+    opsCertificates: () => get('/api/v1/ops/certificates/'),
+    opsAuditEvents: () => get('/api/v1/ops/audit-events/'),
+
+    // Content operations useful to coordinator/admin surfaces.
+    studioCourses: () => get('/api/v1/studio/courses/'),
+    studioLearningPaths: () => get('/api/v1/studio/learning-paths/')
   };
 
   window.CrohnozAcademyCore = Object.freeze(api);
