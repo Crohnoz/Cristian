@@ -17,7 +17,7 @@ window.CCA_CONFIG = Object.freeze({
     mode: 'white-label'
   },
   product: {
-    version: '0.3.1-identity-ops-preview',
+    version: '0.3.2-account-lifecycle-preview',
     northStar: 'Learn → Practice → Attack/Defend → Explain → Score → Certify',
     modules: ['academy', 'phishing', 'range', 'mentor', 'achievements', 'account', 'identity-ops']
   },
@@ -26,7 +26,7 @@ window.CCA_CONFIG = Object.freeze({
     enabled: false,
     apiBaseUrl: '',
     localFallback: true,
-    owns: ['auth', 'profiles', 'catalog', 'enrollments', 'progress', 'assessments', 'certificates', 'cohorts', 'content-studio', 'academic-audit', 'invitations']
+    owns: ['auth', 'profiles', 'account-lifecycle', 'catalog', 'enrollments', 'progress', 'assessments', 'certificates', 'cohorts', 'content-studio', 'academic-audit', 'invitations']
   },
   authentication: {
     provider: 'crohnoz-academy',
@@ -34,6 +34,7 @@ window.CCA_CONFIG = Object.freeze({
     minimumPasswordLength: 12,
     passwordReset: true,
     invitationActivation: true,
+    accountSuspension: true,
     roleAwareRouting: true,
     productionMfa: 'planned'
   },
