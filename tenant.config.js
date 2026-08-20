@@ -95,6 +95,9 @@ window.CCA_CONFIG = Object.freeze({
       if (['catalog.html','course.html','lesson.html','progress.html'].includes(file)) {
         await import('./product-shell.js');
       }
+      if (file === 'studio.html') {
+        await import('./studio.js');
+      }
       if (file === 'instructor.html' && !document.querySelector('link[data-instructor-unified]')) {
         const theme = document.createElement('link');
         theme.rel = 'stylesheet';
