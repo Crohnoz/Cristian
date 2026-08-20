@@ -5,6 +5,7 @@ const html = fs.readFileSync('studio.html', 'utf8');
 const css = fs.readFileSync('studio.css', 'utf8');
 const js = fs.readFileSync('studio.js', 'utf8');
 const instructor = fs.readFileSync('instructor.js', 'utf8');
+const tenant = fs.readFileSync('tenant.config.js', 'utf8');
 const sw = fs.readFileSync('sw.js', 'utf8');
 
 assert.match(html, /Course Studio/);
@@ -12,6 +13,9 @@ assert.match(html, /id="courseList"/);
 assert.match(html, /id="moduleList"/);
 assert.match(html, /id="lessonList"/);
 assert.match(html, /id="previewOutline"/);
+assert.match(html, /id="loadCore"/);
+assert.match(html, /id="syncCourse"/);
+assert.match(html, /id="submitReview"/);
 assert.match(html, /academy-core\.adapter\.js/);
 assert.match(html, /auth\.session\.js/);
 
@@ -21,10 +25,20 @@ assert.match(js, /function createCourse\(/);
 assert.match(js, /function addModule\(/);
 assert.match(js, /function addLesson\(/);
 assert.match(js, /function renderPreview\(/);
+assert.match(js, /function syncSelectedCourse\(/);
+assert.match(js, /function loadFromCore\(/);
+assert.match(js, /function submitForReview\(/);
+assert.match(js, /createStudioCourse/);
+assert.match(js, /createStudioModule/);
+assert.match(js, /createStudioLesson/);
+assert.match(js, /transitionStudioCourse\(course\.remoteId, 'review'\)/);
 assert.match(js, /localStorage\.setItem\(STORAGE_KEY/);
+assert.doesNotMatch(js, /transitionStudioCourse\([^\n]+['"]published['"]/, 'Studio must not publish directly');
+assert.doesNotMatch(js, /transitionStudioCourse\([^\n]+['"]approved['"]/, 'Studio must not self-approve content');
 assert.doesNotMatch(js, /\.insertAdjacentHTML\(/);
 assert.doesNotMatch(js, /document\.write\(/);
 
+assert.match(tenant, /contentTenantScoped:\s*false/, 'Remote content synchronization must remain release-gated by tenant scoping');
 assert.match(instructor, /contentStudioLink/);
 assert.match(instructor, /\.\/studio\.html/);
 assert.match(sw, /\/studio\.html/);
