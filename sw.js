@@ -1,4 +1,4 @@
-const CACHE = 'cca-shell-v15-clarity-guidance';
+const CACHE = 'cca-shell-v16-learner-clarity';
 const SHELL = [
   '/',
   '/dashboard.html',
@@ -36,6 +36,9 @@ const SHELL = [
   '/student.html',
   '/student.css',
   '/student.js',
+  '/progress.html',
+  '/progress.css',
+  '/progress.js',
   '/catalog.html',
   '/catalog.css',
   '/catalog.js',
