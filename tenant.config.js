@@ -54,7 +54,8 @@ window.CCA_CONFIG = Object.freeze({
 });
 
 (() => {
-  const file = location.pathname.split('/').filter(Boolean).pop() || 'index.html';
+  const rawFile = location.pathname.split('/').filter(Boolean).pop() || 'index.html';
+  const file = rawFile.includes('.') ? rawFile : `${rawFile}.html`;
   const protectedRoutes = new Map([
     ['index.html', []],
     ['instructor.html', ['instructor', 'coordinator', 'admin']],
