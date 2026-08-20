@@ -27,6 +27,8 @@ assert.match(tenant, /if \(file === 'studio\.html'\) \{\s*await import\('\.\/stu
 assert.match(tenant, /contentTenantScoped:\s*false/, 'Remote content synchronization must remain release-gated by tenant scoping');
 
 assert.match(js, /requireAuth\(\{ roles: \['author', 'coordinator', 'admin'\]/);
+assert.match(js, /contentTenantScoped\s*=\s*window\.CCA_CONFIG\?\.academyCore\?\.contentTenantScoped\s*===\s*true/);
+assert.match(js, /remoteEnabled\s*=\s*Boolean\(contentTenantScoped\s*&&\s*core\?\.enabled/, 'Remote writes must require the server tenant-scope gate');
 assert.match(js, /cca:content-studio:v1:/);
 assert.match(js, /function createCourse\(/);
 assert.match(js, /function addModule\(/);
