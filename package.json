@@ -1,13 +1,14 @@
 {
   "name": "cristian-cyber-academy",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "private": true,
   "description": "Premium privacy-first practical cybersecurity training platform powered by Crohnoz Labs.",
   "scripts": {
-    "test": "node tests/smoke.mjs && node tests/academy-core-contract.mjs && node tests/auth-contract.mjs",
+    "test": "node tests/smoke.mjs && node tests/academy-core-contract.mjs && node tests/auth-contract.mjs && node tests/identity-admin-contract.mjs",
     "test:smoke": "node tests/smoke.mjs",
     "test:academy-core": "node tests/academy-core-contract.mjs",
-    "test:auth": "node tests/auth-contract.mjs"
+    "test:auth": "node tests/auth-contract.mjs",
+    "test:identity": "node tests/identity-admin-contract.mjs"
   },
   "engines": {
     "node": ">=18"
