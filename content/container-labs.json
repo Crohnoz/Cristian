@@ -25,6 +25,22 @@
       "dataPolicy": "dummy-dataset-only",
       "ephemeral": true,
       "status": "preview-only"
+    },
+    {
+      "id": "owasp-webgoat",
+      "title": "OWASP WebGoat",
+      "image": "webgoat/webgoat:v2025.3",
+      "category": "guided-web-security",
+      "previewPath": "/webgoat-lab.html",
+      "sessionMinutes": 50,
+      "services": [
+        { "name": "webgoat", "containerPort": 8080, "exposure": "authenticated-gateway-only" },
+        { "name": "webwolf", "containerPort": 9090, "exposure": "authenticated-gateway-only" }
+      ],
+      "networkPolicy": "deny-egress",
+      "dataPolicy": "synthetic-only",
+      "ephemeral": true,
+      "status": "preview-only"
     }
   ]
 }
