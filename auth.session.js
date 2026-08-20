@@ -7,8 +7,17 @@
     },
     'cristian.demo': {
       password: 'InstructorDemo2026!',
-      user: { id: 'demo-instructor', username: 'cristian.demo', email: 'cristian@demo.example', display_name: 'Cristian', role: 'instructor', locale: 'es', tenant: 'cristian-demo' }
+      user: { id: 'demo-coordinator', username: 'cristian.demo', email: 'cristian@demo.example', display_name: 'Cristian', role: 'coordinator', locale: 'es', tenant: 'cristian-demo' }
     }
+  });
+
+  const PERMISSIONS = Object.freeze({
+    learner: Object.freeze(['learn', 'account']),
+    instructor: Object.freeze(['learn', 'teach', 'account']),
+    author: Object.freeze(['learn', 'content', 'account']),
+    reviewer: Object.freeze(['learn', 'content-review', 'account']),
+    coordinator: Object.freeze(['learn', 'teach', 'manage_users', 'manage_cohorts', 'content', 'reports', 'account']),
+    admin: Object.freeze(['learn', 'teach', 'manage_users', 'manage_cohorts', 'content', 'reports', 'admin', 'account'])
   });
 
   const core = () => window.CrohnozAcademyCore;
@@ -27,6 +36,14 @@
   function clearSession() {
     sessionStorage.removeItem(SESSION_KEY);
     window.dispatchEvent(new CustomEvent('cca:session-changed', { detail: null }));
+  }
+
+  function permissionsFor(role) {
+    return PERMISSIONS[String(role || '').toLowerCase()] || Object.freeze([]);
+  }
+
+  function can(permission, session = readSession()) {
+    return Boolean(session?.authenticated && permissionsFor(session.user?.role).includes(permission));
   }
 
   async function login(username, password) {
@@ -66,13 +83,18 @@
     return session;
   }
 
-  function requireAuth({ roles = [] } = {}) {
+  function requireAuth({ roles = [], permission = '', unauthorized = './index.html' } = {}) {
     const session = readSession();
-    const role = session?.user?.role;
-    const allowed = session?.authenticated && (!roles.length || roles.includes(role));
-    if (!allowed) {
+    if (!session?.authenticated) {
       const next = encodeURIComponent(location.pathname + location.search + location.hash);
       location.replace(`./auth.html?next=${next}`);
+      return null;
+    }
+
+    const roleAllowed = !roles.length || roles.includes(session.user?.role);
+    const permissionAllowed = !permission || can(permission, session);
+    if (!roleAllowed || !permissionAllowed) {
+      location.replace(unauthorized);
       return null;
     }
     return session;
@@ -114,6 +136,9 @@
   window.CCAAuth = Object.freeze({
     login, logout, refresh, requireAuth, updateProfile, changePassword, requestPasswordReset,
     current: readSession,
-    demoAccounts: Object.freeze({ learner: 'alumno.demo', instructor: 'cristian.demo' })
+    can,
+    permissionsFor,
+    roles: PERMISSIONS,
+    demoAccounts: Object.freeze({ learner: 'alumno.demo', coordinator: 'cristian.demo', instructor: 'cristian.demo' })
   });
 })();
