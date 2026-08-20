@@ -27,6 +27,7 @@ window.CCA_CONFIG = Object.freeze({
     apiBaseUrl: '',
     localFallback: true,
     contentTenantScoped: false,
+    organizationSlug: 'cristian-demo',
     owns: ['auth', 'profiles', 'account-lifecycle', 'catalog', 'enrollments', 'progress', 'assessments', 'certificates', 'cohorts', 'content-studio', 'academic-audit', 'invitations']
   },
   authentication: {
