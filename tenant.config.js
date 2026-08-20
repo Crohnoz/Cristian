@@ -77,13 +77,16 @@ window.CCA_CONFIG = Object.freeze({
       if (!session) return;
       document.documentElement.style.visibility = '';
 
-      if (!document.querySelector('link[data-premium-ui]')) {
-        const premiumStyle = document.createElement('link');
-        premiumStyle.rel = 'stylesheet';
-        premiumStyle.href = './premium-ui.css';
-        premiumStyle.dataset.premiumUi = 'true';
-        document.head.appendChild(premiumStyle);
-      }
+      const ensureStyle = (href, key) => {
+        if (document.querySelector(`link[data-${key}]`)) return;
+        const style = document.createElement('link');
+        style.rel = 'stylesheet';
+        style.href = href;
+        style.dataset[key] = 'true';
+        document.head.appendChild(style);
+      };
+      ensureStyle('./premium-ui.css', 'premiumUi');
+      ensureStyle('./premium-layout.css', 'premiumLayout');
 
       if (['catalog.html','course.html','lesson.html'].includes(file)) {
         await import('./product-shell.js');
