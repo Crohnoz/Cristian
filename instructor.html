@@ -3,8 +3,11 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="description" content="Cristian Cyber Academy — Instructor Console." />
+  <meta name="description" content="Cristian Cyber Academy — Instructor Operations Console." />
+  <meta name="theme-color" content="#07100f" />
   <title>Instructor Console · Cristian Cyber Academy</title>
+  <link rel="icon" href="./brand.svg" type="image/svg+xml" />
+  <link rel="manifest" href="./manifest.webmanifest" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
@@ -12,64 +15,101 @@
   <link rel="stylesheet" href="./instructor.css" />
 </head>
 <body>
+  <a class="skip-link" href="#overview">Saltar al contenido</a>
+  <div class="ambient ambient-a" aria-hidden="true"></div>
+  <div class="ambient ambient-b" aria-hidden="true"></div>
   <div class="instructor-shell">
     <aside class="sidebar">
-      <div class="brand"><div class="brand-mark">C</div><div><strong>CRISTIAN</strong><span>INSTRUCTOR CONSOLE</span></div></div>
+      <div class="brand"><img class="brand-mark" src="./brand.svg" alt="" /><div><strong>CRISTIAN</strong><span>INSTRUCTOR OPS</span></div></div>
+      <div class="environment-chip"><i></i><span>WHITE-LABEL · PREVIEW</span></div>
       <nav class="nav" aria-label="Instructor">
-        <a class="nav-item active" href="#overview">Overview</a>
-        <a class="nav-item" href="#cohorts">Cohortes</a>
-        <a class="nav-item" href="#students">Alumnos</a>
-        <a class="nav-item" href="#content">Contenido</a>
-        <a class="nav-item" href="#risks">Skill Gaps</a>
-        <a class="nav-item" href="./index.html">← Vista alumno</a>
+        <a class="nav-item active" href="#overview"><span>⌂</span>Overview</a>
+        <a class="nav-item" href="#cohorts"><span>◫</span>Cohortes</a>
+        <a class="nav-item" href="#students"><span>◎</span>Alumnos</a>
+        <a class="nav-item" href="#content"><span>◇</span>Contenido</a>
+        <a class="nav-item" href="#risks"><span>△</span>Skill Gaps</a>
+        <a class="nav-item" href="#activity"><span>↗</span>Activity</a>
       </nav>
-      <div class="sidebar-card"><span class="eyebrow">TENANT</span><strong>Cristian Cyber Academy</strong><small>White-label · Demo environment</small></div>
-      <div class="powered">Powered by <strong>Crohnoz Labs</strong></div>
+      <div class="sidebar-stack">
+        <div class="sidebar-card"><span class="eyebrow">TENANT</span><div class="level-row"><strong>Cristian Academy</strong><span>OWNER</span></div><div class="progress"><i style="width:100%"></i></div><small>Demo environment · local telemetry</small></div>
+        <a class="console-link" href="./index.html"><span>LEARNER EXPERIENCE</span><b>↗</b></a>
+        <div class="powered">Powered by <strong>Crohnoz Labs</strong><span>Instructor v0.2</span></div>
+      </div>
     </aside>
 
     <main class="main instructor-main">
-      <header class="topbar"><div><span class="eyebrow">INSTRUCTOR OPERATIONS</span><h1>Panel de enseñanza</h1></div><div class="profile"><div class="profile-copy"><strong>Cristian</strong><span>Lead Instructor</span></div><div class="avatar">CG</div></div></header>
+      <header class="topbar">
+        <div><span class="eyebrow">INSTRUCTOR OPERATIONS</span><h1>Teaching Command Center</h1></div>
+        <div class="top-actions">
+          <div class="system-health"><i></i><span>Learning engine nominal</span></div>
+          <button class="command-trigger" id="exportCsv" type="button"><span>⇩</span>Export evidence</button>
+          <div class="profile"><div class="profile-copy"><strong id="instructorName">Cristian</strong><span>Lead Instructor</span></div><div class="avatar">CG</div></div>
+        </div>
+      </header>
 
       <section id="overview">
-        <div class="section-heading compact-heading"><div><span class="eyebrow">OVERVIEW</span><h2>Estado de la academia</h2><p>Seguimiento pedagógico, riesgo de conocimiento y actividad reciente.</p></div><button class="primary">+ Nueva asignación</button></div>
+        <div class="signal-strip"><span><i></i>COHORT TELEMETRY ACTIVE</span><span>STUDENT DATA: SYNTHETIC</span><span>RANGE: ISOLATED</span><span>AI: DEMO GUARDRAILS</span></div>
+        <div class="section-heading compact-heading"><div><span class="eyebrow">EXECUTIVE OVERVIEW</span><h2>Estado de la academia</h2><p>Desempeño, riesgo de conocimiento y señal pedagógica en una sola vista.</p></div><button class="primary" id="assignRecommended" type="button">Asignar recomendación</button></div>
         <div class="stats instructor-stats">
-          <article><span>Alumnos activos</span><strong>47</strong><small>42 activos últimos 7 días</small></article>
-          <article><span>Labs completados</span><strong>312</strong><small>+38 esta semana</small></article>
-          <article><span>Promedio general</span><strong>81%</strong><small>+6 pts en 30 días</small></article>
-          <article><span>Necesitan apoyo</span><strong class="risk-value">8</strong><small>Score bajo en 2+ skills</small></article>
+          <article><div class="stat-icon">◎</div><div><span>Alumnos activos</span><strong>47</strong><small>42 activos últimos 7 días</small></div></article>
+          <article><div class="stat-icon">⌘</div><div><span>Labs completados</span><strong id="cohortLabs">312</strong><small>+38 esta semana</small></div></article>
+          <article><div class="stat-icon">↗</div><div><span>Promedio general</span><strong>81%</strong><small>+6 pts en 30 días</small></div></article>
+          <article><div class="stat-icon">△</div><div><span>Necesitan apoyo</span><strong class="risk-value">8</strong><small>Score bajo en 2+ skills</small></div></article>
         </div>
+
         <div class="grid-2 instructor-grid">
-          <article class="panel"><div class="panel-head"><div><span class="eyebrow">COHORT READINESS</span><h3>Competencias del grupo</h3></div><span class="pill pill-green">LIVE MODEL</span></div><div class="skills">
-            <div class="skill"><div><span>Phishing & Social Engineering</span><b>84</b></div><div class="bar"><i style="width:84%"></i></div></div>
-            <div class="skill"><div><span>Web Security</span><b>71</b></div><div class="bar"><i style="width:71%"></i></div></div>
-            <div class="skill"><div><span>OSINT</span><b>63</b></div><div class="bar"><i style="width:63%"></i></div></div>
-            <div class="skill"><div><span>API Security</span><b class="risk-value">46</b></div><div class="bar warning"><i style="width:46%"></i></div></div>
-          </div></article>
-          <article class="panel attention-panel"><div class="panel-head"><div><span class="eyebrow">TEACHING SIGNAL</span><h3>Qué enseñar después</h3></div><span class="difficulty">PRIORITY</span></div><p>El grupo muestra buen desempeño en phishing, pero una brecha consistente en autorización y seguridad de APIs.</p><div class="recommendation"><span>RECOMMENDED NEXT</span><strong>API Security · Broken Object Level Authorization</strong><small>12 min teoría · 18 min lab · nivel intermedio</small></div><button class="primary full">Asignar a cohorte</button></article>
+          <article class="panel">
+            <div class="panel-head"><div><span class="eyebrow">COHORT READINESS</span><h3>Competencias agregadas</h3></div><span class="live-tag"><i></i>LIVE MODEL</span></div>
+            <div class="skills">
+              <div class="skill"><div><span>Phishing & Social Engineering</span><b>84</b></div><div class="bar"><i style="width:84%"></i></div></div>
+              <div class="skill"><div><span>Web Security</span><b>71</b></div><div class="bar"><i style="width:71%"></i></div></div>
+              <div class="skill"><div><span>OSINT & Verification</span><b>63</b></div><div class="bar"><i style="width:63%"></i></div></div>
+              <div class="skill"><div><span>API Security</span><b class="risk-value">46</b></div><div class="bar warning"><i style="width:46%"></i></div></div>
+            </div>
+          </article>
+          <article class="panel attention-panel">
+            <div class="panel-head"><div><span class="eyebrow">CROHNOZ TEACHING SIGNAL</span><h3>Qué enseñar después</h3></div><span class="difficulty">PRIORITY</span></div>
+            <p>La cohorte mantiene buen awareness, pero la autorización a nivel de objeto sigue siendo la brecha con mayor impacto.</p>
+            <div class="recommendation"><span>RECOMMENDED NEXT</span><strong id="recommendedModule">API Security · Authorization</strong><small>12 min teoría · 18 min lab · nivel intermedio</small></div>
+            <div class="mission-metrics"><span><b>14</b> alumnos bajo 60</span><span><b>3</b> reintentos avg.</span><span><b>HIGH</b> priority</span></div>
+          </article>
+        </div>
+
+        <div class="grid-2 instructor-grid">
+          <article class="panel live-learner-panel"><div class="panel-head"><div><span class="eyebrow">LIVE LEARNER SIGNAL</span><h3>Alumno Demo</h3></div><span class="pill pill-green">SYNCED</span></div><div id="liveLearnerSummary" class="learner-signal"></div></article>
+          <article class="panel"><div class="panel-head"><div><span class="eyebrow">OPERATING HEALTH</span><h3>Academy services</h3></div><span class="pill pill-green">NOMINAL</span></div><div class="service-grid"><span><i></i><b>Learning Engine</b><small>Online</small></span><span><i></i><b>Telemetry Bus</b><small>Local</small></span><span><i></i><b>Cyber Range</b><small>Isolated</small></span><span><i></i><b>Certificate Gate</b><small>Ready</small></span></div></article>
         </div>
       </section>
 
       <section id="cohorts" class="instructor-section">
-        <div class="section-heading"><div><span class="eyebrow">COHORTS</span><h2>Cohortes</h2><p>Grupos, avance y actividad.</p></div><span class="pill">3 activas</span></div>
+        <div class="section-heading"><div><span class="eyebrow">COHORT OPERATIONS</span><h2>Cohortes</h2><p>Ritmo, completion y riesgo pedagógico por grupo.</p></div><span class="pill">3 ACTIVE</span></div>
         <div class="table-card"><div class="table-row table-head"><span>Cohorte</span><span>Alumnos</span><span>Progreso</span><span>Score</span><span>Estado</span></div><div class="table-row"><strong>AppSec Foundations</strong><span>18</span><span>76%</span><span>82</span><span class="status-good">En ritmo</span></div><div class="table-row"><strong>Cyber Awareness Q3</strong><span>21</span><span>64%</span><span>78</span><span class="status-good">En ritmo</span></div><div class="table-row"><strong>Blue Team Starter</strong><span>8</span><span>41%</span><span>69</span><span class="status-warn">Revisar</span></div></div>
       </section>
 
       <section id="students" class="instructor-section">
-        <div class="section-heading"><div><span class="eyebrow">STUDENTS</span><h2>Alumnos a observar</h2><p>Priorizados por brechas repetidas, no por una sola respuesta incorrecta.</p></div><span class="pill">8 señales</span></div>
-        <div class="student-grid"><article class="student-card"><div class="student-avatar">AM</div><div><strong>Alumno 14</strong><span>API Security · 39</span><small>3 reintentos · BOLA fundamentals</small></div><button>Ver perfil</button></article><article class="student-card"><div class="student-avatar">AD</div><div><strong>Alumno 27</strong><span>Web Security · 44</span><small>Dificultad con output contexts</small></div><button>Ver perfil</button></article><article class="student-card"><div class="student-avatar">AL</div><div><strong>Alumno 31</strong><span>OSINT · 47</span><small>Necesita reforzar verificación</small></div><button>Ver perfil</button></article></div>
+        <div class="section-heading"><div><span class="eyebrow">LEARNER INTELLIGENCE</span><h2>Alumnos a observar</h2><p>Priorizados por brechas repetidas, no por un error aislado.</p></div><span class="pill">8 SIGNALS</span></div>
+        <div class="student-grid" id="studentGrid"><article class="student-card"><div class="student-avatar">AM</div><div><strong>Alumno 14</strong><span>API Security · 39</span><small>3 reintentos · BOLA fundamentals</small></div><button type="button">Ver perfil</button></article><article class="student-card"><div class="student-avatar">AD</div><div><strong>Alumno 27</strong><span>Web Security · 44</span><small>Dificultad con output contexts</small></div><button type="button">Ver perfil</button></article><article class="student-card"><div class="student-avatar">AL</div><div><strong>Alumno 31</strong><span>OSINT · 47</span><small>Necesita reforzar verificación</small></div><button type="button">Ver perfil</button></article></div>
       </section>
 
       <section id="content" class="instructor-section">
-        <div class="section-heading"><div><span class="eyebrow">CONTENT ENGINE</span><h2>Biblioteca</h2><p>Contenido reusable para construir rutas y sesiones.</p></div><button class="primary">Crear módulo</button></div>
-        <div class="content-grid"><article class="content-card"><span class="pill pill-green">PUBLISHED</span><h3>Phishing Fundamentals</h3><p>6 cápsulas · 2 quizzes · 1 inbox lab</p><small>Actualizado hace 2 días</small></article><article class="content-card"><span class="pill pill-green">PUBLISHED</span><h3>OWASP · XSS</h3><p>4 cápsulas · 1 quiz · 2 range labs</p><small>Actualizado hoy</small></article><article class="content-card"><span class="pill">DRAFT</span><h3>API Authorization</h3><p>3 cápsulas · 1 quiz · lab pendiente</p><small>Recomendado por Skill Graph</small></article></div>
+        <div class="section-heading"><div><span class="eyebrow">CONTENT ENGINE</span><h2>Biblioteca</h2><p>Contenido reusable para rutas, sesiones y recomendaciones adaptativas.</p></div><button class="secondary" id="createModule" type="button">+ Crear módulo</button></div>
+        <div class="content-grid"><article class="content-card"><span class="pill pill-green">PUBLISHED</span><h3>Phishing Fundamentals</h3><p>6 cápsulas · 2 quizzes · 1 inbox lab</p><small>Actualizado hace 2 días</small></article><article class="content-card"><span class="pill pill-green">PUBLISHED</span><h3>OWASP · XSS</h3><p>4 cápsulas · 1 quiz · 2 range labs</p><small>Actualizado hoy</small></article><article class="content-card highlighted"><span class="pill">RECOMMENDED</span><h3>API Authorization</h3><p>3 cápsulas · 1 quiz · lab pendiente</p><small>Generado por Skill Graph</small></article></div>
       </section>
 
       <section id="risks" class="instructor-section">
         <div class="section-heading"><div><span class="eyebrow">SKILL GAPS</span><h2>Brechas de aprendizaje</h2><p>Señales agregadas para decidir dónde invertir tiempo docente.</p></div></div>
         <div class="risk-board"><article><span class="risk-rank">01</span><div><strong>API authorization</strong><p>14 alumnos bajo 60 · mayor correlación con reintentos.</p></div><b>HIGH</b></article><article><span class="risk-rank">02</span><div><strong>Output encoding contexts</strong><p>7 alumnos confunden sanitización y encoding.</p></div><b>MEDIUM</b></article><article><span class="risk-rank">03</span><div><strong>OSINT verification</strong><p>5 alumnos dependen de una sola fuente.</p></div><b>MEDIUM</b></article></div>
       </section>
+
+      <section id="activity" class="instructor-section">
+        <div class="section-heading"><div><span class="eyebrow">AUDIT & EVIDENCE</span><h2>Actividad de aprendizaje</h2><p>Eventos locales de la demo para mostrar trazabilidad pedagógica.</p></div><span class="pill" id="activityCount">0 EVENTS</span></div>
+        <div class="table-card" id="activityTable"></div>
+      </section>
     </main>
   </div>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script src="./tenant.config.js"></script>
+  <script src="./telemetry.js"></script>
   <script src="./instructor.js"></script>
 </body>
 </html>
