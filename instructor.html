@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Cristian Cyber Academy — Instructor Console." />
+  <title>Instructor Console · Cristian Cyber Academy</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./styles.css" />
+  <link rel="stylesheet" href="./instructor.css" />
+</head>
+<body>
+  <div class="instructor-shell">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-mark">C</div>
+        <div><strong>CRISTIAN</strong><span>INSTRUCTOR CONSOLE</span></div>
+      </div>
+      <nav class="nav" aria-label="Instructor">
+        <a class="nav-item active" href="#overview">Overview</a>
+        <a class="nav-item" href="#cohorts">Cohortes</a>
+        <a class="nav-item" href="#students">Alumnos</a>
+        <a class="nav-item" href="#content">Contenido</a>
+        <a class="nav-item" href="#risks">Skill Gaps</a>
+        <a class="nav-item" href="./index.html">← Vista alumno</a>
+      </nav>
+      <div class="sidebar-card">
+        <span class="eyebrow">TENANT</span>
+        <strong>Cristian Cyber Academy</strong>
+        <small>White-label · Demo environment</small>
+      </div>
+      <div class="powered">Powered by <strong>Crohnoz Labs</strong></div>
+    </aside>
+
+    <main class="main instructor-main">
+      <header class="topbar">
+        <div><span class="eyebrow">INSTRUCTOR OPERATIONS</span><h1>Panel de enseñanza</h1></div>
+        <div class="profile"><div class="profile-copy"><strong>Cristian</strong><span>Lead Instructor</span></div><div class="avatar">CG</div></div>
+      </header>
+
+      <section id="overview">
+        <div class="section-heading compact-heading">
+          <div><span class="eyebrow">OVERVIEW</span><h2>Estado de la academia</h2><p>Seguimiento pedagógico, riesgo de conocimiento y actividad reciente.</p></div>
+          <button class="primary">+ Nueva asignación</button>
+        </div>
+
+        <div class="stats instructor-stats">
+          <article><span>Alumnos activos</span><strong>47</strong><small>42 activos últimos 7 días</small></article>
+          <article><span>Labs completados</span><strong>312</strong><small>+38 esta semana</small></article>
+          <article><span>Promedio general</span><strong>81%</strong><small>+6 pts en 30 días</small></article>
+          <article><span>Necesitan apoyo</span><strong class="risk-value">8</strong><small>Score bajo en 2+ skills</small></article>
+        </div>
+
+        <div class="grid-2 instructor-grid">
+          <article class="panel">
+            <div class="panel-head"><div><span class="eyebrow">COHORT READINESS</span><h3>Competencias del grupo</h3></div><span class="pill pill-green">LIVE MODEL</span></div>
+            <div class="skills">
+              <div class="skill"><div><span>Phishing & Social Engineering</span><b>84</b></div><div class="bar"><i style="width:84%"></i></div></div>
+              <div class="skill"><div><span>Web Security</span><b>71</b></div><div class="bar"><i style="width:71%"></i></div></div>
+              <div class="skill"><div><span>OSINT</span><b>63</b></div><div class="bar"><i style="width:63%"></i></div></div>
+              <div class="skill"><div><span>API Security</span><b class="risk-value">46</b></div><div class="bar warning"><i style="width:46%"></i></div></div>
+            </div>
+          </article>
+
+          <article class="panel attention-panel">
+            <div class="panel-head"><div><span class="eyebrow">TEACHING SIGNAL</span><h3>Qué enseñar después</h3></div><span class="difficulty">PRIORITY</span></div>
+            <p>El grupo muestra buen desempeño en phishing, pero una brecha consistente en autorización y seguridad de APIs.</p>
+            <div class="recommendation">
+              <span>RECOMMENDED NEXT</span>
+              <strong>API Security · Broken Object Level Authorization</strong>
+              <small>12 min teoría · 18 min lab · nivel intermedio</small>
+            </div>
+            <button class="primary full">Asignar a cohorte</button>
+          </article>
+        </div>
+      </section>
+
+      <section id="cohorts" class="instructor-section">
+        <div class="section-heading"><div><span class="eyebrow">COHORTS</span><h2>Cohortes</h2><p>Grupos, avance y actividad.</p></div><span class="pill">3 activas</span></div>
+        <div class="table-card">
+          <div class="table-row table-head"><span>Cohorte</span><span>Alumnos</span><span>Progreso</span><span>Score</span><span>Estado</span></div>
+          <div class="table-row"><strong>AppSec Foundations</strong><span>18</span><span>76%</span><span>82</span><span class="status-good">En ritmo</span></div>
+          <div class="table-row"><strong>Cyber Awareness Q3</strong><span>21</span><span>64%</span><span>78</span><span class="status-good">En ritmo</span></div>
+          <div class="table-row"><strong>Blue Team Starter</strong><span>8</span><span>41%</span><span>69</span><span class="status-warn">Revisar</span></div>
+        </div>
+      </section>
+
+      <section id="students" class="instructor-section">
+        <div class="section-heading"><div><span class="eyebrow">STUDENTS</span><h2>Alumnos a observar</h2><p>Priorizados por brechas repetidas, no por una sola respuesta incorrecta.</p></div><span class="pill">8 señales</span></div>
+        <div class="student-grid">
+          <article class="student-card"><div class="student-avatar">AM</div><div><strong>Alumno 14</strong><span>API Security · 39</span><small>3 reintentos · BOLA fundamentals</small></div><button>Ver perfil</button></article>
+          <article class="student-card"><div class="student-avatar">AD</div><div><strong>Alumno 27</strong><span>Web Security · 44</span><small>Dificultad con output contexts</small></div><button>Ver perfil</button></article>
+          <article class="student-card"><div class="student-avatar">AL</div><div><strong>Alumno 31</strong><span>OSINT · 47</span><small>Necesita reforzar verificación</small></div><button>Ver perfil</button></article>
+        </div>
+      </section>
+
+      <section id="content" class="instructor-section">
+        <div class="section-heading"><div><span class="eyebrow">CONTENT ENGINE</span><h2>Biblioteca</h2><p>Contenido reusable para construir rutas y sesiones.</p></div><button class="primary">Crear módulo</button></div>
+        <div class="content-grid">
+          <article class="content-card"><span class="pill pill-green">PUBLISHED</span><h3>Phishing Fundamentals</h3><p>6 cápsulas · 2 quizzes · 1 inbox lab</p><small>Actualizado hace 2 días</small></article>
+          <article class="content-card"><span class="pill pill-green">PUBLISHED</span><h3>OWASP · XSS</h3><p>4 cápsulas · 1 quiz · 2 range labs</p><small>Actualizado hoy</small></article>
+          <article class="content-card"><span class="pill">DRAFT</span><h3>API Authorization</h3><p>3 cápsulas · 1 quiz · lab pendiente</p><small>Recomendado por Skill Graph</small></article>
+        </div>
+      </section>
+
+      <section id="risks" class="instructor-section">
+        <div class="section-heading"><div><span class="eyebrow">SKILL GAPS</span><h2>Brechas de aprendizaje</h2><p>Señales agregadas para decidir dónde invertir tiempo docente.</p></div></div>
+        <div class="risk-board">
+          <article><span class="risk-rank">01</span><div><strong>API authorization</strong><p>14 alumnos bajo 60 · mayor correlación con reintentos.</p></div><b>HIGH</b></article>
+          <article><span class="risk-rank">02</span><div><strong>Output encoding contexts</strong><p>7 alumnos confunden sanitización y encoding.</p></div><b>MEDIUM</b></article>
+          <article><span class="risk-rank">03</span><div><strong>OSINT verification</strong><p>5 alumnos dependen de una sola fuente.</p></div><b>MEDIUM</b></article>
+        </div>
+      </section>
+    </main>
+  </div>
+</body>
+</html>
