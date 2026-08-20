@@ -2,6 +2,36 @@
 
 All notable product changes for Cristian Cyber Academy are documented here.
 
+## [0.3.2] — 2026-08-19
+
+### Added
+
+- Explicit account suspension/reactivation controls in `/users`.
+- Remote Academy Core actions for `suspend` and `reactivate`.
+- Account access posture with `ACTIVE` / `SUSPENDED` and last-login context.
+- Dedicated lifecycle styling and PWA cache coverage.
+- Negative authorization tests in Academy Core for self-suspension, admin protection and generic `is_active` PATCH bypass.
+
+### Security
+
+- Suspension is a dedicated audited action, not a generic profile mutation.
+- Suspending an account revokes its DRF authentication token.
+- Operators cannot suspend their own account.
+- Coordinators cannot suspend administrator accounts.
+- Suspended accounts cannot have role/cohort changes made from the Cristian operator UI until reactivated.
+- Academy Core keeps `is_active` read-only in the managed-profile serializer.
+
+### Changed
+
+- Product preview version is now `0.3.2-account-lifecycle-preview`.
+- Identity Operations now surfaces account lifecycle and access activity as first-class posture.
+
+### Known gates
+
+- Latest contract tests remain written but not claimed as executed in this runner.
+- Academy Core Django/SQLite + PostgreSQL release gates remain mandatory before merge.
+- MFA/step-up authentication remains a production gate for sensitive administrative actions.
+
 ## [0.3.1] — 2026-08-19
 
 ### Added
