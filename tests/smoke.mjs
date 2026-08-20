@@ -2,19 +2,19 @@ import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 
 const read = (path) => readFile(new URL(`../${path}`, import.meta.url), 'utf8');
-const [index, app, instructor, instructorJs, certificate, certificateJs, privacy, privacyJs, vercel, security, tenant, telemetry, analytics, manifest, sw, observability, threatModel, pathsRaw, labsRaw, eventSchemaRaw, labSchemaRaw] = await Promise.all([
+const [index, app, instructor, instructorJs, certificate, certificateJs, privacy, privacyJs, vercel, security, tenant, telemetry, analytics, manifest, sw, observability, threatModel, pathsRaw, labsRaw, eventSchemaRaw, labSchemaRaw, noAi, xmlContent] = await Promise.all([
   read('index.html'), read('app.js'), read('instructor.html'), read('instructor.js'),
   read('certificate.html'), read('certificate.js'), read('privacy.html'), read('privacy.js'),
   read('vercel.json'), read('SECURITY.md'), read('tenant.config.js'), read('telemetry.js'),
   read('analytics.js'), read('manifest.webmanifest'), read('sw.js'), read('docs/OBSERVABILITY.md'),
   read('docs/THREAT_MODEL.md'), read('content/learning-paths.json'), read('content/labs.json'),
-  read('schemas/learning-event.schema.json'), read('schemas/lab-manifest.schema.json')
+  read('schemas/learning-event.schema.json'), read('schemas/lab-manifest.schema.json'),
+  read('no-ai.js'), read('xml-content.js')
 ]);
 
 assert.match(index, /Cristian Cyber Academy/i, 'student experience should be branded');
 assert.match(index, /Phishing Lab/i, 'student experience should expose phishing lab');
 assert.match(index, /Cyber Range/i, 'student experience should expose cyber range');
-assert.match(index, /AI Mentor/i, 'student experience should expose AI mentor');
 assert.match(index, /Command Deck/i, 'premium experience should expose command deck');
 assert.match(index, /Achievements/i, 'premium experience should expose achievements');
 assert.match(index, /manifest\.webmanifest/, 'PWA manifest should be linked');
@@ -52,14 +52,21 @@ assert.match(tenant, /remoteAnalyticsDefault:\s*false/, 'remote analytics must d
 assert.match(tenant, /consentRequired:\s*true/, 'remote analytics must require consent');
 assert.match(tenant, /sessionRecording:\s*false/, 'session recording must remain disabled');
 assert.match(tenant, /cca-premium-experience/, 'premium rollout flag should be declared');
-assert.match(tenant, /cca-ai-mentor-live/, 'live AI mentor gate should be declared');
+assert.match(tenant, /aiAgentEnabled:\s*false/, 'AI agents must remain explicitly disabled');
+assert.doesNotMatch(tenant, /cca-ai-mentor-live/, 'legacy AI mentor rollout flag must stay removed');
+assert.match(tenant, /cca-xml-content-v1/, 'XML content rollout flag should be declared');
 assert.match(tenant, /cca-cyber-range-live/, 'live range gate should be declared');
+assert.match(tenant, /import\('\.\/no-ai\.js'\)/, 'runtime must remove the legacy AI surface');
+assert.match(tenant, /import\('\.\/xml-content\.js'\)/, 'Studio must load the XML content pipeline');
 assert.doesNotMatch(tenant, /(api[_-]?key|secret|token)\s*:/i, 'tenant config must not expose secrets');
+assert.match(noAi, /data-view="mentor"/, 'legacy mentor navigation must be stripped at runtime');
+assert.match(xmlContent, /DOMParser/, 'XML content pipeline must parse XML structurally');
+assert.match(xmlContent, /<!DOCTYPE\|<!ENTITY/i, 'XML content pipeline must reject unsafe declarations');
 
 assert.match(telemetry, /localStorage/, 'telemetry should remain local in demo mode');
 assert.match(telemetry, /crohnoz:telemetry/, 'telemetry should expose a local event bus');
 assert.match(telemetry, /SAFE_KEYS/, 'local telemetry must filter properties');
-assert.doesNotMatch(telemetry, /['"]topic['"]\s*,/, 'raw mentor topic text must not be allowlisted in telemetry');
+assert.doesNotMatch(telemetry, /['"]topic['"]\s*,/, 'raw legacy mentor topic text must not be allowlisted in telemetry');
 assert.match(analytics, /CONSENT_KEY/, 'analytics adapter should maintain explicit consent state');
 assert.match(analytics, /ALLOWED_EVENTS/, 'analytics adapter should allowlist event names');
 assert.match(analytics, /PROPERTY_ALLOWLIST/, 'analytics adapter should allowlist properties');
@@ -120,4 +127,4 @@ assert.match(security, /credenciales reales/i, 'security policy should prohibit 
 console.log('✓ Cristian Cyber Academy premium smoke tests passed');
 console.log(`✓ ${externalTrainingDomains.length} reserved training-domain references validated`);
 console.log(`✓ ${learningPaths.paths.length} learning paths and ${labs.labs.length} isolated lab manifests validated`);
-console.log('✓ Privacy, white-label, PWA, analytics policy, threat model and instructor evidence invariants validated');
+console.log('✓ No-AI, XML, privacy, white-label, PWA, analytics policy, threat model and instructor evidence invariants validated');
