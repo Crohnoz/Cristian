@@ -1,4 +1,4 @@
-const CACHE = 'cca-shell-v3';
+const CACHE = 'cca-shell-v4';
 const SHELL = [
   '/',
   '/index.html',
@@ -7,6 +7,13 @@ const SHELL = [
   '/tenant.config.js',
   '/telemetry.js',
   '/analytics.js',
+  '/academy-core.adapter.js',
+  '/auth.session.js',
+  '/auth.html',
+  '/auth.css',
+  '/auth.page.js',
+  '/account.html',
+  '/account.js',
   '/instructor.html',
   '/instructor.css',
   '/instructor.js',
@@ -42,6 +49,6 @@ self.addEventListener('fetch', event => {
         caches.open(CACHE).then(cache => cache.put(event.request, copy));
         return response;
       })
-      .catch(() => caches.match(event.request).then(hit => hit || caches.match('/index.html')))
+      .catch(() => caches.match(event.request).then(hit => hit || caches.match('/auth.html')))
   );
 });
