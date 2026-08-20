@@ -10,7 +10,8 @@
   const MAX_COURSES = 100;
   const MAX_MODULES = 40;
   const MAX_LESSONS = 80;
-  const remoteEnabled = Boolean(core?.enabled && session.provider === 'crohnoz-academy' && core.isAuthenticated?.());
+  const contentTenantScoped = window.CCA_CONFIG?.academyCore?.contentTenantScoped === true;
+  const remoteEnabled = Boolean(contentTenantScoped && core?.enabled && session.provider === 'crohnoz-academy' && core.isAuthenticated?.());
   let state = loadState();
   let selectedCourseId = state.courses[0]?.id || null;
   let selectedModuleId = state.courses[0]?.modules?.[0]?.id || null;
@@ -153,6 +154,7 @@
     const locked = courseLocked(course);
     const controls = ['courseTitle','courseSlug','courseSummary','courseLevel','courseLocale','courseWorkflow','deleteCourse'];
     controls.forEach(id => { if ($(id)) $(id).disabled = !course || locked; });
+    if ($('courseWorkflow')) $('courseWorkflow').disabled = !course || locked || remoteEnabled;
     $('newCourse').disabled = remoteBusy;
     $('saveCourse').disabled = !course || locked || remoteBusy;
     $('addModule').disabled = !course || locked || remoteBusy;
@@ -406,7 +408,7 @@
 
   async function syncSelectedCourse() {
     const course = currentCourse();
-    if (!remoteEnabled || !course) return showToast('Academy Core no está conectado en este entorno.');
+    if (!remoteEnabled || !course) return showToast('Academy Core no está conectado o el tenant scope aún no está certificado.');
     if (courseLocked(course)) return showToast('El backend bloqueó edición: devuelve el contenido a DRAFT antes de modificarlo.');
 
     await withRemoteBusy(async () => {
@@ -455,7 +457,7 @@
   }
 
   async function loadFromCore() {
-    if (!remoteEnabled) return showToast('Academy Core no está conectado en este entorno.');
+    if (!remoteEnabled) return showToast('Academy Core no está conectado o el tenant scope aún no está certificado.');
     await withRemoteBusy(async () => {
       try {
         const [coursesPayload, modulesPayload, lessonsPayload] = await Promise.all([core.studioCourses(), core.studioModules(), core.studioLessons()]);
@@ -494,7 +496,7 @@
 
   async function submitForReview() {
     const course = currentCourse();
-    if (!remoteEnabled || !course) return showToast('Academy Core no está conectado en este entorno.');
+    if (!remoteEnabled || !course) return showToast('Academy Core no está conectado o el tenant scope aún no está certificado.');
     if (course.remoteStatus && course.remoteStatus !== 'draft') return showToast(`El curso ya está en estado ${course.remoteStatus.toUpperCase()}.`);
     await syncSelectedCourse();
     if (!course.remoteId || course.remoteStatus !== 'draft') return;
@@ -516,7 +518,7 @@
     [loadButton, syncButton, reviewButton].forEach(button => { button.hidden = !remoteEnabled; });
     if (!remoteEnabled) {
       remoteState.innerHTML = '<i></i>Core desconectado';
-      remoteState.title = 'ACADEMY_CORE permanece deshabilitado hasta configurar un API explícito.';
+      remoteState.title = contentTenantScoped ? 'ACADEMY_CORE requiere API y sesión remota válidas.' : 'Remote Content Studio está bloqueado hasta certificar tenant scope server-side.';
       return;
     }
     const course = currentCourse();
@@ -537,7 +539,7 @@
   $('submitReview')?.addEventListener('click', submitForReview);
   bindCourseFields(); bindNavigation(); renderAll(); persist('studio-opened');
 
-  $('studioMode').textContent = remoteEnabled ? 'ACADEMY CORE CONNECTED · CONTROLLED WORKFLOW' : 'LOCAL DRAFT ENGINE · BACKEND READY';
+  $('studioMode').textContent = remoteEnabled ? 'ACADEMY CORE CONNECTED · CONTROLLED WORKFLOW' : (core?.enabled && !contentTenantScoped ? 'TENANT SCOPE REQUIRED · CORE BLOCKED' : 'LOCAL DRAFT ENGINE · BACKEND READY');
   updateRemoteActions();
   telemetry.track('content_studio_loaded', { mode: remoteEnabled ? 'academy-core' : 'local-fallback', tenant: tenantId });
 })();
