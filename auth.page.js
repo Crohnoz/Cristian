@@ -14,8 +14,8 @@
   function safeNext(raw) {
     const allowed = new Set([
       '/', '/dashboard', '/dashboard.html', '/index.html', '/catalog', '/catalog.html', '/course', '/course.html', '/lesson', '/lesson.html',
-      '/instructor', '/instructor.html', '/users', '/users.html', '/student', '/student.html',
-      '/certificate', '/certificate.html', '/account', '/account.html'
+      '/progress', '/progress.html', '/teacher', '/teacher.html', '/instructor', '/instructor.html', '/users', '/users.html', '/student', '/student.html',
+      '/studio', '/studio.html', '/certificate', '/certificate.html', '/account', '/account.html', '/privacy', '/privacy.html'
     ]);
     try {
       const url = new URL(raw || '/dashboard.html', location.origin);
@@ -28,7 +28,7 @@
     const role = session?.user?.role;
     const path = requested.split('?')[0].split('#')[0];
     if ((path === '/users' || path === '/users.html' || path === '/student' || path === '/student.html') && !userAdminRoles.has(role)) return '/dashboard.html';
-    if ((path === '/instructor' || path === '/instructor.html') && !teachingRoles.has(role)) return '/dashboard.html';
+    if ((path === '/teacher' || path === '/teacher.html' || path === '/instructor' || path === '/instructor.html') && !teachingRoles.has(role)) return '/dashboard.html';
     if (path === '/index.html' || path === '/') return '/dashboard.html';
     return requested;
   }
