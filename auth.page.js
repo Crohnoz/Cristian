@@ -10,11 +10,12 @@
   const demoBox = document.getElementById('demoBox');
   const teachingRoles = new Set(['instructor', 'coordinator', 'admin']);
   const userAdminRoles = new Set(['coordinator', 'admin']);
+  const ONBOARDING_KEY = 'cca:onboarding:v1';
 
   function safeNext(raw) {
     const allowed = new Set([
       '/', '/dashboard', '/dashboard.html', '/index.html', '/catalog', '/catalog.html', '/course', '/course.html', '/lesson', '/lesson.html',
-      '/progress', '/progress.html', '/teacher', '/teacher.html', '/instructor', '/instructor.html', '/users', '/users.html', '/student', '/student.html',
+      '/progress', '/progress.html', '/onboarding', '/onboarding.html', '/teacher', '/teacher.html', '/instructor', '/instructor.html', '/users', '/users.html', '/student', '/student.html',
       '/studio', '/studio.html', '/certificate', '/certificate.html', '/account', '/account.html', '/privacy', '/privacy.html'
     ]);
     try {
@@ -29,7 +30,10 @@
     const path = requested.split('?')[0].split('#')[0];
     if ((path === '/users' || path === '/users.html' || path === '/student' || path === '/student.html') && !userAdminRoles.has(role)) return '/dashboard.html';
     if ((path === '/teacher' || path === '/teacher.html' || path === '/instructor' || path === '/instructor.html') && !teachingRoles.has(role)) return '/dashboard.html';
-    if (path === '/index.html' || path === '/') return '/dashboard.html';
+    if ((path === '/onboarding' || path === '/onboarding.html') && role !== 'learner') return teachingRoles.has(role) ? '/teacher.html' : '/dashboard.html';
+    if ((path === '/dashboard' || path === '/dashboard.html') && role === 'learner' && !localStorage.getItem(ONBOARDING_KEY)) return '/onboarding.html';
+    if ((path === '/dashboard' || path === '/dashboard.html') && teachingRoles.has(role)) return '/teacher.html';
+    if (path === '/index.html' || path === '/') return role === 'learner' ? '/dashboard.html' : teachingRoles.has(role) ? '/teacher.html' : '/dashboard.html';
     return requested;
   }
 
