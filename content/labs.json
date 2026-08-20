@@ -1,0 +1,48 @@
+{
+  "version": "2026.08.1",
+  "labs": [
+    {
+      "id": "lab-04-xss",
+      "title": "Reflected XSS · Detect & Fix",
+      "skill": "web",
+      "level": "intermediate",
+      "mode": "defender",
+      "status": "demo-ready",
+      "target_type": "synthetic",
+      "network_policy": "isolated-no-egress",
+      "secrets": "none",
+      "objectives": ["identify-source-and-sink", "explain-impact", "select-contextual-mitigation"],
+      "allowed_capabilities": ["inspect-synthetic-code", "select-mitigation", "request-hints"],
+      "prohibited_capabilities": ["external-targets", "arbitrary-network-egress", "real-credentials"]
+    },
+    {
+      "id": "lab-05-api-authorization",
+      "title": "API Authorization · Object Access",
+      "skill": "api",
+      "level": "intermediate",
+      "mode": "defender",
+      "status": "feature-gated",
+      "feature_flag": "cca-cyber-range-live",
+      "target_type": "synthetic",
+      "network_policy": "isolated-no-egress",
+      "secrets": "none",
+      "objectives": ["distinguish-authn-authz", "identify-object-scope", "select-server-side-control"],
+      "allowed_capabilities": ["inspect-synthetic-requests", "compare-authorized-responses", "request-hints"],
+      "prohibited_capabilities": ["external-targets", "real-api-tokens", "internet-enumeration"]
+    },
+    {
+      "id": "lab-06-session-defense",
+      "title": "Session Defense · Secure State",
+      "skill": "web",
+      "level": "intermediate",
+      "mode": "defender",
+      "status": "planned",
+      "target_type": "synthetic",
+      "network_policy": "isolated-no-egress",
+      "secrets": "none",
+      "objectives": ["inspect-cookie-properties", "reason-about-session-lifecycle", "choose-defense-in-depth"],
+      "allowed_capabilities": ["inspect-synthetic-session", "select-controls", "request-hints"],
+      "prohibited_capabilities": ["session-theft-against-third-parties", "external-targets", "real-cookies"]
+    }
+  ]
+}
