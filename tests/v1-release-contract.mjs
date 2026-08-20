@@ -1,0 +1,41 @@
+import fs from 'node:fs';
+import assert from 'node:assert/strict';
+
+const read = path => fs.readFileSync(new URL(`../${path}`, import.meta.url), 'utf8');
+const tenant = read('tenant.config.js');
+const authPage = read('auth.page.js');
+const onboarding = read('onboarding.html');
+const onboardingJs = read('onboarding.js');
+const dashboard = read('dashboard.html');
+const shell = read('product-shell.js');
+const certificate = read('certificate.html');
+const certificateJs = read('certificate.js');
+const privacyHardening = read('privacy-hardening.js');
+const showcase = read('showcase.html');
+const vercel = read('vercel.json');
+
+assert.match(tenant, /version:\s*'1\.0\.0-rc\.1'/, 'tenant must identify the v1 release candidate');
+assert.match(tenant, /\['onboarding\.html', \['learner'\]\]/, 'learner onboarding must be role-gated');
+assert.match(tenant, /\['teacher\.html', \['instructor', 'coordinator', 'admin'\]\]/, 'Teacher Intranet must be staff-only');
+assert.match(tenant, /\['users\.html', \['coordinator', 'admin'\]\]/, 'Identity Ops must be manager-only');
+assert.match(tenant, /\['certificate\.html', \[\]\]/, 'certificate surface must be authenticated');
+assert.match(tenant, /\['account\.html', \[\]\]/, 'account surface must be authenticated');
+assert.match(tenant, /\['privacy\.html', \[\]\]/, 'privacy control center must be authenticated');
+assert.match(authPage, /cca:onboarding:v1/, 'auth flow must track learner onboarding');
+assert.match(authPage, /return '\/onboarding\.html'/, 'first-time learner must enter onboarding');
+assert.match(authPage, /return '\/teacher\.html'/, 'teaching roles must land in Teacher Intranet');
+assert.match(onboarding, /Tu ruta parte con tres decisiones simples/, 'onboarding must explain the learner journey');
+assert.match(onboardingJs, /localStorage\.setItem\(KEY/, 'onboarding must persist only the local learning preference');
+assert.doesNotMatch(onboardingJs, /innerHTML/, 'onboarding interactions must use safe DOM rendering');
+assert.match(dashboard, /\.\/progress\.html/, 'learner progress must route to the learner surface');
+assert.doesNotMatch(dashboard, /type=(?:live|lab|simulation|checkpoint)/, 'dashboard must not use legacy lesson type routes');
+assert.match(shell, /Teacher Intranet/, 'shared navigation must expose Teacher Intranet to teaching roles');
+assert.match(shell, /Operations Console/, 'advanced operations must remain separate from daily teaching');
+assert.match(certificate, /tenant\.config\.js/, 'certificate must load the authentication bootstrap');
+assert.doesNotMatch(certificateJs, /innerHTML/, 'certificate must not render dynamic markup with innerHTML');
+assert.match(privacyHardening, /topic_category/, 'mentor telemetry must retain only a category');
+assert.doesNotMatch(showcase, /auth\.session\.js|users\.js|student\.js|instructor\.js/, 'public showcase must not load private operations code');
+assert.doesNotMatch(vercel, /rawgit|githack|raw\.githubusercontent|jsdelivr/i, 'Vercel production must not depend on external raw-code proxies');
+assert.match(vercel, /Content-Security-Policy/, 'production must ship CSP headers');
+
+console.log('v1 release contract: OK');
