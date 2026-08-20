@@ -19,7 +19,7 @@ window.CCA_CONFIG = Object.freeze({
   product: {
     version: '0.9.0-clarity-guidance-preview',
     northStar: 'Learn → Practice → Attack/Defend → Explain → Score → Certify',
-    modules: ['clarity-guidance', 'premium-polish', 'public-showcase', 'mission-control', 'unified-product-shell', 'immersive-learning', 'visual-academy', 'academy', 'phishing', 'range', 'mentor', 'achievements', 'account', 'identity-ops', 'student-360']
+    modules: ['clarity-guidance', 'learner-progress', 'premium-polish', 'public-showcase', 'mission-control', 'unified-product-shell', 'immersive-learning', 'visual-academy', 'academy', 'phishing', 'range', 'mentor', 'achievements', 'account', 'identity-ops', 'student-360']
   },
   academyCore: {
     provider: 'crohnoz-academy',
@@ -62,6 +62,7 @@ window.CCA_CONFIG = Object.freeze({
     ['catalog.html', []],
     ['course.html', []],
     ['lesson.html', []],
+    ['progress.html', []],
     ['instructor.html', ['instructor', 'coordinator', 'admin']],
     ['student.html', ['coordinator', 'admin']],
     ['certificate.html', []]
@@ -89,7 +90,7 @@ window.CCA_CONFIG = Object.freeze({
       ensureStyle('./premium-layout.css', 'premiumLayout');
       ensureStyle('./clarity-ui.css', 'clarityUi');
 
-      if (['catalog.html','course.html','lesson.html'].includes(file)) {
+      if (['catalog.html','course.html','lesson.html','progress.html'].includes(file)) {
         await import('./product-shell.js');
       }
       if (file === 'instructor.html' && !document.querySelector('link[data-instructor-unified]')) {
