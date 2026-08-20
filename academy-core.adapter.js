@@ -94,6 +94,7 @@
     changePassword: data => post('/api/v1/auth/change-password/', data),
     requestPasswordReset: email => post('/api/v1/auth/password-reset/request/', { email }),
     confirmPasswordReset: data => post('/api/v1/auth/password-reset/confirm/', data),
+    activateInvitation: data => post('/api/v1/invitations/activate/', data),
     invitations: () => get('/api/v1/ops/invitations/'),
     createInvitation: data => post('/api/v1/ops/invitations/', data),
     revokeInvitation: id => post(`/api/v1/ops/invitations/${encodeURIComponent(id)}/revoke/`, {}),
