@@ -2,7 +2,7 @@
 
 ## Verified source
 
-This contract was checked against `Crohnoz/Crohnoz-academy` `main` on 2026-08-20, specifically the Django/DRF backend routes, serializers, viewsets and models.
+This contract was checked against `Crohnoz/Crohnoz-academy` on 2026-08-20, specifically the Django/DRF backend routes, serializers, viewsets and models.
 
 Cristian must not invent a second LMS. The white-label product consumes the existing Academy Core and adds its cyber-specific experience on top.
 
@@ -24,7 +24,12 @@ Authenticated Content Studio resources:
 - `GET/POST /api/v1/studio/assessments/`
 - `GET/PATCH/DELETE /api/v1/studio/assessments/<id>/`
 
-The browser adapter now exposes these routes, but remote Content Studio remains disabled in Cristian until the tenant boundary described below is server-side.
+Learner persistence routes used by the Cristian adapter:
+
+- `GET/POST /api/v1/enrollments/`
+- `GET/POST/PATCH /api/v1/lesson-progress/`
+- `GET/POST /api/v1/assessment-attempts/`
+- `GET /api/v1/certificates/`
 
 ## Verified editorial workflow
 
@@ -94,37 +99,76 @@ The current Academy Core `Module` model has no objective/description field. Cris
 
 Assessment answer keys/configuration remain server-owned through `/studio/assessments/`. A quiz lesson is not considered complete authoring until its assessment configuration exists and passes backend validation.
 
-## Critical tenant boundary
+## Tenant boundary implementation
 
-The verified Academy Core `Course`, `Module` and `Lesson` models are currently global academic content. Organization support exists for memberships/cohorts/operational context, but organization membership does not scope Content Studio rows.
+The backend work is isolated in:
 
-That is acceptable for Crohnoz Academy's global catalog but is not sufficient to activate a customer white-label Content Studio without an explicit content ownership boundary.
+```text
+Crohnoz/Crohnoz-academy
+branch: feat/content-tenant-scope-cristian
+```
 
-Therefore Cristian config contains:
+It is **not merged or deployed** yet.
+
+The branch introduces server-side organization ownership for `Course` and `LearningPath`. Modules, lessons, assessments, enrollments, progress and certificates inherit scope through their parent course. The API resolves the active content space from:
+
+```http
+X-Academy-Organization: <organization-slug>
+```
+
+Cristian declares the expected slug separately:
 
 ```js
 academyCore: {
   enabled: false,
   apiBaseUrl: '',
-  contentTenantScoped: false
+  contentTenantScoped: false,
+  organizationSlug: 'cristian-demo'
 }
 ```
 
-### Release requirement
+The adapter only adds the custom header to tenant-sensitive academic/catalog/Studio calls. Login, `/me`, password lifecycle and global operations remain outside this transport.
 
-Before `contentTenantScoped` may become `true`, Academy Core must enforce the boundary server-side, for example through a dedicated tenant/content-space relation and queryset/serializer validation. A browser slug prefix or frontend filtering is **not** an authorization boundary.
+### Backend invariants implemented in the feature branch
 
-Required server invariants:
+- organization content links are server-side relations, not browser prefixes;
+- white-label catalog queries return only content linked to the active organization;
+- requests without organization context continue to see only global Academy content;
+- non-members cannot enter another organization content space;
+- global `admin` may enter an organization only when explicitly selecting its slug;
+- course/path creation links the new object atomically to the active organization;
+- modules, lessons and assessments reject cross-tenant parents;
+- learner enrollment/progress/assessment queries inherit the same content scope;
+- deleting a scoped draft removes its ownership relation transactionally;
+- organizations with linked content cannot be deleted and silently turn private content global;
+- tenant coordinators can read the reusable global competency catalog but cannot mutate it;
+- organization identity is included in dedicated content-scope audit events;
+- CORS explicitly permits `X-Academy-Organization`.
 
-- every mutable white-label content object belongs to an authorized content space/tenant;
-- Studio querysets are scoped server-side to that content space;
-- parent relationships cannot cross content spaces;
-- transitions reject cross-tenant access;
-- coordinator/admin authority is bounded to the intended Academy administrative scope;
-- audit events preserve tenant/content-space identity;
-- tests prove that a Cristian user cannot read, mutate, transition or delete another tenant's private drafts.
+Tests covering these boundaries are present on the backend feature branch, but this document does **not** mark the release gate green until the Django/PostgreSQL suite is executed successfully.
 
-Until those invariants exist and pass tests, Cristian continues using local draft persistence and Academy Core remains disabled in this frontend.
+## Fail-closed frontend behavior
+
+`academy-core.adapter.js` now rejects a tenant-sensitive call with `CONTENT_SCOPE_NOT_CONFIGURED` unless both conditions are true:
+
+1. `contentTenantScoped === true`;
+2. an explicit `organizationSlug` is available.
+
+This prevents an accidental backend URL change from silently falling back to global academic content.
+
+## Activation sequence
+
+Do not activate remote Academy Core merely because the code exists. The sequence is:
+
+1. run Academy Core Django tests including `test_content_scope.py`;
+2. run migration drift checks and the PostgreSQL gate;
+3. review the tenant feature branch and merge it independently;
+4. deploy Academy Core to a staging app server with explicit CORS origin for the Cristian staging frontend;
+5. create/verify organization `cristian-demo` server-side;
+6. add intended users as organization members without changing Academy RBAC implicitly;
+7. verify login + scoped catalog + Studio draft + `draft -> review` + learner enrollment/progress;
+8. only then set Cristian development/staging config to `contentTenantScoped: true`, configure an API URL and enable Academy Core;
+9. production remains blocked until Cristian approves the visible demo and the normal release checklist is completed.
 
 ## Deployment rule
 
