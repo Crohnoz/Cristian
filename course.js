@@ -14,7 +14,8 @@
         ['04','✓','Reporte seguro','challenge · 20 min','pending']
       ],
       practice:[['✉','INBOX LAB','Clasifica 6 mensajes','Synthetic mail'],['⌁','URL CHECK','Detecta dominios falsos','Visual challenge'],['✓','REPORT','Decide qué escalar','Decision drill']],
-      skills:[['Phishing signals',91],['Verification',76],['Reporting',68]]
+      skills:[['Phishing signals',91],['Verification',76],['Reporting',68]],
+      showAwareness:true
     },
     web: {
       title:'Web Application Security', code:'COURSE 02 · APPSEC', level:'INTERMEDIATE', duration:'3h 10m', labs:'4 labs', progress:24, score:63,
@@ -26,7 +27,8 @@
         ['04','✓','Fix & Explain','challenge · 25 min','pending']
       ],
       practice:[['</>','XSS LAB','Encuentra el sink','Isolated range'],['⌘','AUTHZ','Rompe la suposición','Object-level'],['✓','PATCH','Elige la mitigación','Secure coding']],
-      skills:[['Input handling',72],['Access control',48],['Secure coding',69]]
+      skills:[['Input handling',72],['Access control',48],['Secure coding',69]],
+      showAwareness:false
     },
     soc: {
       title:'SOC & Incident Response', code:'COURSE 03 · BLUE TEAM', level:'INTERMEDIATE', duration:'3h 45m', labs:'4 labs', progress:0, score:54,
@@ -38,7 +40,8 @@
         ['04','✓','Contain & Report','tabletop · 30 min','pending']
       ],
       practice:[['◉','SIEM VIEW','Lee la señal','Synthetic events'],['⌁','TRIAGE','Prioriza alertas','Blue-team drill'],['◇','TIMELINE','Reconstruye el incidente','Evidence board']],
-      skills:[['Detection',58],['Triage',52],['Response',47]]
+      skills:[['Detection',58],['Triage',52],['Response',47]],
+      showAwareness:false
     },
     cloud: {
       title:'Cloud & Identity Security', code:'COURSE 04 · ZERO TRUST', level:'ADVANCED', duration:'3h 20m', labs:'3 labs', progress:0, score:51,
@@ -50,7 +53,8 @@
         ['04','✓','Zero Trust Review','challenge · 25 min','pending']
       ],
       practice:[['☁','IAM MAP','Visualiza permisos','Synthetic tenant'],['◇','PRIVILEGE','Recorta acceso','Policy drill'],['⌁','SESSION','Refuerza identidad','MFA decisions']],
-      skills:[['IAM',55],['Least privilege',49],['Session defense',50]]
+      skills:[['IAM',55],['Least privilege',49],['Session defense',50]],
+      showAwareness:false
     }
   };
 
@@ -74,6 +78,9 @@
   safeText(q('progressValue'), `${course.progress}%`);
   q('progressBar').style.width = `${course.progress}%`;
   safeText(q('evidenceScore'), course.score);
+
+  const awarenessCard = q('awarenessCard');
+  if (awarenessCard && !course.showAwareness) awarenessCard.hidden = true;
 
   const moduleTrack = q('moduleTrack');
   course.modules.forEach(([num, icon, title, meta, state]) => {
