@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="theme-color" content="#07100f" />
+  <meta name="color-scheme" content="dark" />
+  <meta name="description" content="Cristian Cyber Academy — Student 360 learner intelligence workspace." />
+  <title>Student 360 · Cristian Cyber Academy</title>
+  <link rel="icon" href="./brand.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./styles.css" />
+  <link rel="stylesheet" href="./student.css" />
+</head>
+<body>
+  <a class="skip-link" href="#studentWorkspace">Saltar a Student 360</a>
+  <div class="ambient ambient-a" aria-hidden="true"></div>
+  <div class="ambient ambient-b" aria-hidden="true"></div>
+
+  <main class="student-shell" id="studentWorkspace">
+    <header class="student-topbar">
+      <div class="brand"><img class="brand-mark" src="./brand.svg" alt="" /><div><strong>CRISTIAN</strong><span>STUDENT 360</span></div></div>
+      <nav class="student-nav" aria-label="Navegación Student 360">
+        <a href="./users.html">← Usuarios & Accesos</a>
+        <a href="./instructor.html">Teaching Console</a>
+        <a href="./account.html">Mi cuenta</a>
+      </nav>
+    </header>
+
+    <section class="student-selector panel">
+      <div><span class="eyebrow">LEARNER INTELLIGENCE</span><h1>Student 360</h1><p>Una sola vista para entender progreso, contexto, riesgos y próxima intervención pedagógica.</p></div>
+      <label>Alumno<select id="learnerSelector" aria-label="Seleccionar alumno"></select></label>
+    </section>
+
+    <section class="student-identity panel" aria-live="polite">
+      <div class="student-avatar" id="studentAvatar">AD</div>
+      <div class="student-copy"><span class="eyebrow" id="studentRole">LEARNER</span><h2 id="studentName">Alumno Demo</h2><p id="studentMeta">—</p></div>
+      <div class="student-posture"><span id="accountState" class="state-pill">ACTIVE</span><small id="lastAccess">Último acceso · —</small></div>
+    </section>
+
+    <section class="student-kpis" aria-label="Indicadores del alumno">
+      <article><span>Progreso académico</span><strong id="progressKpi">0%</strong><small>promedio de matrículas</small></article>
+      <article><span>Readiness cyber</span><strong id="readinessKpi">—</strong><small id="readinessSource">sin señal</small></article>
+      <article><span>Cursos activos</span><strong id="coursesKpi">0</strong><small>matrículas visibles</small></article>
+      <article><span>Certificados</span><strong id="certificatesKpi">0</strong><small>evidencia emitida</small></article>
+    </section>
+
+    <section class="student-grid">
+      <article class="panel">
+        <div class="panel-head"><div><span class="eyebrow">CYBER SKILL GRAPH</span><h3>Competencias</h3></div><span class="source-chip" id="skillSource">PREVIEW SYNTHETIC</span></div>
+        <div class="skill-stack" id="skillStack"></div>
+      </article>
+      <article class="panel intervention-panel">
+        <div class="panel-head"><div><span class="eyebrow">NEXT BEST ACTION</span><h3>Intervención recomendada</h3></div><span class="priority-chip" id="priorityChip">MEDIUM</span></div>
+        <p id="recommendationText">Analizando evidencia disponible…</p>
+        <div class="recommendation-card"><span>RECOMMENDED NEXT</span><strong id="recommendationModule">Security Foundations</strong><small id="recommendationWhy">—</small></div>
+        <button class="primary" id="assignAction" type="button">Registrar recomendación</button>
+        <p class="student-feedback" id="actionFeedback" role="status"></p>
+      </article>
+    </section>
+
+    <section class="student-grid">
+      <article class="panel">
+        <div class="panel-head"><div><span class="eyebrow">ACADEMIC JOURNEY</span><h3>Matrículas y progreso</h3></div><span class="source-chip">ACADEMY CORE</span></div>
+        <div class="journey-list" id="journeyList"></div>
+      </article>
+      <article class="panel">
+        <div class="panel-head"><div><span class="eyebrow">COHORT CONTEXT</span><h3>Contexto de cohorte</h3></div></div>
+        <div class="cohort-context" id="cohortContext"></div>
+      </article>
+    </section>
+
+    <section class="student-grid">
+      <article class="panel">
+        <div class="panel-head"><div><span class="eyebrow">CERTIFICATION EVIDENCE</span><h3>Certificados</h3></div></div>
+        <div class="evidence-list" id="certificateList"></div>
+      </article>
+      <article class="panel">
+        <div class="panel-head"><div><span class="eyebrow">ACTIVITY TIMELINE</span><h3>Actividad relevante</h3></div><span class="source-chip">AUDIT</span></div>
+        <div class="timeline" id="activityTimeline"></div>
+      </article>
+    </section>
+
+    <section class="panel privacy-boundary">
+      <div><span class="eyebrow">DATA BOUNDARY</span><h3>Qué ve Student 360</h3></div>
+      <p>Solo evidencia académica y operacional autorizada. No muestra contraseñas, tokens, prompts completos, cookies ni contenido sensible de laboratorio.</p>
+    </section>
+  </main>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script src="./tenant.config.js"></script>
+  <script src="./academy-core.adapter.js"></script>
+  <script src="./auth.session.js"></script>
+  <script src="./student.js"></script>
+</body>
+</html>
