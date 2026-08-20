@@ -45,6 +45,7 @@ const SHELL = [
   '/lesson.js',
   '/showcase.html',
   '/showcase.css',
+  '/showcase-premium.css',
   '/public-preview.html',
   '/art/cristian-avatar.svg',
   '/art/course-phishing.svg',
