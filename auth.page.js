@@ -13,23 +13,23 @@
 
   function safeNext(raw) {
     const allowed = new Set([
-      '/', '/index.html', '/catalog', '/catalog.html', '/course', '/course.html', '/lesson', '/lesson.html',
+      '/', '/dashboard', '/dashboard.html', '/index.html', '/catalog', '/catalog.html', '/course', '/course.html', '/lesson', '/lesson.html',
       '/instructor', '/instructor.html', '/users', '/users.html', '/student', '/student.html',
       '/certificate', '/certificate.html', '/account', '/account.html'
     ]);
     try {
-      const url = new URL(raw || '/index.html', location.origin);
-      if (url.origin !== location.origin || !allowed.has(url.pathname)) return '/index.html';
+      const url = new URL(raw || '/dashboard.html', location.origin);
+      if (url.origin !== location.origin || !allowed.has(url.pathname)) return '/dashboard.html';
       return `${url.pathname}${url.search}${url.hash}`;
-    } catch { return '/index.html'; }
+    } catch { return '/dashboard.html'; }
   }
 
   function destinationFor(session, requested) {
     const role = session?.user?.role;
     const path = requested.split('?')[0].split('#')[0];
-    if ((path === '/users' || path === '/users.html' || path === '/student' || path === '/student.html') && !userAdminRoles.has(role)) return '/index.html';
-    if ((path === '/instructor' || path === '/instructor.html') && !teachingRoles.has(role)) return '/index.html';
-    if ((path === '/index.html' || path === '/') && teachingRoles.has(role)) return '/instructor.html';
+    if ((path === '/users' || path === '/users.html' || path === '/student' || path === '/student.html') && !userAdminRoles.has(role)) return '/dashboard.html';
+    if ((path === '/instructor' || path === '/instructor.html') && !teachingRoles.has(role)) return '/dashboard.html';
+    if (path === '/index.html' || path === '/') return '/dashboard.html';
     return requested;
   }
 
