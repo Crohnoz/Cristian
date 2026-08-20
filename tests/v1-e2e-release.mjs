@@ -33,13 +33,15 @@ const certificateJs = read('certificate.js');
 const privacyHardening = read('privacy-hardening.js');
 const sw = read('sw.js');
 const vercel = read('vercel.json');
+const build = read('scripts/build-static.mjs');
 
 assert.match(tenant, /version:\s*'1\.0\.0-rc\.1'/, 'v1 release candidate version missing');
 for (const gate of [
+  "['lab.html', []]",
   "['onboarding.html', ['learner']]",
-  "['teacher.html', ['instructor', 'coordinator', 'admin']]",
-  "['users.html', ['coordinator', 'admin']]",
-  "['student.html', ['coordinator', 'admin']]",
+  "['teacher.html', ['instructor','coordinator','admin']]",
+  "['users.html', ['coordinator','admin']]",
+  "['student.html', ['coordinator','admin']]",
   "['certificate.html', []]",
   "['account.html', []]",
   "['privacy.html', []]"
@@ -53,7 +55,7 @@ assert.doesNotMatch(showcase, /auth\.session\.js|users\.js|student\.js|instructo
 assert.match(dashboard, /\.\/progress\.html/, 'learner progress route missing');
 assert.match(dashboard, /\.\/teacher\.html/, 'Teacher Intranet route missing from management navigation');
 assert.doesNotMatch(dashboard, /\?type=(?:live|lab|simulation|checkpoint)/, 'legacy lesson routing remains in dashboard');
-assert.doesNotMatch(dashboard, /nmap\s+-/, 'public learner dashboard should not display operational command snippets');
+assert.doesNotMatch(dashboard, /nmap\s+-/, 'learner dashboard should not display operational command snippets');
 assert.match(shell, /Teacher Intranet/, 'shared shell must expose Teacher Intranet');
 assert.match(shell, /Operations Console/, 'shared shell must preserve advanced Operations Console');
 assert.doesNotMatch(premium, /\.\/student\.html[^\n]*Progreso|Progreso[^\n]*\.\/student\.html/, 'premium learner navigation must not use Student 360');
@@ -65,9 +67,9 @@ assert.doesNotMatch(vercel, /rawgit|githack|raw\.githubusercontent|jsdelivr/i, '
 assert.match(vercel, /Content-Security-Policy/, 'CSP header missing');
 assert.match(vercel, /X-Content-Type-Options/, 'nosniff header missing');
 assert.match(sw, /cca-shell-v20-v1-release-candidate/, 'v1 service worker namespace missing');
-for (const file of ['onboarding.html','teacher.html','privacy-hardening.js','certificate.html']) {
-  assert.ok(sw.includes(`/${file}`), `service worker missing ${file}`);
-}
+for (const file of ['onboarding.html','teacher.html','privacy-hardening.js','certificate.html']) assert.ok(sw.includes(`/${file}`), `service worker missing ${file}`);
+assert.match(build, /showcase\.html[\s\S]*index\.html/, 'production builder must promote the public showcase to root');
+assert.match(build, /lab\.html/, 'production builder must preserve the legacy lab shell separately');
 
 const htmlFiles = required.filter(file => file.endsWith('.html'));
 for (const htmlFile of htmlFiles) {
