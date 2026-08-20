@@ -2,6 +2,42 @@
 
 All notable product changes for Cristian Cyber Academy are documented here.
 
+## [0.3.3] — 2026-08-19
+
+### Added
+
+- Student 360 learner-intelligence workspace at `/student`.
+- Learner selector with identity, account posture and last-access context.
+- Academic progress, enrollments, cohort context and certificate evidence aggregation.
+- Cyber Skill Graph preview with explicit `PREVIEW SYNTHETIC` labeling.
+- Next Best Action / intervention recommendation surface.
+- Learner-specific audit timeline.
+- Data-boundary panel documenting prohibited sensitive fields.
+- Clean Netlify `/student` route and PWA cache coverage.
+- Dedicated Student 360 contract test.
+
+### Security & integrity
+
+- Student 360 requires `manage_users` and the early route bootstrap limits it to coordinator/admin.
+- Login return routing allows `/student` only as a same-origin allowlisted destination and preserves authorized query context.
+- Remote mode never fabricates cyber Skill Graph scores; it shows `PENDING CYBER DATA` until the server-side cyber evidence contract exists.
+- Remote mode does not create a fake assignment when the server-side assignment API is unavailable.
+- User-controlled content is rendered with DOM/textContent APIs rather than `innerHTML`.
+- Student 360 never exposes passwords, tokens, raw prompts, cookies or sensitive lab content.
+
+### Changed
+
+- Product preview version is now `0.3.3-learner-intelligence-preview`.
+- Identity Operations links directly into Student 360.
+- Offline shell advanced to `cca-shell-v8`.
+
+### Known gates
+
+- Student 360 contract tests are written but not claimed as executed in the current runner.
+- Server-side Cyber Skill Graph persistence is still pending; only preview mode displays synthetic skill values.
+- Server-side recommendation/assignment persistence is not yet connected to Student 360.
+- Human desktop/mobile QA remains required before production.
+
 ## [0.3.2] — 2026-08-19
 
 ### Added
