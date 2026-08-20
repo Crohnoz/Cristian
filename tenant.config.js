@@ -17,9 +17,9 @@ window.CCA_CONFIG = Object.freeze({
     mode: 'white-label'
   },
   product: {
-    version: '0.8.0-premium-polish-preview',
+    version: '0.9.0-clarity-guidance-preview',
     northStar: 'Learn → Practice → Attack/Defend → Explain → Score → Certify',
-    modules: ['premium-polish', 'public-showcase', 'mission-control', 'unified-product-shell', 'immersive-learning', 'visual-academy', 'academy', 'phishing', 'range', 'mentor', 'achievements', 'account', 'identity-ops', 'student-360']
+    modules: ['clarity-guidance', 'premium-polish', 'public-showcase', 'mission-control', 'unified-product-shell', 'immersive-learning', 'visual-academy', 'academy', 'phishing', 'range', 'mentor', 'achievements', 'account', 'identity-ops', 'student-360']
   },
   academyCore: {
     provider: 'crohnoz-academy',
@@ -87,6 +87,7 @@ window.CCA_CONFIG = Object.freeze({
       };
       ensureStyle('./premium-ui.css', 'premiumUi');
       ensureStyle('./premium-layout.css', 'premiumLayout');
+      ensureStyle('./clarity-ui.css', 'clarityUi');
 
       if (['catalog.html','course.html','lesson.html'].includes(file)) {
         await import('./product-shell.js');
@@ -105,6 +106,13 @@ window.CCA_CONFIG = Object.freeze({
         premiumScript.defer = true;
         premiumScript.dataset.premiumUi = 'true';
         document.body.appendChild(premiumScript);
+      }
+      if (!document.querySelector('script[data-clarity-ui]')) {
+        const clarityScript = document.createElement('script');
+        clarityScript.src = './clarity-ui.js';
+        clarityScript.defer = true;
+        clarityScript.dataset.clarityUi = 'true';
+        document.body.appendChild(clarityScript);
       }
 
       setTimeout(() => {
