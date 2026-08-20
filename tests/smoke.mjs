@@ -2,10 +2,11 @@ import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 
 const read = (path) => readFile(new URL(`../${path}`, import.meta.url), 'utf8');
-const [index, app, instructor, instructorJs, certificate, certificateJs, vercel, security, tenant, telemetry, analytics, manifest, sw, observability] = await Promise.all([
+const [index, app, instructor, instructorJs, certificate, certificateJs, privacy, privacyJs, vercel, security, tenant, telemetry, analytics, manifest, sw, observability] = await Promise.all([
   read('index.html'), read('app.js'), read('instructor.html'), read('instructor.js'),
-  read('certificate.html'), read('certificate.js'), read('vercel.json'), read('SECURITY.md'),
-  read('tenant.config.js'), read('telemetry.js'), read('analytics.js'), read('manifest.webmanifest'), read('sw.js'), read('docs/OBSERVABILITY.md')
+  read('certificate.html'), read('certificate.js'), read('privacy.html'), read('privacy.js'),
+  read('vercel.json'), read('SECURITY.md'), read('tenant.config.js'), read('telemetry.js'),
+  read('analytics.js'), read('manifest.webmanifest'), read('sw.js'), read('docs/OBSERVABILITY.md')
 ]);
 
 assert.match(index, /Cristian Cyber Academy/i, 'student experience should be branded');
@@ -23,6 +24,13 @@ assert.match(instructor, /Export evidence/i, 'instructor should expose evidence 
 assert.match(instructor, /instructor\.js/, 'instructor telemetry script should be loaded');
 assert.match(certificate, /certificate\.js/, 'certificate logic must be external for strict CSP');
 assert.doesNotMatch(certificate, /<script>[^<]/i, 'certificate must not contain inline script');
+assert.match(privacy, /Privacy & Data/i, 'privacy control center should exist');
+assert.match(privacy, /analytics\.js/, 'privacy center should load consent-aware analytics adapter');
+assert.match(privacy, /Session recording/i, 'privacy center should make recording state explicit');
+assert.match(privacyJs, /consent\.set\('granted'\)/, 'privacy center should support explicit analytics opt-in');
+assert.match(privacyJs, /consent\.set\('denied'\)/, 'privacy center should support explicit analytics opt-out');
+assert.match(privacyJs, /telemetry\?\.clear/, 'privacy center should support local data deletion');
+assert.match(privacyJs, /application\/json/, 'privacy center should support local evidence export');
 
 assert.match(app, /localStorage/, 'learner progression should persist locally in demo mode');
 assert.match(app, /phishingCorrect/, 'phishing outcomes should be tracked');
@@ -62,6 +70,8 @@ const pwa = JSON.parse(manifest);
 assert.equal(pwa.display, 'standalone', 'PWA should run standalone');
 assert.equal(pwa.theme_color, '#07100f', 'PWA theme should match brand shell');
 assert.match(sw, /caches\.open/, 'service worker should cache the application shell');
+assert.match(sw, /privacy\.html/, 'service worker should cache privacy control center');
+assert.match(sw, /analytics\.js/, 'service worker should cache analytics policy adapter');
 
 const externalTrainingDomains = [...app.matchAll(/[a-z0-9.-]+\.example/gi)].map(m => m[0]);
 assert.ok(externalTrainingDomains.length >= 4, 'training inbox should use reserved .example domains');
@@ -81,4 +91,4 @@ assert.match(security, /credenciales reales/i, 'security policy should prohibit 
 
 console.log('✓ Cristian Cyber Academy premium smoke tests passed');
 console.log(`✓ ${externalTrainingDomains.length} reserved training-domain references validated`);
-console.log('✓ White-label, PWA, privacy-safe telemetry, analytics policy and instructor evidence invariants validated');
+console.log('✓ Privacy center, white-label, PWA, privacy-safe telemetry, analytics policy and instructor evidence invariants validated');
