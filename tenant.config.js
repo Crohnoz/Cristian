@@ -72,6 +72,10 @@ window.CCA_CONFIG = Object.freeze({
       if (!session) return;
       document.documentElement.style.visibility = '';
       setTimeout(() => {
+        const academyNav = document.querySelector('.nav-item[data-view="academy"]');
+        if (academyNav) academyNav.addEventListener('click', () => { location.href = './catalog.html'; });
+        document.querySelectorAll('[data-jump="academy"]').forEach(link => link.addEventListener('click', () => { location.href = './catalog.html'; }));
+
         const profile = document.querySelector('.profile');
         if (profile) {
           profile.setAttribute('role', 'link');
