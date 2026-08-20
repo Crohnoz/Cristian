@@ -2,6 +2,45 @@
 
 All notable product changes for Cristian Cyber Academy are documented here.
 
+## [1.0.0-rc.1] — 2026-08-20
+
+### Product
+
+- Public showcase promoted as the production root experience.
+- Dedicated first-run learner onboarding with goal, learning format and weekly pace selection.
+- Mission Control clarified around next action, agenda, learner progress and Skill Graph.
+- Dedicated learner `/progress` surface separated from staff-only Student 360.
+- Teacher Intranet added as the daily workspace for instructor/coordinator/admin roles.
+- Advanced Instructor Console retained as a separate Operations Console.
+- Identity Ops, Student 360 and Content Studio remain role-gated operational surfaces.
+- Course, lesson, live, awareness, lab and quiz navigation normalized around the current `mode=` routing contract.
+- Public and learner-facing cyber wording softened toward educational context while preserving synthetic practical scenarios.
+
+### Release engineering
+
+- Added consolidated `tests/v1-e2e-release.mjs` release gate.
+- `npm test` now runs the authoritative v1 gate; the historical suite remains available as `npm run test:legacy` pending version-contract migration.
+- Vercel build now runs `npm run build`, which blocks publication when the release gate fails.
+- Added a static `dist/` builder that excludes tests, docs, schemas, Supabase, OpenAPI and development-only artifacts from the public deployment.
+- Production root is generated from `showcase.html`; the legacy training shell is isolated at `/lab.html`.
+- Service Worker advanced to `cca-shell-v20-v1-release-candidate`, precaches the new role surfaces and no longer stores failed HTTP responses.
+- Removed all production dependency on RawGit, GitHack, raw GitHub and equivalent raw-code proxies.
+
+### Security & privacy
+
+- Certificate, account, privacy, users, Student 360, Teacher Intranet and learner onboarding are covered by the centralized auth/RBAC bootstrap.
+- Certificate rendering no longer uses dynamic `innerHTML`.
+- Mentor questions are migrated and persisted only as a coarse `topic_category`; prompt fragments are not retained as learning events.
+- Vercel headers include CSP, `nosniff`, frame denial, Permissions Policy, COOP and CORP.
+- Public showcase remains free of private auth/operations scripts.
+- Demo identities, email domains, evidence and targets remain synthetic; no production secrets or external targets were introduced.
+
+### Known production boundaries
+
+- This v1 is a commercial/demo release candidate; Academy Core remote persistence is not enabled on the public preview.
+- MFA, real multi-user backend persistence and live Cyber Range orchestration remain explicit production-backend gates.
+- The v1 release gate is intended to execute inside the Vercel build; release status must not be marked final until that build succeeds and the public domain is checked end-to-end.
+
 ## [0.3.3] — 2026-08-19
 
 ### Added
