@@ -32,17 +32,21 @@
     clearTimeout(showToast.timer);
     showToast.timer = setTimeout(() => toast.classList.remove('show'), 2400);
   }
+  function isSelf(profile) {
+    return Boolean(session.user?.email && String(session.user.email).toLowerCase() === String(profile.email || '').toLowerCase());
+  }
 
   function demoSeed() {
+    const ago = minutes => new Date(Date.now() - minutes * 60e3).toISOString();
     const profiles = [
-      { id:'p1', user_id:1, username:'cristian.demo', email:'cristian@demo.example', display_name:'Cristian', role:'coordinator', locale:'es', onboarding_completed:true },
-      { id:'p2', user_id:2, username:'camila.rojas', email:'camila@demo.example', display_name:'Camila Rojas', role:'learner', locale:'es', onboarding_completed:true },
-      { id:'p3', user_id:3, username:'diego.martin', email:'diego@demo.example', display_name:'Diego Martín', role:'learner', locale:'es', onboarding_completed:true },
-      { id:'p4', user_id:4, username:'valentina.soto', email:'valentina@demo.example', display_name:'Valentina Soto', role:'learner', locale:'es', onboarding_completed:false },
-      { id:'p5', user_id:5, username:'matias.vega', email:'matias@demo.example', display_name:'Matías Vega', role:'learner', locale:'es', onboarding_completed:true },
-      { id:'p6', user_id:6, username:'sofia.reyes', email:'sofia@demo.example', display_name:'Sofía Reyes', role:'learner', locale:'es', onboarding_completed:false },
-      { id:'p7', user_id:7, username:'andres.instructor', email:'andres@demo.example', display_name:'Andrés Demo', role:'instructor', locale:'es', onboarding_completed:true },
-      { id:'p8', user_id:8, username:'maria.author', email:'maria@demo.example', display_name:'María Demo', role:'author', locale:'es', onboarding_completed:true }
+      { id:'p1', user_id:1, username:'cristian.demo', email:'cristian@demo.example', display_name:'Cristian', role:'coordinator', locale:'es', onboarding_completed:true, is_active:true, last_login:ago(3) },
+      { id:'p2', user_id:2, username:'camila.rojas', email:'camila@demo.example', display_name:'Camila Rojas', role:'learner', locale:'es', onboarding_completed:true, is_active:true, last_login:ago(34) },
+      { id:'p3', user_id:3, username:'diego.martin', email:'diego@demo.example', display_name:'Diego Martín', role:'learner', locale:'es', onboarding_completed:true, is_active:true, last_login:ago(190) },
+      { id:'p4', user_id:4, username:'valentina.soto', email:'valentina@demo.example', display_name:'Valentina Soto', role:'learner', locale:'es', onboarding_completed:false, is_active:true, last_login:null },
+      { id:'p5', user_id:5, username:'matias.vega', email:'matias@demo.example', display_name:'Matías Vega', role:'learner', locale:'es', onboarding_completed:true, is_active:true, last_login:ago(1440) },
+      { id:'p6', user_id:6, username:'sofia.reyes', email:'sofia@demo.example', display_name:'Sofía Reyes', role:'learner', locale:'es', onboarding_completed:false, is_active:true, last_login:null },
+      { id:'p7', user_id:7, username:'andres.instructor', email:'andres@demo.example', display_name:'Andrés Demo', role:'instructor', locale:'es', onboarding_completed:true, is_active:true, last_login:ago(74) },
+      { id:'p8', user_id:8, username:'maria.author', email:'maria@demo.example', display_name:'María Demo', role:'author', locale:'es', onboarding_completed:true, is_active:true, last_login:ago(320) }
     ];
     const cohorts = [
       { id:'c1', name:'AppSec Foundations', code:'APPSEC-01', max_students:18, status:'active' },
@@ -70,10 +74,20 @@
     return { profiles, invitations, cohorts, memberships, enrollments, audit };
   }
 
+  function normalizeDemoState(state) {
+    state.profiles = (state.profiles || []).map(profile => ({ is_active:true, last_login:null, ...profile }));
+    state.invitations ||= [];
+    state.cohorts ||= [];
+    state.memberships ||= [];
+    state.enrollments ||= [];
+    state.audit ||= [];
+    return state;
+  }
+
   function loadDemo() {
     try {
       const parsed = JSON.parse(localStorage.getItem(DEMO_KEY) || 'null');
-      if (parsed?.profiles && parsed?.cohorts) return parsed;
+      if (parsed?.profiles && parsed?.cohorts) return normalizeDemoState(parsed);
     } catch {}
     const seeded = demoSeed();
     localStorage.setItem(DEMO_KEY, JSON.stringify(seeded));
@@ -83,7 +97,7 @@
   function saveDemo() { if (!isRemote) localStorage.setItem(DEMO_KEY, JSON.stringify(model)); }
   function addDemoAudit(action, metadata = {}) {
     if (isRemote) return;
-    model.audit.unshift({ id: crypto.randomUUID?.() || String(Date.now()), created_at:nowIso(), action, actor:{username:'cristian.demo'}, metadata });
+    model.audit.unshift({ id: crypto.randomUUID?.() || String(Date.now()), created_at:nowIso(), action, actor:{username:session.user?.username || 'cristian.demo'}, metadata });
     model.audit = model.audit.slice(0, 40);
     saveDemo();
   }
@@ -108,8 +122,6 @@
   function membershipsFor(userId) {
     return model.memberships.filter(item => String(item.user?.id ?? item.user) === String(userId) && item.status !== 'removed');
   }
-
-  function cohortById(id) { return model.cohorts.find(item => String(item.id) === String(id)); }
 
   function progressFor(userId) {
     const rows = model.enrollments.filter(item => String(item.learner?.id ?? item.user_id ?? '') === String(userId));
@@ -143,9 +155,9 @@
   function createRoleSelect(profile) {
     const select = document.createElement('select');
     allowedRoles.forEach(role => { const option=document.createElement('option'); option.value=role; option.textContent=role; option.selected=profile.role===role; select.appendChild(option); });
-    const isSelf = session.user?.email && String(session.user.email).toLowerCase() === String(profile.email || '').toLowerCase();
-    select.disabled = isSelf;
-    select.title = isSelf ? 'Tu propio rol debe cambiarlo otro administrador.' : 'Cambiar rol académico';
+    const locked = isSelf(profile) || profile.is_active === false;
+    select.disabled = locked;
+    select.title = isSelf(profile) ? 'Tu propio rol debe cambiarlo otro administrador.' : profile.is_active === false ? 'Reactiva la cuenta antes de cambiar su rol.' : 'Cambiar rol académico';
     select.addEventListener('change', async () => {
       const previous = profile.role;
       select.disabled = true;
@@ -157,7 +169,7 @@
       } catch (error) {
         select.value = previous;
         showToast(error.message || 'No pudimos cambiar el rol');
-      } finally { select.disabled = isSelf; }
+      } finally { select.disabled = isSelf(profile) || profile.is_active === false; }
     });
     return select;
   }
@@ -171,8 +183,9 @@
       option.selected = existing && String(existing.cohort?.id ?? existing.cohort) === String(cohort.id);
       select.appendChild(option);
     });
-    select.disabled = profile.role !== 'learner';
-    select.title = profile.role !== 'learner' ? 'Las cohortes de aprendizaje se asignan a learners.' : 'Asignar cohorte';
+    const locked = profile.role !== 'learner' || profile.is_active === false;
+    select.disabled = locked;
+    select.title = profile.is_active === false ? 'Reactiva la cuenta antes de modificar cohortes.' : profile.role !== 'learner' ? 'Las cohortes de aprendizaje se asignan a learners.' : 'Asignar cohorte';
     select.addEventListener('change', async () => {
       select.disabled = true;
       try {
@@ -190,9 +203,48 @@
         showToast(chosen ? 'Cohorte actualizada' : 'Usuario removido de la cohorte');
         await refresh();
       } catch (error) { showToast(error.message || 'No pudimos actualizar la cohorte'); }
-      finally { select.disabled = profile.role !== 'learner'; }
+      finally { select.disabled = profile.role !== 'learner' || profile.is_active === false; }
     });
     return select;
+  }
+
+  function createLifecycleCell(profile) {
+    const cell = node('div', '', 'lifecycle-cell');
+    const active = profile.is_active !== false;
+    cell.appendChild(node('span', active ? 'ACTIVE' : 'SUSPENDED', `state-chip ${active ? 'good' : 'warn'}`));
+    const posture = profile.last_login
+      ? `Último acceso · ${new Date(profile.last_login).toLocaleString('es-CL')}`
+      : profile.onboarding_completed ? 'Sin login registrado' : 'Onboarding pendiente';
+    cell.appendChild(node('small', posture));
+
+    const forbiddenAdmin = profile.role === 'admin' && operatorRole !== 'admin';
+    const button = node('button', active ? 'Suspender' : 'Reactivar', 'row-action');
+    button.type = 'button';
+    button.disabled = isSelf(profile) || forbiddenAdmin;
+    button.title = isSelf(profile)
+      ? 'No puedes cambiar el estado de tu propia cuenta.'
+      : forbiddenAdmin ? 'Solo un admin puede cambiar el estado de otra cuenta admin.' : '';
+    button.addEventListener('click', async () => {
+      if (button.disabled) return;
+      if (active && !window.confirm(`Suspender acceso de ${profile.display_name || profile.username}? Se revocará su sesión activa.`)) return;
+      button.disabled = true;
+      try {
+        if (isRemote) {
+          if (active) await core.suspendOpsProfile(profile.id);
+          else await core.reactivateOpsProfile(profile.id);
+        } else {
+          profile.is_active = !active;
+          addDemoAudit(active ? 'account.suspended' : 'account.reactivated', { user:profile.username, role:profile.role });
+        }
+        showToast(active ? 'Cuenta suspendida y sesión revocada' : 'Cuenta reactivada');
+        await refresh();
+      } catch (error) {
+        showToast(error.message || 'No pudimos cambiar el estado de la cuenta');
+        button.disabled = false;
+      }
+    });
+    cell.appendChild(button);
+    return cell;
   }
 
   function renderUsers() {
@@ -204,18 +256,18 @@
       return (!search || haystack.includes(search)) && (!role || profile.role === role);
     });
 
-    const head=node('div','', 'user-row head'); ['IDENTIDAD','ROL','COHORTE','PROGRESO','ESTADO'].forEach(label=>head.appendChild(node('span',label))); host.appendChild(head);
+    const head=node('div','', 'user-row head'); ['IDENTIDAD','ROL','COHORTE','PROGRESO','ACCESO'].forEach(label=>head.appendChild(node('span',label))); host.appendChild(head);
     if (!rows.length) { host.appendChild(node('div','No hay usuarios que coincidan con el filtro.','empty-admin')); return; }
 
     rows.forEach(profile => {
-      const row=node('div','', 'user-row');
+      const row=node('div','', `user-row${profile.is_active === false ? ' suspended' : ''}`);
       const identity=node('div','', 'user-identity'); identity.appendChild(node('div',initials(profile.display_name || profile.username),'mini-avatar'));
       const copy=node('div'); copy.appendChild(node('strong',profile.display_name || profile.username)); copy.appendChild(node('span',`${profile.username || '—'} · ${profile.email || '—'}`)); identity.appendChild(copy);
       row.appendChild(identity);
       row.appendChild(createRoleSelect(profile));
       row.appendChild(createCohortSelect(profile));
       const progress=progressFor(profile.user_id); row.appendChild(node('strong',progress===null?'—':`${progress}%`));
-      row.appendChild(node('span',profile.onboarding_completed?'READY':'ONBOARDING',`state-chip ${profile.onboarding_completed?'good':'warn'}`));
+      row.appendChild(createLifecycleCell(profile));
       host.appendChild(row);
     });
   }
@@ -266,9 +318,7 @@
 
   async function refresh() {
     try { model = isRemote ? await loadRemote() : loadDemo(); renderAll(); }
-    catch (error) {
-      showToast(error.code==='NETWORK_ERROR'?'Academy Core no está disponible':(error.message||'No pudimos cargar Identity Operations'));
-    }
+    catch (error) { showToast(error.code==='NETWORK_ERROR'?'Academy Core no está disponible':(error.message||'No pudimos cargar Identity Operations')); }
   }
 
   document.getElementById('userSearch').addEventListener('input',renderUsers);
@@ -293,7 +343,7 @@
         const id=crypto.randomUUID?.()||String(Date.now()); invitation={id,email,role,locale,expires_at:new Date(Date.now()+48*3600e3).toISOString(),accepted_at:null,revoked_at:null,is_usable:true,metadata:{requested_cohort:requestedCohort||null}};
         model.invitations.unshift(invitation); addDemoAudit('access.invitation.created',{email,role}); saveDemo(); activationUrl=`${location.origin}/activate.html?demo=${encodeURIComponent(id)}`;
       }
-      feedback.className='admin-feedback good'; feedback.textContent='Invitación creada. El usuario debe definir su propia contraseña.';
+      feedback.className='admin-feedback good'; feedback.textContent=isRemote?'Invitación creada. Academy Core intentará entregarla por correo; el enlace queda disponible como fallback.':'Invitación creada. El usuario debe definir su propia contraseña.';
       if(activationUrl){document.getElementById('activationLink').textContent=activationUrl;document.getElementById('activationResult').hidden=false;}
       form.reset(); await refresh();
     } catch(error){feedback.className='admin-feedback bad';feedback.textContent=error.message||'No pudimos crear la invitación.';}
