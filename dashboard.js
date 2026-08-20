@@ -1,9 +1,14 @@
 (() => {
-  const premiumCss = document.createElement('link');
-  premiumCss.rel = 'stylesheet';
-  premiumCss.href = './premium-ui.css';
-  premiumCss.dataset.premiumUi = 'true';
-  if (!document.querySelector('link[data-premium-ui]')) document.head.appendChild(premiumCss);
+  const ensureStyle = (href, key) => {
+    if (document.querySelector(`link[data-${key}]`)) return;
+    const style = document.createElement('link');
+    style.rel = 'stylesheet';
+    style.href = href;
+    style.dataset[key] = 'true';
+    document.head.appendChild(style);
+  };
+  ensureStyle('./premium-ui.css', 'premiumUi');
+  ensureStyle('./premium-layout.css', 'premiumLayout');
 
   const loadPremium = () => {
     if (document.querySelector('script[data-premium-ui]')) return;
