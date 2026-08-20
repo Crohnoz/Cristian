@@ -42,6 +42,7 @@ const SHELL = [
   '/art/course-web-security.svg',
   '/art/course-soc.svg',
   '/art/course-cloud-identity.svg',
+  '/art/lesson-phishing-email.svg',
   '/art/lesson-phishing-inbox.svg',
   '/art/lesson-live-class.svg',
   '/art/lesson-video-replay.svg',
