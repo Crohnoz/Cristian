@@ -9,12 +9,22 @@
   const courseNames = { phishing:'Phishing Defense', web:'Web Application Security', soc:'SOC & Incident Response', cloud:'Cloud & Identity Security' };
   const mode = params.get('mode') || params.get('type') || 'video';
   const modeNames = { video:'Clase grabada', live:'Clase en vivo', awareness:'Simulación', simulation:'Simulación', lab:'Laboratorio', quiz:'Checkpoint', checkpoint:'Checkpoint' };
+  const session = window.CCAAuth?.current?.();
 
   const el = (tag, className, text) => {
     const node = document.createElement(tag);
     if (className) node.className = className;
     if (text != null) node.textContent = text;
     return node;
+  };
+
+  const rewriteLearnerRoutes = () => {
+    if (session?.user?.role !== 'learner') return;
+    document.querySelectorAll('a[href="./student.html"]').forEach(link => {
+      link.href = './progress.html';
+      if (/student 360/i.test(link.textContent)) return;
+      if (/mi progreso|skill graph/i.test(link.textContent)) link.setAttribute('aria-label',`${link.textContent.trim()} del alumno`);
+    });
   };
 
   const addDashboardFocus = () => {
@@ -51,8 +61,8 @@
     const bar = el('div','clarity-contextbar');
     const crumbs = el('nav','clarity-breadcrumbs'); crumbs.setAttribute('aria-label','Ubicación');
     const home = el('a','','Academy'); home.href = './catalog.html'; crumbs.append(home);
-
     const sep = () => el('i','', '›');
+
     if (route === 'catalog') {
       crumbs.append(sep(),el('strong','','Catálogo y rutas'));
     } else if (route === 'course') {
@@ -98,6 +108,7 @@
     });
   };
 
+  rewriteLearnerRoutes();
   addDashboardFocus();
   addContextBar();
   addLessonFocusMode();
