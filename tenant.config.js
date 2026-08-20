@@ -17,9 +17,9 @@ window.CCA_CONFIG = Object.freeze({
     mode: 'white-label'
   },
   product: {
-    version: '0.2.1-premium',
+    version: '0.3.0-auth-preview',
     northStar: 'Learn → Practice → Attack/Defend → Explain → Score → Certify',
-    modules: ['academy', 'phishing', 'range', 'mentor', 'achievements']
+    modules: ['academy', 'phishing', 'range', 'mentor', 'achievements', 'account']
   },
   academyCore: {
     provider: 'crohnoz-academy',
@@ -27,6 +27,14 @@ window.CCA_CONFIG = Object.freeze({
     apiBaseUrl: '',
     localFallback: true,
     owns: ['auth', 'profiles', 'catalog', 'enrollments', 'progress', 'assessments', 'certificates', 'cohorts', 'content-studio', 'academic-audit']
+  },
+  authentication: {
+    provider: 'crohnoz-academy',
+    sessionStorageOnly: true,
+    minimumPasswordLength: 12,
+    passwordReset: true,
+    roleAwareRouting: true,
+    productionMfa: 'planned'
   },
   observability: {
     localTelemetry: true,
@@ -42,3 +50,43 @@ window.CCA_CONFIG = Object.freeze({
     liveCyberRange: 'cca-cyber-range-live'
   }
 });
+
+(() => {
+  const file = location.pathname.split('/').filter(Boolean).pop() || 'index.html';
+  const protectedRoutes = new Map([
+    ['index.html', []],
+    ['instructor.html', ['instructor']],
+    ['certificate.html', []]
+  ]);
+  if (!protectedRoutes.has(file)) return;
+
+  document.documentElement.style.visibility = 'hidden';
+  Promise.resolve()
+    .then(() => import('./academy-core.adapter.js'))
+    .then(() => import('./auth.session.js'))
+    .then(() => {
+      const session = window.CCAAuth?.requireAuth({ roles: protectedRoutes.get(file) });
+      if (!session) return;
+      document.documentElement.style.visibility = '';
+      setTimeout(() => {
+        const profile = document.querySelector('.profile');
+        if (profile) {
+          profile.setAttribute('role', 'link');
+          profile.setAttribute('tabindex', '0');
+          profile.setAttribute('aria-label', 'Abrir mi cuenta');
+          profile.style.cursor = 'pointer';
+          const openAccount = () => { location.href = './account.html'; };
+          profile.addEventListener('click', openAccount);
+          profile.addEventListener('keydown', event => { if (event.key === 'Enter' || event.key === ' ') openAccount(); });
+          const name = profile.querySelector('strong');
+          const role = profile.querySelector('.profile-copy span');
+          const avatar = profile.querySelector('.avatar');
+          const displayName = session.user?.display_name || session.user?.username || 'Usuario Academy';
+          if (name) name.textContent = displayName;
+          if (role) role.textContent = session.user?.role === 'instructor' ? 'Cybersecurity Instructor' : 'Security Apprentice';
+          if (avatar) avatar.textContent = displayName.trim().split(/\s+/).slice(0, 2).map(part => part[0]).join('').toUpperCase() || 'CA';
+        }
+      }, 0);
+    })
+    .catch(() => { location.replace('./auth.html'); });
+})();
