@@ -26,6 +26,18 @@
   force = true
 
 [[redirects]]
+  from = "/activate"
+  to = "/activate.html"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/users"
+  to = "/users.html"
+  status = 200
+  force = true
+
+[[redirects]]
   from = "/instructor"
   to = "/instructor.html"
   status = 200
