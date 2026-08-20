@@ -1,4 +1,4 @@
-const CACHE = 'cca-shell-v17-content-studio';
+const CACHE = 'cca-shell-v18-docker-xml-no-agent';
 const SHELL = [
   '/',
   '/dashboard.html',
@@ -15,6 +15,7 @@ const SHELL = [
   '/index.html',
   '/styles.css',
   '/app.js',
+  '/no-ai.js',
   '/tenant.config.js',
   '/telemetry.js',
   '/analytics.js',
@@ -69,6 +70,8 @@ const SHELL = [
   '/studio.html',
   '/studio.css',
   '/studio.js',
+  '/xml-content.js',
+  '/content/course-example.xml',
   '/certificate.html',
   '/certificate.js',
   '/privacy.html',
