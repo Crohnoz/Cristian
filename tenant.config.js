@@ -3,8 +3,8 @@ window.CCA_CONFIG = Object.freeze({
     name: 'Cristian Cyber Academy',
     shortName: 'CCA',
     poweredBy: 'Crohnoz Labs',
-    accent: '#819c8e',
-    themeColor: '#111715'
+    accent: '#8b6fd1',
+    themeColor: '#0b111a'
   },
   instructor: {
     displayName: 'Cristian',
@@ -17,9 +17,9 @@ window.CCA_CONFIG = Object.freeze({
     mode: 'white-label'
   },
   product: {
-    version: '0.5.0-immersive-learning-preview',
+    version: '0.6.0-mission-control-preview',
     northStar: 'Learn → Practice → Attack/Defend → Explain → Score → Certify',
-    modules: ['immersive-learning', 'visual-academy', 'academy', 'phishing', 'range', 'mentor', 'achievements', 'account', 'identity-ops', 'student-360']
+    modules: ['mission-control', 'immersive-learning', 'visual-academy', 'academy', 'phishing', 'range', 'mentor', 'achievements', 'account', 'identity-ops', 'student-360']
   },
   academyCore: {
     provider: 'crohnoz-academy',
@@ -54,9 +54,10 @@ window.CCA_CONFIG = Object.freeze({
 });
 
 (() => {
-  const rawFile = location.pathname.split('/').filter(Boolean).pop() || 'index.html';
+  const rawFile = location.pathname.split('/').filter(Boolean).pop() || 'dashboard.html';
   const file = rawFile.includes('.') ? rawFile : `${rawFile}.html`;
   const protectedRoutes = new Map([
+    ['dashboard.html', []],
     ['index.html', []],
     ['instructor.html', ['instructor', 'coordinator', 'admin']],
     ['student.html', ['coordinator', 'admin']],
