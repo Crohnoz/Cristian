@@ -12,7 +12,7 @@
   const userAdminRoles = new Set(['coordinator', 'admin']);
 
   function safeNext(raw) {
-    const allowed = new Set(['/', '/index.html', '/instructor.html', '/users.html', '/certificate.html', '/account.html']);
+    const allowed = new Set(['/', '/index.html', '/instructor.html', '/users.html', '/student.html', '/certificate.html', '/account.html']);
     try {
       const url = new URL(raw || '/index.html', location.origin);
       if (url.origin !== location.origin || !allowed.has(url.pathname)) return '/index.html';
@@ -22,7 +22,7 @@
 
   function destinationFor(session, requested) {
     const role = session?.user?.role;
-    if (requested === '/users.html' && !userAdminRoles.has(role)) return '/index.html';
+    if ((requested === '/users.html' || requested.startsWith('/student.html')) && !userAdminRoles.has(role)) return '/index.html';
     if (requested === '/instructor.html' && !teachingRoles.has(role)) return '/index.html';
     if ((requested === '/index.html' || requested === '/') && teachingRoles.has(role)) return '/instructor.html';
     return requested;
