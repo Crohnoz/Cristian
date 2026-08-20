@@ -2,11 +2,13 @@ import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 
 const read = (path) => readFile(new URL(`../${path}`, import.meta.url), 'utf8');
-const [index, app, instructor, instructorJs, certificate, certificateJs, privacy, privacyJs, vercel, security, tenant, telemetry, analytics, manifest, sw, observability] = await Promise.all([
+const [index, app, instructor, instructorJs, certificate, certificateJs, privacy, privacyJs, vercel, security, tenant, telemetry, analytics, manifest, sw, observability, threatModel, pathsRaw, labsRaw, eventSchemaRaw, labSchemaRaw] = await Promise.all([
   read('index.html'), read('app.js'), read('instructor.html'), read('instructor.js'),
   read('certificate.html'), read('certificate.js'), read('privacy.html'), read('privacy.js'),
   read('vercel.json'), read('SECURITY.md'), read('tenant.config.js'), read('telemetry.js'),
-  read('analytics.js'), read('manifest.webmanifest'), read('sw.js'), read('docs/OBSERVABILITY.md')
+  read('analytics.js'), read('manifest.webmanifest'), read('sw.js'), read('docs/OBSERVABILITY.md'),
+  read('docs/THREAT_MODEL.md'), read('content/learning-paths.json'), read('content/labs.json'),
+  read('schemas/learning-event.schema.json'), read('schemas/lab-manifest.schema.json')
 ]);
 
 assert.match(index, /Cristian Cyber Academy/i, 'student experience should be branded');
@@ -65,6 +67,32 @@ assert.match(analytics, /remoteDefault:\s*false/, 'analytics adapter must keep r
 assert.match(analytics, /sessionRecording:\s*false/, 'analytics adapter must reject session recording by policy');
 assert.match(observability, /Nunca enviar/i, 'observability contract should enumerate prohibited data');
 assert.match(observability, /Session recording debe permanecer deshabilitado/i, 'observability contract should keep recording disabled');
+assert.match(threatModel, /Trust boundaries/i, 'threat model should define trust boundaries');
+assert.match(threatModel, /deny-egress/i, 'threat model should require range egress denial');
+
+const learningPaths = JSON.parse(pathsRaw);
+assert.ok(Array.isArray(learningPaths.paths) && learningPaths.paths.length >= 4, 'curriculum should define at least four learning paths');
+assert.ok(learningPaths.paths.every(path => path.id && path.title && path.estimated_minutes > 0), 'learning paths require identity, title and duration');
+assert.ok(learningPaths.paths.every(path => Array.isArray(path.skills) && path.skills.length), 'each learning path must map to skills');
+
+const labs = JSON.parse(labsRaw);
+assert.ok(Array.isArray(labs.labs) && labs.labs.length >= 3, 'range catalog should define multiple labs');
+for (const lab of labs.labs) {
+  assert.equal(lab.target_type, 'synthetic', `${lab.id} must use synthetic targets`);
+  assert.equal(lab.network_policy, 'isolated-no-egress', `${lab.id} must deny egress`);
+  assert.equal(lab.secrets, 'none', `${lab.id} must receive no secrets`);
+  assert.ok(Array.isArray(lab.prohibited_capabilities) && lab.prohibited_capabilities.length, `${lab.id} must define prohibited capabilities`);
+}
+const gatedLabs = labs.labs.filter(lab => lab.status === 'feature-gated');
+assert.ok(gatedLabs.every(lab => lab.feature_flag === 'cca-cyber-range-live'), 'live range labs must use the range rollout gate');
+
+const eventSchema = JSON.parse(eventSchemaRaw);
+const labSchema = JSON.parse(labSchemaRaw);
+assert.equal(eventSchema.additionalProperties, false, 'learning event contract must reject unknown fields');
+assert.equal(labSchema.additionalProperties, false, 'lab manifest contract must reject unknown fields');
+assert.equal(labSchema.properties.target_type.const, 'synthetic', 'lab schema must enforce synthetic targets');
+assert.equal(labSchema.properties.network_policy.const, 'isolated-no-egress', 'lab schema must enforce no-egress isolation');
+assert.equal(labSchema.properties.secrets.const, 'none', 'lab schema must enforce no secrets');
 
 const pwa = JSON.parse(manifest);
 assert.equal(pwa.display, 'standalone', 'PWA should run standalone');
@@ -91,4 +119,5 @@ assert.match(security, /credenciales reales/i, 'security policy should prohibit 
 
 console.log('✓ Cristian Cyber Academy premium smoke tests passed');
 console.log(`✓ ${externalTrainingDomains.length} reserved training-domain references validated`);
-console.log('✓ Privacy center, white-label, PWA, privacy-safe telemetry, analytics policy and instructor evidence invariants validated');
+console.log(`✓ ${learningPaths.paths.length} learning paths and ${labs.labs.length} isolated lab manifests validated`);
+console.log('✓ Privacy, white-label, PWA, analytics policy, threat model and instructor evidence invariants validated');
