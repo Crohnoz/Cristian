@@ -17,8 +17,21 @@ window.CCA_CONFIG = Object.freeze({
     mode: 'white-label'
   },
   product: {
-    version: '0.2.0-premium',
+    version: '0.2.1-premium',
     northStar: 'Learn → Practice → Attack/Defend → Explain → Score → Certify',
     modules: ['academy', 'phishing', 'range', 'mentor', 'achievements']
+  },
+  observability: {
+    localTelemetry: true,
+    remoteAnalyticsDefault: false,
+    consentRequired: true,
+    sessionRecording: false,
+    piiAllowed: false,
+    sensitiveLearningContentAllowed: false
+  },
+  featureFlags: {
+    premiumExperience: 'cca-premium-experience',
+    liveAiMentor: 'cca-ai-mentor-live',
+    liveCyberRange: 'cca-cyber-range-live'
   }
 });
