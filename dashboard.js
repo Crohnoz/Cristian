@@ -1,4 +1,19 @@
 (() => {
+  const premiumCss = document.createElement('link');
+  premiumCss.rel = 'stylesheet';
+  premiumCss.href = './premium-ui.css';
+  premiumCss.dataset.premiumUi = 'true';
+  if (!document.querySelector('link[data-premium-ui]')) document.head.appendChild(premiumCss);
+
+  const loadPremium = () => {
+    if (document.querySelector('script[data-premium-ui]')) return;
+    const script = document.createElement('script');
+    script.src = './premium-ui.js';
+    script.defer = true;
+    script.dataset.premiumUi = 'true';
+    document.body.appendChild(script);
+  };
+
   const auth = window.CCAAuth;
   const session = auth?.requireAuth?.();
   if (!session) return;
@@ -20,7 +35,6 @@
 
   if (['instructor','coordinator','admin'].includes(user.role)) document.body.classList.add('role-management');
 
-  const date = new Date();
   const todayLabel = document.getElementById('todayLabel');
   const timeLabel = document.getElementById('timeLabel');
   const renderClock = () => {
@@ -48,9 +62,5 @@
   };
   search?.addEventListener('keydown', event => { if (event.key === 'Enter') goSearch(); });
 
-  document.addEventListener('keydown', event => {
-    if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'k') {
-      event.preventDefault(); search?.focus();
-    }
-  });
+  loadPremium();
 })();
