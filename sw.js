@@ -1,9 +1,12 @@
-const CACHE = 'cca-shell-v12-mission-control';
+const CACHE = 'cca-shell-v13-unified-product';
 const SHELL = [
   '/',
   '/dashboard.html',
   '/dashboard.css',
   '/dashboard.js',
+  '/product-shell.css',
+  '/product-shell.js',
+  '/instructor-unified.css',
   '/index.html',
   '/styles.css',
   '/app.js',
