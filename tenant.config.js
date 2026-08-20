@@ -17,15 +17,16 @@ window.CCA_CONFIG = Object.freeze({
     mode: 'white-label'
   },
   product: {
-    version: '0.9.0-clarity-guidance-preview',
+    version: '0.10.0-functional-studio-dev',
     northStar: 'Learn → Practice → Attack/Defend → Explain → Score → Certify',
-    modules: ['clarity-guidance', 'learner-progress', 'premium-polish', 'public-showcase', 'mission-control', 'unified-product-shell', 'immersive-learning', 'visual-academy', 'academy', 'phishing', 'range', 'mentor', 'achievements', 'account', 'identity-ops', 'student-360']
+    modules: ['content-studio', 'clarity-guidance', 'learner-progress', 'premium-polish', 'public-showcase', 'mission-control', 'unified-product-shell', 'immersive-learning', 'visual-academy', 'academy', 'phishing', 'range', 'mentor', 'achievements', 'account', 'identity-ops', 'student-360']
   },
   academyCore: {
     provider: 'crohnoz-academy',
     enabled: false,
     apiBaseUrl: '',
     localFallback: true,
+    contentTenantScoped: false,
     owns: ['auth', 'profiles', 'account-lifecycle', 'catalog', 'enrollments', 'progress', 'assessments', 'certificates', 'cohorts', 'content-studio', 'academic-audit', 'invitations']
   },
   authentication: {
@@ -64,6 +65,7 @@ window.CCA_CONFIG = Object.freeze({
     ['lesson.html', []],
     ['progress.html', []],
     ['instructor.html', ['instructor', 'coordinator', 'admin']],
+    ['studio.html', ['author', 'coordinator', 'admin']],
     ['student.html', ['coordinator', 'admin']],
     ['certificate.html', []]
   ]);
