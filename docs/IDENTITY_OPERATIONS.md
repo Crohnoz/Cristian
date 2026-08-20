@@ -16,6 +16,7 @@ coordinator/admin
   → perfil académico nace con rol mínimo
   → coordinator asigna cohorte
   → learner/instructor entra a su superficie autorizada
+  → coordinator/admin puede suspender/reactivar mediante acciones auditadas
 ```
 
 ## Superficies
@@ -27,7 +28,7 @@ coordinator/admin
 | `/reset-password` | Confirmación de recuperación | pública con token |
 | `/account` | Perfil, idioma, contraseña y sesión | autenticado |
 | `/instructor` | Teaching Command Center | instructor/coordinator/admin |
-| `/users` | Identity & Cohort Operations | coordinator/admin |
+| `/users` | Identity, lifecycle & Cohort Operations | coordinator/admin |
 
 ## Modelo de roles
 
@@ -50,12 +51,14 @@ coordinator/admin
 - invitaciones;
 - roles no-admin;
 - cohortes y memberships;
+- suspensión/reactivación de cuentas no-admin;
 - operación académica;
 - contenido institucional.
 
 ### admin
 - control institucional completo;
 - puede asignar admin;
+- puede administrar lifecycle de otros admins no-superuser;
 - debe utilizarse de forma excepcional.
 
 El frontend expone permisos (`learn`, `teach`, `manage_users`, `manage_cohorts`, etc.) para evitar que la autorización dependa de comparaciones dispersas de nombres de rol. El backend sigue siendo la autoridad final.
@@ -86,11 +89,40 @@ El token raw se entrega una sola vez en la respuesta de creación y puede enviar
 
 La cohorte sugerida puede viajar en metadata, pero **invitar y matricular son operaciones distintas**. Una identidad existente se agrega a una cohorte mediante `/api/v1/ops/cohort-memberships/`, donde Academy Core valida capacidad y crea la matrícula académica correspondiente.
 
+## Suspensión y reactivación
+
+`is_active` permanece **read-only** en el serializer genérico de perfiles. El lifecycle usa acciones explícitas:
+
+```text
+POST /api/v1/ops/profiles/{id}/suspend/
+POST /api/v1/ops/profiles/{id}/reactivate/
+```
+
+Al suspender:
+
+- se valida que el operador tenga permisos;
+- se prohíbe auto-suspensión;
+- un coordinator no puede suspender admin;
+- superusers quedan fuera del API de tenant;
+- `user.is_active` pasa a false;
+- se eliminan los tokens DRF existentes del usuario;
+- se registra `account.suspended`.
+
+Al reactivar:
+
+- se repiten los controles de autorización;
+- `user.is_active` vuelve a true;
+- se registra `account.reactivated`;
+- el usuario debe autenticarse nuevamente para obtener una sesión.
+
+Esto evita convertir una operación de alto impacto en un simple `PATCH is_active=false` difícil de auditar.
+
 ## Operaciones conectadas
 
 `academy-core.adapter.js` expone:
 
 - `opsProfiles()` / `updateOpsProfile()`;
+- `suspendOpsProfile()` / `reactivateOpsProfile()`;
 - `invitations()` / `createInvitation()` / `revokeInvitation()`;
 - `activateInvitation()`;
 - `opsCohorts()`;
@@ -108,6 +140,7 @@ El modelo productivo registra al menos:
 - invitación creada/revocada/aceptada;
 - login exitoso;
 - profile update / role change;
+- account suspended/reactivated;
 - cohort membership;
 - password change;
 - password reset request/completion;
@@ -116,9 +149,9 @@ El modelo productivo registra al menos:
 
 No deben registrarse contraseñas, tokens raw, prompts completos, cookies ni credenciales.
 
-## Estado v0.3.1
+## Estado v0.3.2
 
-Implementado:
+Implementado en Cristian:
 
 - login role-aware;
 - coordinator preview para Cristian;
@@ -129,6 +162,9 @@ Implementado:
 - cambio de roles;
 - asignación/remoción de cohortes;
 - progreso agregado;
+- estado ACTIVE/SUSPENDED;
+- último acceso cuando Academy Core lo provee;
+- suspensión/reactivación;
 - audit trail;
 - account panel;
 - password recovery contract;
@@ -140,7 +176,9 @@ Backend compartido en revisión:
 - password reset reusable;
 - email de activación por invitación;
 - login audit + `last_login`;
-- activity posture de perfiles.
+- activity posture de perfiles;
+- suspensión/reactivación auditada con revocación de token;
+- pruebas negativas de lifecycle.
 
 ## Gates productivos pendientes
 
@@ -149,6 +187,6 @@ Backend compartido en revisión:
 3. Elegir deployment privado/staging del backend.
 4. Conectar `academyCore.apiBaseUrl` sin versionar secrets.
 5. Validar CORS/CSRF/TLS y rate limits.
-6. Pruebas negativas de roles y tenant boundaries.
-7. Definir suspensión/reactivación de cuentas como operación separada y auditada.
-8. MFA/step-up authentication para acciones administrativas de alto riesgo.
+6. Pruebas negativas de tenant boundaries en staging.
+7. MFA/step-up authentication para acciones administrativas de alto riesgo.
+8. QA humano desktop/mobile del lifecycle completo: invite → activate → login → suspend → denied → reactivate → login.
