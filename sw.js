@@ -1,4 +1,4 @@
-const CACHE = 'cca-shell-v5';
+const CACHE = 'cca-shell-v6';
 const SHELL = [
   '/',
   '/index.html',
@@ -16,6 +16,11 @@ const SHELL = [
   '/account.js',
   '/reset-password.html',
   '/reset-password.js',
+  '/activate.html',
+  '/activate.js',
+  '/users.html',
+  '/users.css',
+  '/users.js',
   '/instructor.html',
   '/instructor.css',
   '/instructor.js',
