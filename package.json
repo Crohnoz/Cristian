@@ -2,7 +2,7 @@
   "name": "cristian-cyber-academy",
   "version": "0.2.1",
   "private": true,
-  "description": "Premium practical cybersecurity training platform powered by Crohnoz Labs.",
+  "description": "Premium privacy-first practical cybersecurity training platform powered by Crohnoz Labs.",
   "scripts": {
     "test": "node tests/smoke.mjs",
     "test:smoke": "node tests/smoke.mjs"
