@@ -17,9 +17,21 @@ window.CCA_CONFIG = Object.freeze({
     mode: 'white-label'
   },
   product: {
-    version: '0.10.0-functional-studio-dev',
-    northStar: 'Learn → Practice → Attack/Defend → Explain → Score → Certify',
-    modules: ['content-studio', 'clarity-guidance', 'learner-progress', 'premium-polish', 'public-showcase', 'mission-control', 'unified-product-shell', 'immersive-learning', 'visual-academy', 'academy', 'phishing', 'range', 'mentor', 'achievements', 'account', 'identity-ops', 'student-360']
+    version: '0.11.0-docker-xml-preview',
+    northStar: 'Read → Structure → Practice → Explain → Score → Certify',
+    modules: ['content-studio', 'xml-content', 'docker-runtime', 'clarity-guidance', 'learner-progress', 'premium-polish', 'public-showcase', 'mission-control', 'unified-product-shell', 'immersive-learning', 'visual-academy', 'academy', 'phishing', 'range', 'achievements', 'account', 'identity-ops', 'student-360']
+  },
+  content: {
+    exchangeFormat: 'xml',
+    xmlVersion: 1,
+    maxImportBytes: 2097152,
+    allowDtd: false,
+    allowEntities: false
+  },
+  automation: {
+    aiAgentEnabled: false,
+    autonomousPublishing: false,
+    humanReviewRequired: true
   },
   academyCore: {
     provider: 'crohnoz-academy',
@@ -50,7 +62,7 @@ window.CCA_CONFIG = Object.freeze({
   },
   featureFlags: {
     premiumExperience: 'cca-premium-experience',
-    liveAiMentor: 'cca-ai-mentor-live',
+    xmlContentPipeline: 'cca-xml-content-v1',
     liveCyberRange: 'cca-cyber-range-live'
   }
 });
@@ -98,6 +110,10 @@ window.CCA_CONFIG = Object.freeze({
       }
       if (file === 'studio.html') {
         await import('./studio.js');
+        await import('./xml-content.js');
+      }
+      if (file === 'index.html') {
+        window.addEventListener('DOMContentLoaded', () => import('./no-ai.js'), { once: true });
       }
       if (file === 'instructor.html' && !document.querySelector('link[data-instructor-unified]')) {
         const theme = document.createElement('link');
