@@ -1,0 +1,110 @@
+/* Premium layout pass: typography, rhythm, density and navigation proportions */
+body.premium-ui{font-feature-settings:'kern' 1,'liga' 1;text-rendering:optimizeLegibility}
+body.premium-ui .app-shell{grid-template-columns:244px minmax(0,1fr)}
+body.premium-ui .side{padding:22px 14px;background:linear-gradient(180deg,#08111c 0%,#08101a 58%,#070e17 100%)}
+body.premium-ui .logo{padding:2px 10px 28px;gap:12px}
+body.premium-ui .logo img{width:41px;height:41px}
+body.premium-ui .logo strong{font-size:16px;letter-spacing:2px}
+body.premium-ui .logo span{font-size:9px;letter-spacing:1.9px;margin-top:3px}
+body.premium-ui .side-nav{gap:6px}
+body.premium-ui .side-nav a{min-height:46px;padding:0 13px;border-radius:12px;font-size:12px;font-weight:600;letter-spacing:-.01em}
+body.premium-ui .side-nav a>span{width:20px;font-size:16px}
+body.premium-ui .side-foot a,body.premium-ui .side-foot button{font-size:11.5px;border-radius:10px}
+body.premium-ui .top{height:78px;padding:0 32px;background:rgba(8,15,25,.9)}
+body.premium-ui .search{height:42px;width:min(440px,42vw);border-radius:12px;padding:0 13px}
+body.premium-ui .search input{font-size:12px}
+body.premium-ui .top-actions{gap:16px}
+body.premium-ui .profile-chip img{width:40px;height:40px}
+body.premium-ui .profile-chip strong{font-size:12px}
+body.premium-ui .profile-chip small{font-size:9.5px;margin-top:2px}
+body.premium-ui .page{max-width:1680px;margin:0 auto;padding:30px 32px 38px}
+body.premium-ui .welcome-row{margin-bottom:24px}
+body.premium-ui .welcome-row h1{font-family:'Space Grotesk',Inter,sans-serif;font-size:27px;line-height:1.15;letter-spacing:-.035em;margin-bottom:8px}
+body.premium-ui .welcome-row p{font-size:12.5px;line-height:1.55;color:#9eafc2}
+body.premium-ui .clock>span{font-size:9.5px}
+body.premium-ui .clock strong{font-family:'Space Grotesk',Inter,sans-serif;font-size:24px;letter-spacing:-.03em}
+body.premium-ui .overview-grid{gap:16px;grid-template-columns:1.55fr .62fr .86fr 1fr}
+body.premium-ui .profile-card{grid-template-columns:220px 1fr;min-height:232px}
+body.premium-ui .profile-main{padding:28px 26px}
+body.premium-ui .profile-main h2{font-family:'Space Grotesk',Inter,sans-serif;font-size:20px;letter-spacing:-.025em;margin:11px 0 17px}
+body.premium-ui .eyebrow{font-size:9.5px}
+body.premium-ui .level-row{font-size:10.5px}
+body.premium-ui .progress{height:6px;margin:11px 0}
+body.premium-ui .profile-main>small{font-size:9.5px}
+body.premium-ui .mini-kpis{gap:11px;margin-top:22px}
+body.premium-ui .mini-kpis>span{border-radius:12px;padding:11px 10px}
+body.premium-ui .mini-kpis b{font-size:14px}
+body.premium-ui .mini-kpis small{font-size:8.5px}
+body.premium-ui .readiness{padding:20px}
+body.premium-ui .gauge{width:124px;height:124px;margin:18px auto 11px}
+body.premium-ui .gauge-inner strong{font-family:'Space Grotesk',Inter,sans-serif;font-size:30px}
+body.premium-ui .activity,body.premium-ui .live-card{padding:18px}
+body.premium-ui .activity ul{gap:13px;margin-top:14px}
+body.premium-ui .activity li{grid-template-columns:29px 1fr auto;gap:10px}
+body.premium-ui .activity li>b{width:29px;height:29px}
+body.premium-ui .activity li strong{font-size:10px;line-height:1.35}
+body.premium-ui .activity li small{font-size:8.5px}
+body.premium-ui .activity time{font-size:8px}
+body.premium-ui .live-body{grid-template-columns:62px 1fr;gap:15px;padding:16px 0}
+body.premium-ui .date-box{border-radius:11px;padding:10px}
+body.premium-ui .live-body strong{font-size:11px}
+body.premium-ui .live-body small{font-size:9px}
+body.premium-ui .join{border-radius:10px;padding:11px;font-size:9.5px;letter-spacing:.02em}
+body.premium-ui .section{margin-top:28px}
+body.premium-ui .section>header{margin-bottom:14px}
+body.premium-ui .section>header h2{font-family:'Space Grotesk',Inter,sans-serif;font-size:17px;letter-spacing:-.025em}
+body.premium-ui .section>header a{font-size:9.5px}
+body.premium-ui .course-grid{gap:15px}
+body.premium-ui .course-copy{padding:15px}
+body.premium-ui .course-copy h3,body.premium-ui .lab-card h3{font-family:'Space Grotesk',Inter,sans-serif;font-size:13.5px;line-height:1.25;letter-spacing:-.02em;margin-bottom:8px}
+body.premium-ui .course-copy p,body.premium-ui .lab-card p{font-size:10.5px;line-height:1.58;color:#9eafc0;margin-bottom:15px}
+body.premium-ui .course-meta{font-size:9px}
+body.premium-ui .mini-progress{height:4px;margin-top:10px}
+body.premium-ui .lower-grid{gap:16px;grid-template-columns:minmax(0,1fr) 330px}
+body.premium-ui .lab-grid{gap:13px}
+body.premium-ui .lab-visual{height:190px}
+body.premium-ui .lab-card>div:last-child{padding:14px}
+body.premium-ui .lab-card footer{font-size:8.8px}
+body.premium-ui .right-column{gap:14px;margin-top:28px}
+body.premium-ui .chart-card,body.premium-ui .skill-card,body.premium-ui .achievements{padding:17px}
+body.premium-ui .skill{grid-template-columns:118px 1fr 34px;gap:10px;font-size:9px}
+body.premium-ui .achievement{grid-template-columns:40px 1fr;gap:11px;margin-top:14px}
+body.premium-ui .achievement>b{width:38px;height:38px;border-radius:12px}
+body.premium-ui .achievement strong{font-size:10px}
+body.premium-ui .achievement small{font-size:8.5px;line-height:1.35}
+body.premium-ui .tip{margin-top:18px;border-radius:13px;min-height:58px;padding:0 18px;gap:12px}
+body.premium-ui .tip strong,body.premium-ui .tip p{font-size:10px;line-height:1.45}
+body.premium-ui .tip a{border-radius:9px;padding:9px 14px;font-size:8.5px}
+
+/* Shared authenticated shell */
+body.premium-ui.with-product-shell{padding-left:242px;padding-top:76px}
+body.premium-ui .product-shell-sidebar{width:242px;padding:22px 14px;background:linear-gradient(180deg,#08111c,#07101a 64%,#070e17)}
+body.premium-ui .product-shell-brand{padding:0 10px 24px;gap:12px}
+body.premium-ui .product-shell-brand img{width:41px;height:41px}
+body.premium-ui .product-shell-brand strong{font-size:16px}
+body.premium-ui .product-shell-brand span{font-size:8.5px;margin-top:3px}
+body.premium-ui .product-shell-nav{gap:6px}
+body.premium-ui .product-shell-nav a{min-height:45px;padding:0 13px;border-radius:12px;font-size:12px}
+body.premium-ui .product-shell-topbar{left:242px;height:76px;padding:0 32px;background:rgba(8,15,25,.9)}
+body.premium-ui .product-shell-search{width:min(440px,38vw);height:42px;border-radius:12px;font-size:11.5px;cursor:pointer}
+body.premium-ui .product-shell-profile img{width:42px;height:42px}
+body.premium-ui .product-shell-profile strong{font-size:12px}
+body.premium-ui .product-shell-profile span{font-size:9.5px;margin-top:2px}
+body.premium-ui.with-product-shell .catalog-shell,body.premium-ui.with-product-shell .course-shell,body.premium-ui.with-product-shell .lesson-shell{padding-left:34px!important;padding-right:34px!important}
+body.premium-ui.with-product-shell .visual-hero,body.premium-ui.with-product-shell .course-hero{margin-top:28px}
+
+/* Instructor surface */
+body.premium-ui .instructor-main .topbar{min-height:78px;padding-left:30px;padding-right:30px}
+body.premium-ui .instructor-main h1{font-size:24px;letter-spacing:-.035em}
+body.premium-ui .instructor-main h2{letter-spacing:-.03em}
+body.premium-ui .instructor-main .panel,body.premium-ui .instructor-main .table-card,body.premium-ui .instructor-main .student-card,body.premium-ui .instructor-main .content-card{border-radius:16px!important}
+body.premium-ui .instructor-main .stats article{border-radius:15px!important}
+
+/* Public showcase refinement if premium layer is enabled there later */
+body.premium-ui .public-topbar{backdrop-filter:blur(22px) saturate(130%)}
+body.premium-ui .public-section{scroll-margin-top:100px}
+body.premium-ui .public-course-grid article,body.premium-ui .format-card,body.premium-ui .instructor-card{border-radius:18px!important}
+
+@media(max-width:1280px){body.premium-ui .overview-grid{grid-template-columns:1.35fr .65fr 1fr}body.premium-ui .live-card{grid-column:1/-1}body.premium-ui .lower-grid{grid-template-columns:1fr 320px}}
+@media(max-width:980px){body.premium-ui .app-shell{grid-template-columns:76px 1fr}body.premium-ui.with-product-shell{padding-left:0;padding-top:66px}body.premium-ui .product-shell-topbar{left:0;height:66px;padding:0 16px}body.premium-ui .product-shell-search{width:55vw}body.premium-ui .page{padding:24px 20px 100px}body.premium-ui .overview-grid{grid-template-columns:1fr 1fr}body.premium-ui .profile-card{grid-column:1/-1}body.premium-ui .lower-grid{grid-template-columns:1fr}body.premium-ui .right-column{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:720px){body.premium-ui .top{height:66px}body.premium-ui .page{padding:20px 15px 105px}body.premium-ui .welcome-row{margin-bottom:18px}body.premium-ui .welcome-row h1{font-size:24px!important}body.premium-ui .overview-grid{grid-template-columns:1fr}body.premium-ui .profile-card{grid-template-columns:1fr}body.premium-ui .profile-avatar{height:285px}body.premium-ui .course-grid,body.premium-ui .lab-grid,body.premium-ui .right-column{grid-template-columns:1fr}body.premium-ui.with-product-shell .catalog-shell,body.premium-ui.with-product-shell .course-shell,body.premium-ui.with-product-shell .lesson-shell{padding-left:15px!important;padding-right:15px!important}}
