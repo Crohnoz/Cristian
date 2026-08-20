@@ -21,6 +21,13 @@ window.CCA_CONFIG = Object.freeze({
     northStar: 'Learn → Practice → Attack/Defend → Explain → Score → Certify',
     modules: ['academy', 'phishing', 'range', 'mentor', 'achievements']
   },
+  academyCore: {
+    provider: 'crohnoz-academy',
+    enabled: false,
+    apiBaseUrl: '',
+    localFallback: true,
+    owns: ['auth', 'profiles', 'catalog', 'enrollments', 'progress', 'assessments', 'certificates', 'cohorts', 'content-studio', 'academic-audit']
+  },
   observability: {
     localTelemetry: true,
     remoteAnalyticsDefault: false,
