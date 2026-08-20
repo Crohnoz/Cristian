@@ -2,6 +2,8 @@
   const config = window.CCA_CONFIG?.academyCore || {};
   const enabled = Boolean(config.enabled && config.apiBaseUrl);
   const baseUrl = String(config.apiBaseUrl || '').replace(/\/$/, '');
+  const organizationSlug = String(config.organizationSlug || window.CCA_CONFIG?.tenant?.id || '').trim();
+  const tenantScopeReady = Boolean(config.contentTenantScoped === true && organizationSlug);
   const TOKEN_KEY = 'cca:academy-core-token:v1';
 
   const token = () => sessionStorage.getItem(TOKEN_KEY) || '';
@@ -14,14 +16,22 @@
 
   async function request(path, options = {}) {
     if (!enabled) throw new Error('ACADEMY_CORE_DISABLED');
-    const headers = new Headers(options.headers || {});
+    const { tenantScoped = false, ...fetchOptions } = options;
+    if (tenantScoped && !tenantScopeReady) {
+      const error = new Error('ACADEMY_CONTENT_SCOPE_NOT_CONFIGURED');
+      error.code = 'CONTENT_SCOPE_NOT_CONFIGURED';
+      throw error;
+    }
+
+    const headers = new Headers(fetchOptions.headers || {});
     headers.set('Accept', 'application/json');
-    if (options.body && !headers.has('Content-Type')) headers.set('Content-Type', 'application/json');
+    if (fetchOptions.body && !headers.has('Content-Type')) headers.set('Content-Type', 'application/json');
     if (token()) headers.set('Authorization', `Token ${token()}`);
+    if (tenantScoped) headers.set('X-Academy-Organization', organizationSlug);
 
     let response;
     try {
-      response = await fetch(`${baseUrl}${path}`, { credentials: 'omit', ...options, headers });
+      response = await fetch(`${baseUrl}${path}`, { credentials: 'omit', ...fetchOptions, headers });
     } catch (cause) {
       const error = new Error('ACADEMY_CORE_NETWORK_ERROR');
       error.code = 'NETWORK_ERROR';
@@ -48,6 +58,11 @@
   const patch = (path, data = {}) => request(path, { method: 'PATCH', body: JSON.stringify(data) });
   const del = path => request(path, { method: 'DELETE' });
 
+  const scopedGet = path => request(path, { tenantScoped: true });
+  const scopedPost = (path, data = {}) => request(path, { tenantScoped: true, method: 'POST', body: JSON.stringify(data) });
+  const scopedPatch = (path, data = {}) => request(path, { tenantScoped: true, method: 'PATCH', body: JSON.stringify(data) });
+  const scopedDelete = path => request(path, { tenantScoped: true, method: 'DELETE' });
+
   async function login(username, password) {
     const payload = await post('/api/v1/auth/token/', { username, password });
     if (!payload?.token) throw new Error('ACADEMY_CORE_TOKEN_MISSING');
@@ -65,11 +80,11 @@
   const studioResource = resource => {
     const path = `/api/v1/studio/${resource}/`;
     return Object.freeze({
-      list: () => get(path),
-      retrieve: id => get(`${path}${encodeURIComponent(id)}/`),
-      create: data => post(path, data),
-      update: (id, data) => patch(`${path}${encodeURIComponent(id)}/`, data),
-      remove: id => del(`${path}${encodeURIComponent(id)}/`)
+      list: () => scopedGet(path),
+      retrieve: id => scopedGet(`${path}${encodeURIComponent(id)}/`),
+      create: data => scopedPost(path, data),
+      update: (id, data) => scopedPatch(`${path}${encodeURIComponent(id)}/`, data),
+      remove: id => scopedDelete(`${path}${encodeURIComponent(id)}/`)
     });
   };
 
@@ -84,17 +99,23 @@
     enabled,
     mode: enabled ? 'remote' : 'local-fallback',
     baseUrl,
+    organizationSlug,
+    contentScopeReady: () => tenantScopeReady,
     isAuthenticated: () => Boolean(token()),
     health: () => get('/api/v1/health/'),
     me: () => get('/api/v1/me/'),
     updateMe: data => patch('/api/v1/me/', data),
 
-    courses: () => get('/api/v1/courses/'),
-    learningPaths: () => get('/api/v1/learning-paths/'),
-    enrollments: () => get('/api/v1/enrollments/'),
-    lessonProgress: () => get('/api/v1/lesson-progress/'),
-    assessmentAttempts: () => get('/api/v1/assessment-attempts/'),
-    certificates: () => get('/api/v1/certificates/'),
+    courses: () => scopedGet('/api/v1/courses/'),
+    learningPaths: () => scopedGet('/api/v1/learning-paths/'),
+    enrollments: () => scopedGet('/api/v1/enrollments/'),
+    createEnrollment: data => scopedPost('/api/v1/enrollments/', data),
+    lessonProgress: () => scopedGet('/api/v1/lesson-progress/'),
+    createLessonProgress: data => scopedPost('/api/v1/lesson-progress/', data),
+    updateLessonProgress: (id, data) => scopedPatch(`/api/v1/lesson-progress/${encodeURIComponent(id)}/`, data),
+    assessmentAttempts: () => scopedGet('/api/v1/assessment-attempts/'),
+    createAssessmentAttempt: data => scopedPost('/api/v1/assessment-attempts/', data),
+    certificates: () => scopedGet('/api/v1/certificates/'),
     verifyCertificate: code => get(`/api/v1/certificates/verify/${encodeURIComponent(code)}/`),
 
     login,
@@ -132,14 +153,14 @@
     createStudioCourse: studioCourses.create,
     updateStudioCourse: studioCourses.update,
     deleteStudioCourse: studioCourses.remove,
-    transitionStudioCourse: (id, status) => post(`/api/v1/studio/courses/${encodeURIComponent(id)}/transition/`, { status }),
+    transitionStudioCourse: (id, status) => scopedPost(`/api/v1/studio/courses/${encodeURIComponent(id)}/transition/`, { status }),
 
     studioLearningPaths: studioLearningPaths.list,
     studioLearningPath: studioLearningPaths.retrieve,
     createStudioLearningPath: studioLearningPaths.create,
     updateStudioLearningPath: studioLearningPaths.update,
     deleteStudioLearningPath: studioLearningPaths.remove,
-    transitionStudioLearningPath: (id, status) => post(`/api/v1/studio/learning-paths/${encodeURIComponent(id)}/transition/`, { status }),
+    transitionStudioLearningPath: (id, status) => scopedPost(`/api/v1/studio/learning-paths/${encodeURIComponent(id)}/transition/`, { status }),
 
     studioModules: studioModules.list,
     createStudioModule: studioModules.create,
