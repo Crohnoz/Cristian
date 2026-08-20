@@ -1,10 +1,10 @@
 {
   "name": "cristian-cyber-academy",
-  "version": "0.11.0-dev",
+  "version": "0.12.0-dev",
   "private": true,
-  "description": "Privacy-first practical cybersecurity training platform with Docker runtime and XML content exchange, powered by Crohnoz Labs.",
+  "description": "Privacy-first practical cybersecurity training platform with learner campus, Teacher Intranet, Docker runtime and XML content exchange, powered by Crohnoz Labs.",
   "scripts": {
-    "test": "node tests/smoke.mjs && node tests/academy-core-contract.mjs && node tests/auth-contract.mjs && node tests/identity-admin-contract.mjs && node tests/student360-contract.mjs && node tests/visual-academy-contract.mjs && node tests/mission-control-contract.mjs && node tests/unified-product-contract.mjs && node tests/public-showcase-contract.mjs && node tests/premium-polish-contract.mjs && node tests/clarity-guidance-contract.mjs && node tests/learner-progress-contract.mjs && node tests/studio-contract.mjs && node tests/xml-docker-contract.mjs",
+    "test": "node tests/smoke.mjs && node tests/academy-core-contract.mjs && node tests/auth-contract.mjs && node tests/identity-admin-contract.mjs && node tests/student360-contract.mjs && node tests/visual-academy-contract.mjs && node tests/mission-control-contract.mjs && node tests/unified-product-contract.mjs && node tests/public-showcase-contract.mjs && node tests/premium-polish-contract.mjs && node tests/clarity-guidance-contract.mjs && node tests/learner-progress-contract.mjs && node tests/studio-contract.mjs && node tests/xml-docker-contract.mjs && node tests/teacher-intranet-contract.mjs",
     "test:smoke": "node tests/smoke.mjs",
     "test:academy-core": "node tests/academy-core-contract.mjs",
     "test:auth": "node tests/auth-contract.mjs",
@@ -18,7 +18,8 @@
     "test:clarity-guidance": "node tests/clarity-guidance-contract.mjs",
     "test:learner-progress": "node tests/learner-progress-contract.mjs",
     "test:studio": "node tests/studio-contract.mjs",
-    "test:xml-docker": "node tests/xml-docker-contract.mjs"
+    "test:xml-docker": "node tests/xml-docker-contract.mjs",
+    "test:teacher-intranet": "node tests/teacher-intranet-contract.mjs"
   },
   "engines": {
     "node": ">=18"
