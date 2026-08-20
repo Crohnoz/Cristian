@@ -12,6 +12,8 @@ assert.match(tenant, /provider:\s*'crohnoz-academy'/, 'Cristian must declare Cro
 assert.match(tenant, /enabled:\s*false/, 'Academy Core must remain disabled until an explicit API environment is configured');
 assert.match(tenant, /apiBaseUrl:\s*''/, 'No production/staging Academy API URL should be hardcoded in the public tenant config');
 assert.match(tenant, /localFallback:\s*true/, 'Premium demo must retain safe local fallback while Academy Core is disabled');
+assert.match(tenant, /contentTenantScoped:\s*false/, 'Remote Content Studio must remain gated until backend content is tenant scoped');
+assert.match(tenant, /\['studio\.html',\s*\['author',\s*'coordinator',\s*'admin'\]\]/, 'Studio route must be role-gated centrally');
 
 for (const endpoint of [
   '/api/v1/health/',
@@ -23,11 +25,22 @@ for (const endpoint of [
   '/api/v1/enrollments/',
   '/api/v1/lesson-progress/',
   '/api/v1/assessment-attempts/',
-  '/api/v1/certificates/'
+  '/api/v1/certificates/',
+  '/api/v1/studio/'
 ]) {
   assert.match(adapter, new RegExp(endpoint.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')), `Adapter should expose Academy endpoint ${endpoint}`);
 }
 
+for (const method of [
+  'createStudioCourse', 'updateStudioCourse', 'deleteStudioCourse', 'transitionStudioCourse',
+  'createStudioModule', 'updateStudioModule', 'deleteStudioModule',
+  'createStudioLesson', 'updateStudioLesson', 'deleteStudioLesson',
+  'createStudioAssessment', 'updateStudioAssessment', 'deleteStudioAssessment'
+]) {
+  assert.match(adapter, new RegExp(`\\b${method}\\b`), `Adapter should expose verified Content Studio method ${method}`);
+}
+
+assert.match(adapter, /transition\/.*\{ status \}/, 'Publication workflow must use the backend transition action rather than editing status directly');
 assert.doesNotMatch(adapter, /(service[_-]?role|secret|private[_-]?key|password\s*[:=]\s*['"][^'"]+)/i, 'Academy Core adapter must not contain secrets');
 assert.doesNotMatch(adapter, /score\s*:/i, 'Browser adapter must not send authoritative assessment scores');
 assert.match(integration, /Generic education|Academy Core/i, 'Integration decision should define Academy as reusable academic core');
