@@ -1,6 +1,13 @@
+(() => {
+const AUTH_SESSION_KEY = 'cca:auth-session:v1';
 const STORAGE_KEY = 'cristian-cyber-academy:v2';
 const telemetry = window.CrohnozTelemetry || { track: () => {}, exportEvents: () => [] };
 const config = window.CCA_CONFIG || {};
+
+function readSession(){try{return JSON.parse(sessionStorage.getItem(AUTH_SESSION_KEY)||'null');}catch{return null;}}
+const session=readSession();
+if(!session?.authenticated){const next=encodeURIComponent(location.pathname+location.search+location.hash);location.replace(`./auth.html?next=${next}`);return;}
+if(!['instructor','coordinator','admin'].includes(session.user?.role)){location.replace('./index.html');return;}
 
 function safeText(value, maxLength = 160) { return String(value ?? '').slice(0, maxLength); }
 function loadLearner() { try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}'); } catch { return {}; } }
@@ -12,6 +19,18 @@ function showToast(message) {
   const toast = document.getElementById('toast');
   toast.textContent = safeText(message,160); toast.classList.add('show');
   clearTimeout(showToast.timer); showToast.timer=setTimeout(()=>toast.classList.remove('show'),2200);
+}
+
+function installIdentityOperations(){
+  const nav=document.querySelector('.sidebar .nav');
+  if(nav && ['coordinator','admin'].includes(session.user?.role) && !document.getElementById('identityOpsLink')){
+    const link=document.createElement('a'); link.id='identityOpsLink'; link.className='nav-item'; link.href='./users.html';
+    const icon=document.createElement('span'); icon.textContent='♙'; link.append(icon,document.createTextNode('Usuarios & Accesos')); nav.appendChild(link);
+  }
+  const profile=document.querySelector('.topbar .profile');
+  if(profile){profile.tabIndex=0;profile.setAttribute('role','link');profile.setAttribute('aria-label','Abrir mi cuenta');profile.style.cursor='pointer';const open=()=>location.href='./account.html';profile.addEventListener('click',open);profile.addEventListener('keydown',event=>{if(event.key==='Enter'||event.key===' '){event.preventDefault();open();}});}
+  const tenantCard=document.querySelector('.sidebar-card .level-row span');
+  if(tenantCard) tenantCard.textContent=session.user?.role?.toUpperCase()||'INSTRUCTOR';
 }
 
 function renderLiveLearner() {
@@ -66,7 +85,8 @@ function bindNavigation() {
   document.querySelectorAll('main section[id]').forEach(section=>observer.observe(section));
 }
 
-function applyConfig(){document.getElementById('instructorName').textContent=config.instructor?.displayName || 'Cristian';}
+function applyConfig(){document.getElementById('instructorName').textContent=session.user?.display_name || config.instructor?.displayName || 'Cristian';}
 window.addEventListener('storage',event=>{if(event.key===STORAGE_KEY){renderLiveLearner();renderActivity();}});
 
-applyConfig(); renderLiveLearner(); renderActivity(); bindNavigation(); telemetry.track('instructor_console_loaded');
+installIdentityOperations(); applyConfig(); renderLiveLearner(); renderActivity(); bindNavigation(); telemetry.track('instructor_console_loaded',{source:'role-gated'});
+})();
