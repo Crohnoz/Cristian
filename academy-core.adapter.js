@@ -62,6 +62,24 @@
     finally { clearToken('logout'); }
   }
 
+  const studioResource = resource => {
+    const path = `/api/v1/studio/${resource}/`;
+    return Object.freeze({
+      list: () => get(path),
+      retrieve: id => get(`${path}${encodeURIComponent(id)}/`),
+      create: data => post(path, data),
+      update: (id, data) => patch(`${path}${encodeURIComponent(id)}/`, data),
+      remove: id => del(`${path}${encodeURIComponent(id)}/`)
+    });
+  };
+
+  const studioCompetencies = studioResource('competencies');
+  const studioCourses = studioResource('courses');
+  const studioLearningPaths = studioResource('learning-paths');
+  const studioModules = studioResource('modules');
+  const studioLessons = studioResource('lessons');
+  const studioAssessments = studioResource('assessments');
+
   const api = {
     enabled,
     mode: enabled ? 'remote' : 'local-fallback',
@@ -104,8 +122,39 @@
     opsCertificates: () => get('/api/v1/ops/certificates/'),
     opsAuditEvents: () => get('/api/v1/ops/audit-events/'),
 
-    studioCourses: () => get('/api/v1/studio/courses/'),
-    studioLearningPaths: () => get('/api/v1/studio/learning-paths/')
+    studioCompetencies: studioCompetencies.list,
+    createStudioCompetency: studioCompetencies.create,
+    updateStudioCompetency: studioCompetencies.update,
+    deleteStudioCompetency: studioCompetencies.remove,
+
+    studioCourses: studioCourses.list,
+    studioCourse: studioCourses.retrieve,
+    createStudioCourse: studioCourses.create,
+    updateStudioCourse: studioCourses.update,
+    deleteStudioCourse: studioCourses.remove,
+    transitionStudioCourse: (id, status) => post(`/api/v1/studio/courses/${encodeURIComponent(id)}/transition/`, { status }),
+
+    studioLearningPaths: studioLearningPaths.list,
+    studioLearningPath: studioLearningPaths.retrieve,
+    createStudioLearningPath: studioLearningPaths.create,
+    updateStudioLearningPath: studioLearningPaths.update,
+    deleteStudioLearningPath: studioLearningPaths.remove,
+    transitionStudioLearningPath: (id, status) => post(`/api/v1/studio/learning-paths/${encodeURIComponent(id)}/transition/`, { status }),
+
+    studioModules: studioModules.list,
+    createStudioModule: studioModules.create,
+    updateStudioModule: studioModules.update,
+    deleteStudioModule: studioModules.remove,
+
+    studioLessons: studioLessons.list,
+    createStudioLesson: studioLessons.create,
+    updateStudioLesson: studioLessons.update,
+    deleteStudioLesson: studioLessons.remove,
+
+    studioAssessments: studioAssessments.list,
+    createStudioAssessment: studioAssessments.create,
+    updateStudioAssessment: studioAssessments.update,
+    deleteStudioAssessment: studioAssessments.remove
   };
 
   window.CrohnozAcademyCore = Object.freeze(api);
