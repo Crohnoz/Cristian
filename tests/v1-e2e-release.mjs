@@ -11,7 +11,7 @@ const required = [
   'showcase.html','showcase.css','showcase-premium.css','auth.html','auth.css','auth.page.js','auth.session.js',
   'onboarding.html','onboarding.css','onboarding.js','dashboard.html','dashboard.css','dashboard.js',
   'catalog.html','catalog.css','catalog.js','container-catalog.css','container-lab.html','container-lab.css','container-lab.js',
-  'api-lab.html','api-lab.css','api-lab.js','content/container-labs.json',
+  'api-lab.html','api-lab.css','api-lab.js','webgoat-lab.html','webgoat-lab.css','webgoat-lab.js','content/container-labs.json',
   'course.html','course.css','course.js','lesson.html','lesson.css','lesson.js',
   'progress.html','progress.css','progress.js','certificate.html','certificate.js',
   'teacher.html','teacher.css','teacher.js','instructor.html','instructor.css','instructor.js','instructor-unified.css',
@@ -44,6 +44,7 @@ for (const gate of [
   "['lab.html', []]",
   "['container-lab.html', []]",
   "['api-lab.html', []]",
+  "['webgoat-lab.html', []]",
   "['onboarding.html', ['learner']]",
   "['teacher.html', ['instructor','coordinator','admin']]",
   "['users.html', ['coordinator','admin']]",
@@ -72,22 +73,30 @@ assert.match(privacyHardening, /mentor_question/, 'mentor privacy migration miss
 assert.doesNotMatch(vercel, /rawgit|githack|raw\.githubusercontent|jsdelivr/i, 'production depends on external raw-code proxy');
 assert.match(vercel, /Content-Security-Policy/, 'CSP header missing');
 assert.match(vercel, /X-Content-Type-Options/, 'nosniff header missing');
-assert.match(sw, /cca-shell-v21-container-labs/, 'v1 service worker namespace missing');
-for (const file of ['onboarding.html','teacher.html','privacy-hardening.js','certificate.html','container-lab.html','api-lab.html']) assert.ok(sw.includes(`/${file}`), `service worker missing ${file}`);
+assert.match(sw, /cca-shell-v22-webgoat-lab/, 'v1 service worker namespace missing');
+for (const file of ['onboarding.html','teacher.html','privacy-hardening.js','certificate.html','container-lab.html','api-lab.html','webgoat-lab.html']) assert.ok(sw.includes(`/${file}`), `service worker missing ${file}`);
 assert.match(build, /showcase\.html[\s\S]*index\.html/, 'production builder must promote the public showcase to root');
 assert.match(build, /lab\.html/, 'production builder must preserve the legacy lab shell separately');
 
 assert.equal(containerLabs.runtimeEnabled, false, 'vulnerable container runtime must remain disabled in public RC');
-assert.equal(containerLabs.labs.length, 2, 'expected two preview container labs');
+assert.equal(containerLabs.labs.length, 3, 'expected three preview container labs');
 for (const lab of containerLabs.labs) {
   assert.equal(lab.ephemeral, true, `${lab.id} must be ephemeral`);
   assert.equal(lab.networkPolicy, 'deny-egress', `${lab.id} must deny egress`);
   assert.equal(lab.status, 'preview-only', `${lab.id} must remain preview-only`);
 }
+const webGoat = containerLabs.labs.find(lab => lab.id === 'owasp-webgoat');
+assert.ok(webGoat, 'WebGoat runtime profile missing');
+assert.equal(webGoat.image, 'webgoat/webgoat:v2025.3', 'WebGoat image should use pinned release tag');
+assert.deepEqual(webGoat.services.map(service => service.containerPort), [8080, 9090], 'WebGoat and WebWolf internal services expected');
+assert.ok(webGoat.services.every(service => service.exposure === 'authenticated-gateway-only'), 'WebGoat services must stay behind authenticated gateway');
+
 assert.match(catalogJs, /OWASP Juice Shop/, 'Academy catalog must expose Juice Shop');
 assert.match(catalogJs, /VAmPI/, 'Academy catalog must expose VAmPI');
+assert.match(catalogJs, /OWASP WebGoat/, 'Academy catalog must expose WebGoat');
 assert.match(catalogJs, /container-lab\.html/, 'Academy catalog missing Juice Shop route');
 assert.match(catalogJs, /api-lab\.html/, 'Academy catalog missing VAmPI route');
+assert.match(catalogJs, /webgoat-lab\.html/, 'Academy catalog missing WebGoat route');
 
 const htmlFiles = required.filter(file => file.endsWith('.html'));
 for (const htmlFile of htmlFiles) {
