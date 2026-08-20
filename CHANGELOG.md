@@ -15,6 +15,8 @@ All notable product changes for Cristian Cyber Academy are documented here.
 - Identity Ops, Student 360 and Content Studio remain role-gated operational surfaces.
 - Course, lesson, live, awareness, lab and quiz navigation normalized around the current `mode=` routing contract.
 - Public and learner-facing cyber wording softened toward educational context while preserving synthetic practical scenarios.
+- Added a **Container Labs** family inside Academy with an OWASP Juice Shop preview and a VAmPI API preview.
+- Added an approved Container Lab catalog in `content/container-labs.json` and the isolation architecture in `docs/CONTAINER_LABS.md`.
 
 ### Release engineering
 
@@ -23,22 +25,24 @@ All notable product changes for Cristian Cyber Academy are documented here.
 - Vercel build now runs `npm run build`, which blocks publication when the release gate fails.
 - Added a static `dist/` builder that excludes tests, docs, schemas, Supabase, OpenAPI and development-only artifacts from the public deployment.
 - Production root is generated from `showcase.html`; the legacy training shell is isolated at `/lab.html`.
-- Service Worker advanced to `cca-shell-v20-v1-release-candidate`, precaches the new role surfaces and no longer stores failed HTTP responses.
+- Service Worker advanced to `cca-shell-v21-container-labs`, precaches the role surfaces and Container Lab previews, and no longer stores failed HTTP responses.
 - Removed all production dependency on RawGit, GitHack, raw GitHub and equivalent raw-code proxies.
 
 ### Security & privacy
 
-- Certificate, account, privacy, users, Student 360, Teacher Intranet and learner onboarding are covered by the centralized auth/RBAC bootstrap.
+- Certificate, account, privacy, users, Student 360, Teacher Intranet, learner onboarding and Container Lab previews are covered by the centralized auth/RBAC bootstrap.
 - Certificate rendering no longer uses dynamic `innerHTML`.
 - Mentor questions are migrated and persisted only as a coarse `topic_category`; prompt fragments are not retained as learning events.
 - Vercel headers include CSP, `nosniff`, frame denial, Permissions Policy, COOP and CORP.
 - Public showcase remains free of private auth/operations scripts.
 - Demo identities, email domains, evidence and targets remain synthetic; no production secrets or external targets were introduced.
+- Container Lab runtime stays disabled for the public RC and is contractually limited to ephemeral sessions, approved images, synthetic/dummy data and `deny-egress` networking.
 
 ### Known production boundaries
 
 - This v1 is a commercial/demo release candidate; Academy Core remote persistence is not enabled on the public preview.
 - MFA, real multi-user backend persistence and live Cyber Range orchestration remain explicit production-backend gates.
+- The Container Lab Launcher is not enabled in the public RC; Juice Shop and VAmPI are integrated as safe visual/interactive previews only.
 - The v1 release gate is intended to execute inside the Vercel build; release status must not be marked final until that build succeeds and the public domain is checked end-to-end.
 
 ## [0.3.3] — 2026-08-19
