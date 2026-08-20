@@ -2,8 +2,8 @@ import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 
 const read = path => readFile(new URL(`../${path}`, import.meta.url), 'utf8');
-const [catalog, catalogCss, course, courseJs, sw] = await Promise.all([
-  read('catalog.html'), read('catalog.css'), read('course.html'), read('course.js'), read('sw.js')
+const [catalog, catalogCss, course, courseJs, sw, tenant, authPage] = await Promise.all([
+  read('catalog.html'), read('catalog.css'), read('course.html'), read('course.js'), read('sw.js'), read('tenant.config.js'), read('auth.page.js')
 ]);
 
 for (const asset of ['course-phishing.svg','course-web-security.svg','course-soc.svg','course-cloud-identity.svg']) {
@@ -24,7 +24,10 @@ assert.match(course, /PRACTICE LANE/, 'course detail should expose visual practi
 assert.match(courseJs, /const courses =/, 'course detail should be populated from a reusable course model');
 assert.match(courseJs, /textContent/, 'course rendering should prefer safe DOM text rendering');
 assert.doesNotMatch(courseJs, /\.innerHTML\s*=/, 'course population should not render dynamic content with innerHTML');
+assert.match(tenant, /catalog\.html/, 'Mission Control should route Academy to the visual catalog');
+assert.match(authPage, /\/catalog\.html/, 'login safe-next allowlist should include visual catalog');
+assert.match(authPage, /\/course\.html/, 'login safe-next allowlist should include course detail');
 assert.match(sw, /cca-shell-v9-visual-academy/, 'offline shell should advance for visual academy assets');
 
 console.log('✓ Visual Academy catalog contracts passed');
-console.log('✓ Four populated courses, artwork, journey and safe rendering validated');
+console.log('✓ Four populated courses, artwork, navigation, journey and safe rendering validated');
