@@ -1,41 +1,66 @@
 # Cristian Cyber Academy
 
-Plataforma de entrenamiento práctico en ciberseguridad desarrollada por **Crohnoz Labs**.
+Plataforma white-label de entrenamiento práctico en ciberseguridad desarrollada por **Crohnoz Labs**.
 
 > **Learn → Practice → Attack/Defend → Explain → Score → Certify**
 
-## Estado actual
+## Estado actual — Premium MVP v0.2.0
 
-La rama `feat/cyber-academy-mvp` contiene una **demo end-to-end funcional** sin backend ni secretos:
+La rama `feat/cyber-academy-mvp` contiene una demo end-to-end funcional, sin backend sensible ni secretos, con:
 
-- experiencia del alumno;
-- Academy;
-- Phishing Lab con escenarios ficticios y dominios `.example`;
+- Mission Control del alumno;
+- Academy con learning paths;
+- Phishing Lab con 6 escenarios ficticios y dominios `.example`;
 - Cyber Range defensivo/simulado;
-- AI Mentor en modo local;
-- Skill Graph;
-- XP y scoring;
+- AI Mentor local con guardrails pedagógicos;
+- Crohnoz Skill Graph y señal adaptativa;
+- XP, scoring, achievements y readiness;
 - progreso persistente en `localStorage`;
 - learning event trail;
-- Instructor Console;
+- Crohnoz Command Deck (`Ctrl/Cmd + K`);
+- deep-links por vista;
+- Instructor Teaching Command Center;
+- live learner signal;
+- evidencia exportable CSV;
 - certificado demostrativo con gate de progreso;
+- configuración white-label por tenant;
+- telemetría Crohnoz local y privacy-safe;
+- PWA instalable + offline application shell;
 - contrato SQL multi-tenant con RLS;
 - smoke tests sin dependencias;
-- security headers y CSP para Vercel.
+- CSP y security headers defensivos para Vercel.
 
 ## Rutas
 
 | Ruta | Función |
 |---|---|
-| `/` | Experiencia del alumno |
-| `/instructor` | Consola de Cristian / instructor |
+| `/` | Mission Control / experiencia del alumno |
+| `/instructor` | Teaching Command Center |
 | `/certificate` | Estado de certificación demo |
+
+## White-label
+
+La personalización pública y no sensible vive en:
+
+```text
+tenant.config.js
+```
+
+Permite adaptar marca, instructor, tenant, ambiente y metadata de producto sin reescribir la experiencia. Nunca deben almacenarse secretos en este archivo.
+
+## Telemetría
+
+`telemetry.js` implementa un bus local de eventos Crohnoz. En demo no envía datos a terceros: guarda un buffer acotado en `localStorage` y emite eventos `crohnoz:telemetry` para permitir una futura integración con observabilidad/analytics mediante adapter.
+
+## PWA / Offline
+
+`manifest.webmanifest` + `sw.js` convierten la plataforma en una aplicación instalable y mantienen disponible el application shell local. El service worker solo cachea recursos first-party del producto.
 
 ## Ejecutar localmente
 
-No requiere instalación de dependencias para la demo estática.
+No requiere instalación de dependencias para la demo estática. Puede servirse con cualquier servidor HTTP estático.
 
-Puede servirse con cualquier servidor HTTP estático. Para validar invariantes del repositorio:
+Para validar invariantes del repositorio:
 
 ```bash
 npm test
@@ -43,40 +68,27 @@ npm test
 
 El test usa únicamente Node.js >= 18.
 
-## Arquitectura
+## Backend productivo
 
-La demo usa `localStorage` deliberadamente para poder mostrar el flujo completo sin conectar infraestructura sensible.
-
-El contrato del backend real está en:
+La demo usa `localStorage` deliberadamente para mostrar el flujo completo sin infraestructura sensible. El contrato del backend real está en:
 
 ```text
 supabase/001_core_schema.sql
 ```
 
-Incluye:
+Incluye tenants, memberships/roles, cohorts, modules, labs, assignments, attempts, skill scores, learning events, certificates y Row Level Security.
 
-- tenants;
-- memberships y roles;
-- cohorts;
-- modules;
-- labs;
-- assignments;
-- attempts;
-- skill scores;
-- learning events;
-- certificates;
-- Row Level Security.
-
-La migración a backend real debe realizarse mediante un adapter de persistencia, reemplazando el almacenamiento local sin reescribir la experiencia de usuario.
+La migración productiva debe realizarse mediante un adapter de persistencia, reemplazando almacenamiento local sin reescribir UX.
 
 ## Seguridad
 
-- Todo laboratorio ofensivo real debe ejecutarse únicamente en entornos aislados y autorizados.
-- No se almacenan credenciales reales en simulaciones.
-- Los ejercicios de phishing usan identidades, dominios y datos ficticios.
-- No se aceptan targets externos arbitrarios.
-- Secrets y claves nunca se versionan en el repositorio.
-- El futuro Cyber Range debe usar sesiones efímeras, egress denegado por defecto, límites de recursos y destrucción automática.
+- Laboratorios ofensivos reales únicamente en entornos aislados y autorizados.
+- Sin credenciales reales en simulaciones.
+- Phishing con identidades y dominios ficticios.
+- Sin targets externos arbitrarios.
+- Secrets y API keys nunca se versionan.
+- CSP estricta, framing denegado y `object-src 'none'`.
+- El futuro Cyber Range debe usar sesiones efímeras, deny-egress por defecto, límites de recursos y destrucción automática.
 
 Ver `SECURITY.md` y `docs/ARCHITECTURE.md`.
 
@@ -90,16 +102,15 @@ docs/DEMO_RUNBOOK.md
 
 ## Deployment
 
-Vercel es el target primario. El preview está actualmente bloqueado por permisos del proyecto Vercel y se rastrea en el issue **#3**. No se ha promovido ningún build a producción.
+Vercel es el target primario. Existe un fallback autocontenido READY rastreado en issue #3; el objetivo operativo sigue siendo desplegar directamente la rama multiarchivo como fuente única y validar visualmente `/`, `/instructor` y `/certificate` antes de merge/production.
 
 ## Próxima transición
 
-Una vez que el repositorio sea privado y el permiso de Vercel esté resuelto:
-
-1. crear/conectar proyecto Supabase;
-2. aplicar migración con RLS;
-3. implementar autenticación y adapter remoto;
-4. conectar AI Mentor real con guardrails;
-5. levantar el Cyber Range en infraestructura separada;
-6. validar desktop/mobile y seguridad sobre preview;
-7. promover únicamente después de esa validación.
+1. resolver preview canónico multiarchivo;
+2. validar desktop/mobile y headers;
+3. mover el repositorio a privado antes de conectar servicios sensibles;
+4. conectar Supabase/Auth mediante adapter remoto;
+5. integrar observabilidad/analytics con consentimiento y tenant scoping;
+6. conectar AI Mentor real con retrieval, guardrails y evaluación;
+7. levantar Cyber Range en infraestructura separada;
+8. promover a producción solo después de QA y revisión de seguridad.
