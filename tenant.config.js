@@ -17,9 +17,9 @@ window.CCA_CONFIG = Object.freeze({
     mode: 'white-label'
   },
   product: {
-    version: '0.11.0-docker-xml-preview',
+    version: '0.12.0-teacher-intranet-preview',
     northStar: 'Read → Structure → Practice → Explain → Score → Certify',
-    modules: ['content-studio', 'xml-content', 'docker-runtime', 'clarity-guidance', 'learner-progress', 'premium-polish', 'public-showcase', 'mission-control', 'unified-product-shell', 'immersive-learning', 'visual-academy', 'academy', 'phishing', 'range', 'achievements', 'account', 'identity-ops', 'student-360']
+    modules: ['teacher-intranet', 'content-studio', 'xml-content', 'docker-runtime', 'clarity-guidance', 'learner-progress', 'premium-polish', 'public-showcase', 'mission-control', 'unified-product-shell', 'immersive-learning', 'visual-academy', 'academy', 'phishing', 'range', 'achievements', 'account', 'identity-ops', 'student-360']
   },
   content: {
     exchangeFormat: 'xml',
@@ -77,6 +77,7 @@ window.CCA_CONFIG = Object.freeze({
     ['course.html', []],
     ['lesson.html', []],
     ['progress.html', []],
+    ['teacher.html', ['instructor', 'coordinator', 'admin']],
     ['instructor.html', ['instructor', 'coordinator', 'admin']],
     ['studio.html', ['author', 'coordinator', 'admin']],
     ['student.html', ['coordinator', 'admin']],
