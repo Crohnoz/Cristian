@@ -1,0 +1,14 @@
+.git
+.github
+node_modules
+npm-debug.log*
+.DS_Store
+.env
+.env.*
+!.env.example
+tests
+docs
+openapi
+supabase
+BITACORA.md
+CHANGELOG.md
