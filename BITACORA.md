@@ -34,6 +34,7 @@ La plataforma evolucionó desde una demo funcional de ciberseguridad hacia una e
 - GitHub Actions sigue sin utilizarse deliberadamente.
 - Se creó **`/showcase`** (`showcase.html` + `showcase.css`) como superficie pública sin bootstrap de autenticación de Academy, sin Student 360 y sin operaciones privadas.
 - Se documentó la topología definitiva en `docs/PLATFORM_ROLES.md`.
+- Se creó `public-preview.html` como preview pública autocontenida de un solo archivo para handoff/deploy independiente de assets y autenticación.
 
 ### Arquitectura de producto acordada al cierre
 
@@ -70,8 +71,11 @@ Regla: el sitio público y la intranet pueden compartir marca y design system, p
 - Vercel es el target primario actual.
 - Se generó una showcase standalone v0.7 mediante carga directa a Vercel.
 - La integración de Vercel sigue presentando una inconsistencia: acepta deployments y entrega URL/alias/ID, pero luego no los resuelve correctamente desde sus herramientas de lectura y el team continúa mostrando 0 proyectos vinculados.
-- Pendiente crítico: importar/vincular `Crohnoz/Cristian` como proyecto real de Vercel para obtener Project ID, previews por commit, logs, control de Deployment Protection y alias canónico.
-- La nueva ruta pública `/showcase` ya está en GitHub, pero no se declara publicada/validada en Vercel hasta resolver el vínculo de proyecto o realizar un bundle directo que pueda verificarse externamente.
+- El deploy directo actual no puede completarse desde este conector porque el backend exige `target`, `name` y `files`, pero la función expuesta no permite enviar esos argumentos.
+- El fallback Netlify entregó un comando firmado de deploy, pero el runner local no dispone de salida DNS, por lo que no pudo clonar GitHub ni ejecutar el CLI.
+- El importador alternativo de Vercel rechazó GitHub raw porque acepta exclusivamente bundles desde `claudeusercontent.com`.
+- Pendiente crítico y único bloqueo real de hosting: importar/vincular `Crohnoz/Cristian` como proyecto real de Vercel para obtener Project ID, previews por commit, logs, control de Deployment Protection y alias canónico.
+- La nueva ruta pública `/showcase` y `public-preview.html` ya están en GitHub, pero no se declaran publicadas/validadas en Vercel hasta resolver el vínculo de proyecto.
 
 ### Acceso público
 
@@ -140,15 +144,22 @@ Mantener como mínimo:
 - `admin`;
 - opcionales: `author`, `reviewer`.
 
-### 5. Cierre técnico pendiente
+### 5. Primera tarea de mañana
+
+1. Importar `Crohnoz/Cristian` en Vercel como `cristian-cyber-academy`.
+2. Production branch temporal: `feat/cyber-academy-mvp`.
+3. Validar `/showcase` como acceso público sin Vercel Authentication.
+4. Verificar `/auth` y campus con autenticación propia.
+5. Ejecutar QA desktop/mobile.
+
+### 6. Cierre técnico pendiente
 
 - vincular GitHub → Vercel como proyecto canónico;
 - confirmar demo pública sin Vercel Authentication;
 - ejecutar suite Node local/capable runner;
 - QA desktop/mobile;
-- revisar README/CHANGELOG para reflejar v0.7.1+;
 - no mergear PR #2 ni Academy Core #37 sin revisión y tests.
 
 ---
 
-**Cierre:** la demo ya permite mostrar no solo una Academy vacía, sino una visión creíble de cómo Cristian podría impartir cursos, clases sincrónicas/asincrónicas, laboratorios y seguimiento académico bajo una plataforma propia de Crohnoz Labs; además, la separación entre vitrina pública y campus autenticado ya quedó definida e iniciada en código.
+**Cierre de laboratorio 01:39:** código, arquitectura, showcase pública, preview autocontenida y bitácora quedan persistidos en GitHub. El producto no tiene un bloqueo funcional para continuar; el único bloqueo para URL canónica pública es la vinculación del proyecto en Vercel. Se da por cerrada la jornada sin mergear PRs ni activar capacidades de mayor riesgo.
