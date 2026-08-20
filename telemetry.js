@@ -3,7 +3,7 @@
   const MAX_EVENTS = 120;
   const sessionId = globalThis.crypto?.randomUUID ? globalThis.crypto.randomUUID() : `s-${Date.now()}`;
   const SAFE_KEYS = new Set([
-    'view', 'module', 'lab', 'achievement', 'topic_category', 'topic',
+    'view', 'module', 'lab', 'achievement', 'topic_category',
     'result', 'correct', 'messageId', 'readiness_band', 'source'
   ]);
 
