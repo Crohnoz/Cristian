@@ -38,6 +38,12 @@
   force = true
 
 [[redirects]]
+  from = "/student"
+  to = "/student.html"
+  status = 200
+  force = true
+
+[[redirects]]
   from = "/instructor"
   to = "/instructor.html"
   status = 200
