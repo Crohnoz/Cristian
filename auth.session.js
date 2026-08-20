@@ -98,7 +98,7 @@
       const error = new Error('WEAK_PASSWORD'); error.code = 'WEAK_PASSWORD'; throw error;
     }
     if (session.provider === 'crohnoz-academy' && core()?.enabled) {
-      return core().changePassword({ current_password, new_password });
+      return core().changePassword({ old_password: current_password, new_password });
     }
     const error = new Error('DEMO_PASSWORD_CHANGE_DISABLED');
     error.code = 'DEMO_PASSWORD_CHANGE_DISABLED';
