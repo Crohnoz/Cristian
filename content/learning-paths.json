@@ -1,0 +1,46 @@
+{
+  "version": "2026.08.1",
+  "tenant": "cristian-demo",
+  "paths": [
+    {
+      "id": "phishing-social-engineering",
+      "title": "Phishing & Social Engineering",
+      "level": "foundation",
+      "estimated_minutes": 35,
+      "skills": ["phishing"],
+      "modules": ["phishing-signals", "identity-and-domain", "urgency-and-intent", "reporting"],
+      "labs": ["phishing-inbox-01"],
+      "certificate_weight": 0.3
+    },
+    {
+      "id": "owasp-web-security",
+      "title": "OWASP Web Security",
+      "level": "intermediate",
+      "estimated_minutes": 50,
+      "skills": ["web"],
+      "modules": ["trust-boundaries", "output-contexts", "access-control", "browser-defenses"],
+      "labs": ["lab-04-xss"],
+      "certificate_weight": 0.3
+    },
+    {
+      "id": "api-security",
+      "title": "API Security",
+      "level": "intermediate",
+      "estimated_minutes": 45,
+      "skills": ["api"],
+      "modules": ["authentication-vs-authorization", "object-authorization", "validation", "rate-limits"],
+      "labs": ["lab-05-api-authorization"],
+      "certificate_weight": 0.25
+    },
+    {
+      "id": "osint-fundamentals",
+      "title": "OSINT Fundamentals",
+      "level": "foundation",
+      "estimated_minutes": 40,
+      "skills": ["osint"],
+      "modules": ["source-quality", "corroboration", "confidence-labels", "exposure-minimization"],
+      "labs": ["osint-verification-01"],
+      "certificate_weight": 0.15
+    }
+  ]
+}
