@@ -1,185 +1,72 @@
 const STORAGE_KEY = 'cristian-cyber-academy:v2';
+const telemetry = window.CrohnozTelemetry || { track: () => {}, exportEvents: () => [] };
+const config = window.CCA_CONFIG || {};
 
-function loadLearner() {
-  try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}'); }
-  catch { return {}; }
+function safeText(value, maxLength = 160) { return String(value ?? '').slice(0, maxLength); }
+function loadLearner() { try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}'); } catch { return {}; } }
+function learnerSkills(state) { return state.skills || { phishing:91, web:78, osint:67, api:48 }; }
+function readiness(state) { const values = Object.values(learnerSkills(state)).map(Number).filter(Number.isFinite); return values.length ? Math.round(values.reduce((a,b)=>a+b,0)/values.length) : 0; }
+function appendText(parent, tag, value, className='') { const node=document.createElement(tag); if(className) node.className=className; node.textContent=safeText(value); parent.appendChild(node); return node; }
+
+function showToast(message) {
+  const toast = document.getElementById('toast');
+  toast.textContent = safeText(message,160); toast.classList.add('show');
+  clearTimeout(showToast.timer); showToast.timer=setTimeout(()=>toast.classList.remove('show'),2200);
 }
 
-function safeText(value, maxLength = 160) {
-  return String(value ?? '').slice(0, maxLength);
-}
+function renderLiveLearner() {
+  const state=loadLearner(); const skills=learnerSkills(state); const host=document.getElementById('liveLearnerSummary');
+  if(!host) return; host.textContent='';
+  const cells=[['Readiness',readiness(state)],['Labs',Number(state.stats?.completedLabs ?? 18)],['XP',Number(state.learner?.xp ?? 3420).toLocaleString('es-CL')],['API Security',Number(skills.api ?? 0)]];
+  cells.forEach(([label,value])=>{const cell=document.createElement('span'); appendText(cell,'small',label); appendText(cell,'strong',value); host.appendChild(cell);});
 
-function learnerReadiness(state) {
-  const skills = state.skills || { phishing: 91, web: 78, osint: 67, api: 48 };
-  const values = Object.values(skills).map(Number).filter(Number.isFinite);
-  if (!values.length) return 0;
-  return Math.round(values.reduce((a, b) => a + b, 0) / values.length);
-}
-
-function renderLearnerSignal() {
-  const state = loadLearner();
-  const readiness = learnerReadiness(state);
-  const completedLabs = Number(state.stats?.completedLabs ?? 18);
-  const xp = Number(state.learner?.xp ?? 3420);
-  const name = safeText(state.learner?.name || 'Alumno Demo', 80);
-  const skills = state.skills || { phishing: 91, web: 78, osint: 67, api: 48 };
-
-  const host = document.querySelector('#students .student-grid');
-  if (host && !document.getElementById('liveDemoStudent')) {
-    const card = document.createElement('article');
-    card.className = 'student-card';
-    card.id = 'liveDemoStudent';
-
-    const avatar = document.createElement('div');
-    avatar.className = 'student-avatar';
-    avatar.textContent = 'AD';
-
-    const copy = document.createElement('div');
-    const title = document.createElement('strong');
-    title.textContent = `${name} · LIVE`;
-    const readinessLine = document.createElement('span');
-    readinessLine.textContent = `Readiness · ${readiness}`;
-    const detail = document.createElement('small');
-    detail.textContent = `${completedLabs} labs · ${xp.toLocaleString('es-CL')} XP · API Security ${Number(skills.api ?? 0)}`;
-    copy.append(title, readinessLine, detail);
-
-    const inspect = document.createElement('button');
-    inspect.id = 'inspectLearner';
-    inspect.type = 'button';
-    inspect.textContent = 'Ver señal';
-
-    card.append(avatar, copy, inspect);
-    host.prepend(card);
+  const studentGrid=document.getElementById('studentGrid');
+  if(studentGrid && !document.getElementById('liveDemoStudent')){
+    const card=document.createElement('article'); card.className='student-card'; card.id='liveDemoStudent';
+    const avatar=document.createElement('div'); avatar.className='student-avatar'; avatar.textContent='AD';
+    const copy=document.createElement('div'); appendText(copy,'strong',`${safeText(state.learner?.name || 'Alumno Demo',80)} · LIVE`); appendText(copy,'span',`Readiness · ${readiness(state)}`); appendText(copy,'small',`${Number(state.stats?.completedLabs ?? 18)} labs · ${Number(state.learner?.xp ?? 3420).toLocaleString('es-CL')} XP`);
+    const button=document.createElement('button'); button.type='button'; button.textContent='Ver señal'; button.addEventListener('click',()=>document.getElementById('activity')?.scrollIntoView({behavior:'smooth'}));
+    card.append(avatar,copy,button); studentGrid.prepend(card);
   }
 
-  document.getElementById('inspectLearner')?.addEventListener('click', () => {
-    const events = Array.isArray(state.events) ? state.events.slice(0, 6) : [];
-    const summary = events.length
-      ? events.map(event => {
-          const time = new Date(event.at).toLocaleTimeString('es-CL', { hour: '2-digit', minute: '2-digit' });
-          return `${time} · ${safeText(event.type, 60)}`;
-        }).join('\n')
-      : 'Aún no hay actividad nueva registrada en esta sesión.';
-    alert(`Actividad reciente de ${name}\n\n${summary}`);
-  });
-
-  const recommendation = document.querySelector('.recommendation strong');
-  if (recommendation) {
-    const entries = Object.entries(skills).filter(([, value]) => Number.isFinite(Number(value)));
-    const weakest = entries.sort((a, b) => Number(a[1]) - Number(b[1]))[0];
-    const names = {
-      api: 'API Security · Authorization',
-      osint: 'OSINT · Verification',
-      web: 'Web Security · Output Encoding',
-      phishing: 'Phishing · Social Engineering'
-    };
-    recommendation.textContent = weakest ? (names[weakest[0]] || 'Security Foundations') : 'Security Foundations';
-  }
-}
-
-function bindAssignments() {
-  document.querySelectorAll('button').forEach(button => {
-    if (!/asignar/i.test(button.textContent)) return;
-    button.addEventListener('click', () => {
-      const state = loadLearner();
-      state.assignments = Array.isArray(state.assignments) ? state.assignments : [];
-      const assignment = {
-        id: globalThis.crypto?.randomUUID ? globalThis.crypto.randomUUID() : String(Date.now()),
-        module: 'API Security · Authorization',
-        cohort: 'AppSec Foundations',
-        assignedAt: new Date().toISOString()
-      };
-      state.assignments.unshift(assignment);
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-      button.textContent = '✓ Asignado';
-      button.disabled = true;
-    }, { once: true });
-  });
-}
-
-function appendCell(row, tagName, value, className = '') {
-  const cell = document.createElement(tagName);
-  if (className) cell.className = className;
-  cell.textContent = safeText(value);
-  row.appendChild(cell);
+  const weakest=Object.entries(skills).sort((a,b)=>Number(a[1])-Number(b[1]))[0];
+  const labels={api:'API Security · Authorization',web:'Web Security · Output Encoding',osint:'OSINT · Verification',phishing:'Phishing · Social Engineering'};
+  document.getElementById('recommendedModule').textContent=labels[weakest?.[0]] || 'Security Foundations';
+  document.getElementById('cohortLabs').textContent=String(312 + Math.max(0,Number(state.stats?.completedLabs ?? 18)-18));
 }
 
 function renderActivity() {
-  const section = document.createElement('section');
-  section.className = 'instructor-section';
-  section.id = 'activity';
-
-  const state = loadLearner();
-  const events = Array.isArray(state.events) ? state.events.slice(0, 8) : [];
-
-  const heading = document.createElement('div');
-  heading.className = 'section-heading';
-  const headingCopy = document.createElement('div');
-  const eyebrow = document.createElement('span');
-  eyebrow.className = 'eyebrow';
-  eyebrow.textContent = 'AUDIT TRAIL';
-  const title = document.createElement('h2');
-  title.textContent = 'Actividad de aprendizaje';
-  const description = document.createElement('p');
-  description.textContent = 'Eventos locales de la demo para mostrar trazabilidad pedagógica.';
-  headingCopy.append(eyebrow, title, description);
-  const count = document.createElement('span');
-  count.className = 'pill';
-  count.textContent = `${events.length} eventos`;
-  heading.append(headingCopy, count);
-
-  const table = document.createElement('div');
-  table.className = 'table-card';
-  const tableHead = document.createElement('div');
-  tableHead.className = 'table-row table-head';
-  ['Hora', 'Evento', 'Detalle', 'Origen', 'Estado'].forEach(label => appendCell(tableHead, 'span', label));
-  table.appendChild(tableHead);
-
-  if (!events.length) {
-    const row = document.createElement('div');
-    row.className = 'table-row';
-    appendCell(row, 'strong', 'Sin eventos');
-    appendCell(row, 'span', 'Completa una actividad en vista alumno');
-    appendCell(row, 'span', '—');
-    appendCell(row, 'span', 'Demo');
-    appendCell(row, 'span', 'Esperando');
-    table.appendChild(row);
-  } else {
-    events.forEach(event => {
-      const row = document.createElement('div');
-      row.className = 'table-row';
-      let timestamp = 'Fecha inválida';
-      try { timestamp = new Date(event.at).toLocaleString('es-CL'); } catch { /* keep fallback */ }
-      const details = event.detail && typeof event.detail === 'object'
-        ? Object.values(event.detail).map(value => safeText(value, 80)).join(' · ')
-        : '—';
-      appendCell(row, 'strong', timestamp);
-      appendCell(row, 'span', event.type || 'event');
-      appendCell(row, 'span', details || '—');
-      appendCell(row, 'span', 'Alumno Demo');
-      appendCell(row, 'span', 'Registrado', 'status-good');
-      table.appendChild(row);
-    });
-  }
-
-  section.append(heading, table);
-  document.querySelector('.instructor-main')?.appendChild(section);
-
-  const nav = document.querySelector('.nav');
-  const studentLink = nav ? [...nav.querySelectorAll('a')].find(a => a.getAttribute('href') === '#students') : null;
-  if (studentLink && !nav.querySelector('a[href="#activity"]')) {
-    const activityLink = document.createElement('a');
-    activityLink.className = 'nav-item';
-    activityLink.href = '#activity';
-    activityLink.textContent = 'Actividad';
-    studentLink.insertAdjacentElement('afterend', activityLink);
-  }
+  const state=loadLearner(); const events=Array.isArray(state.events)?state.events.slice(0,12):[]; const host=document.getElementById('activityTable');
+  if(!host) return; host.textContent=''; document.getElementById('activityCount').textContent=`${events.length} EVENTS`;
+  const head=document.createElement('div'); head.className='table-row table-head'; ['Hora','Evento','Detalle','Origen','Estado'].forEach(label=>appendText(head,'span',label)); host.appendChild(head);
+  if(!events.length){const row=document.createElement('div'); row.className='table-row'; appendText(row,'strong','Sin eventos'); appendText(row,'span','Completa una actividad en vista alumno'); appendText(row,'span','—'); appendText(row,'span','Demo'); appendText(row,'span','Esperando'); host.appendChild(row); return;}
+  events.forEach(event=>{const row=document.createElement('div'); row.className='table-row'; const date=new Date(event.at); const detail=event.detail&&typeof event.detail==='object'?Object.values(event.detail).map(v=>safeText(v,60)).join(' · '):'—'; appendText(row,'strong',Number.isNaN(date.getTime())?'—':date.toLocaleString('es-CL')); appendText(row,'span',safeText(event.type,60).replaceAll('_',' ')); appendText(row,'span',detail||'—'); appendText(row,'span','Alumno Demo'); appendText(row,'span','Registrado','status-good'); host.appendChild(row);});
 }
 
-window.addEventListener('storage', event => {
-  if (event.key === STORAGE_KEY) location.reload();
-});
+function assignRecommended() {
+  const state=loadLearner(); state.assignments=Array.isArray(state.assignments)?state.assignments:[];
+  const assignment={id:globalThis.crypto?.randomUUID?globalThis.crypto.randomUUID():String(Date.now()),module:document.getElementById('recommendedModule').textContent,cohort:'AppSec Foundations',assignedAt:new Date().toISOString()};
+  state.assignments.unshift(assignment); localStorage.setItem(STORAGE_KEY,JSON.stringify(state)); telemetry.track('instructor_assignment_created',{module:assignment.module}); showToast(`Asignado: ${assignment.module}`);
+}
 
-renderLearnerSignal();
-bindAssignments();
-renderActivity();
+document.getElementById('assignRecommended')?.addEventListener('click',assignRecommended);
+document.getElementById('createModule')?.addEventListener('click',()=>showToast('Content Engine listo para conectar al backend de módulos'));
+
+function exportEvidence() {
+  const state=loadLearner(); const events=Array.isArray(state.events)?state.events:[];
+  const rows=[['timestamp','event','detail'],...events.map(event=>[event.at,event.type,Object.values(event.detail||{}).join(' | ')])];
+  const csv=rows.map(row=>row.map(value=>`"${String(value??'').replaceAll('"','""')}"`).join(',')).join('\n');
+  const blob=new Blob([csv],{type:'text/csv;charset=utf-8'}); const url=URL.createObjectURL(blob); const link=document.createElement('a'); link.href=url; link.download='cristian-academy-learning-evidence.csv'; document.body.appendChild(link); link.click(); link.remove(); URL.revokeObjectURL(url); telemetry.track('instructor_evidence_exported',{events:events.length}); showToast('Evidencia exportada en CSV');
+}
+document.getElementById('exportCsv')?.addEventListener('click',exportEvidence);
+
+function bindNavigation() {
+  const links=[...document.querySelectorAll('.nav a[href^="#"]')];
+  const observer=new IntersectionObserver(entries=>{const visible=entries.filter(entry=>entry.isIntersecting).sort((a,b)=>b.intersectionRatio-a.intersectionRatio)[0]; if(!visible)return; links.forEach(link=>link.classList.toggle('active',link.getAttribute('href')===`#${visible.target.id}`));},{rootMargin:'-20% 0px -65% 0px',threshold:[0,.2,.5]});
+  document.querySelectorAll('main section[id]').forEach(section=>observer.observe(section));
+}
+
+function applyConfig(){document.getElementById('instructorName').textContent=config.instructor?.displayName || 'Cristian';}
+window.addEventListener('storage',event=>{if(event.key===STORAGE_KEY){renderLiveLearner();renderActivity();}});
+
+applyConfig(); renderLiveLearner(); renderActivity(); bindNavigation(); telemetry.track('instructor_console_loaded');
