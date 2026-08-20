@@ -1,4 +1,4 @@
-const CACHE = 'cca-shell-v14-premium-polish';
+const CACHE = 'cca-shell-v15-clarity-guidance';
 const SHELL = [
   '/',
   '/dashboard.html',
@@ -7,6 +7,8 @@ const SHELL = [
   '/premium-ui.css',
   '/premium-layout.css',
   '/premium-ui.js',
+  '/clarity-ui.css',
+  '/clarity-ui.js',
   '/product-shell.css',
   '/product-shell.js',
   '/instructor-unified.css',
