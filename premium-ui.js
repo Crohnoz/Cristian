@@ -12,6 +12,7 @@
       entries.forEach(entry => {
         if (!entry.isIntersecting) return;
         entry.target.classList.add('is-visible');
+        setTimeout(() => { entry.target.style.transitionDelay = ''; }, 500);
         observer.unobserve(entry.target);
       });
     }, { threshold: .08, rootMargin: '0px 0px -30px' });
@@ -24,6 +25,7 @@
 
   cards.forEach(card => {
     card.addEventListener('pointermove', event => {
+      if (event.pointerType === 'touch') return;
       const rect = card.getBoundingClientRect();
       card.style.setProperty('--premium-x', `${event.clientX - rect.left}px`);
       card.style.setProperty('--premium-y', `${event.clientY - rect.top}px`);
@@ -91,18 +93,34 @@
   render('');
   input.addEventListener('input', () => render(input.value));
   box.append(head,list); command.appendChild(box); document.body.appendChild(command);
-  const openCommand = () => { command.classList.add('open'); input.value=''; render(''); setTimeout(() => input.focus(),0); };
-  const closeCommand = () => command.classList.remove('open');
+
+  let returnFocus = null;
+  const openCommand = trigger => {
+    returnFocus = trigger || document.activeElement;
+    command.classList.add('open');
+    input.value=''; render('');
+    setTimeout(() => input.focus(),0);
+  };
+  const closeCommand = () => {
+    if (!command.classList.contains('open')) return;
+    command.classList.remove('open');
+    if (returnFocus instanceof HTMLElement) returnFocus.focus({preventScroll:true});
+  };
   command.addEventListener('click', event => { if (event.target === command) closeCommand(); });
   document.addEventListener('keydown', event => {
     if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'k') { event.preventDefault(); openCommand(); }
     if (event.key === 'Escape') closeCommand();
   });
-  document.querySelector('.product-shell-search')?.addEventListener('click', openCommand);
 
-  if (!document.querySelector('.search input')) {
-    document.querySelector('.product-shell-search')?.setAttribute('role','button');
-    document.querySelector('.product-shell-search')?.setAttribute('tabindex','0');
+  const shellSearch = document.querySelector('.product-shell-search');
+  if (shellSearch) {
+    shellSearch.setAttribute('role','button');
+    shellSearch.setAttribute('tabindex','0');
+    shellSearch.setAttribute('aria-label','Abrir navegación rápida');
+    shellSearch.addEventListener('click', () => openCommand(shellSearch));
+    shellSearch.addEventListener('keydown', event => {
+      if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); openCommand(shellSearch); }
+    });
   }
 
   const dock = document.createElement('nav');
