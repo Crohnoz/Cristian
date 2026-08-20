@@ -12,7 +12,7 @@
   const userAdminRoles = new Set(['coordinator', 'admin']);
 
   function safeNext(raw) {
-    const allowed = new Set(['/', '/index.html', '/instructor.html', '/users.html', '/student.html', '/certificate.html', '/account.html']);
+    const allowed = new Set(['/', '/index.html', '/catalog.html', '/course.html', '/instructor.html', '/users.html', '/student.html', '/certificate.html', '/account.html']);
     try {
       const url = new URL(raw || '/index.html', location.origin);
       if (url.origin !== location.origin || !allowed.has(url.pathname)) return '/index.html';
