@@ -10,7 +10,9 @@ const exists = file => fs.existsSync(path.join(root, file));
 const required = [
   'showcase.html','showcase.css','showcase-premium.css','auth.html','auth.css','auth.page.js','auth.session.js',
   'onboarding.html','onboarding.css','onboarding.js','dashboard.html','dashboard.css','dashboard.js',
-  'catalog.html','catalog.css','catalog.js','course.html','course.css','course.js','lesson.html','lesson.css','lesson.js',
+  'catalog.html','catalog.css','catalog.js','container-catalog.css','container-lab.html','container-lab.css','container-lab.js',
+  'api-lab.html','api-lab.css','api-lab.js','content/container-labs.json',
+  'course.html','course.css','course.js','lesson.html','lesson.css','lesson.js',
   'progress.html','progress.css','progress.js','certificate.html','certificate.js',
   'teacher.html','teacher.css','teacher.js','instructor.html','instructor.css','instructor.js','instructor-unified.css',
   'users.html','users.css','users.js','student.html','student.css','student.js','account.html','account.js',
@@ -26,6 +28,7 @@ const tenant = read('tenant.config.js');
 const auth = read('auth.page.js');
 const showcase = read('showcase.html');
 const dashboard = read('dashboard.html');
+const catalogJs = read('catalog.js');
 const shell = read('product-shell.js');
 const premium = read('premium-ui.js');
 const certificate = read('certificate.html');
@@ -34,10 +37,13 @@ const privacyHardening = read('privacy-hardening.js');
 const sw = read('sw.js');
 const vercel = read('vercel.json');
 const build = read('scripts/build-static.mjs');
+const containerLabs = JSON.parse(read('content/container-labs.json'));
 
 assert.match(tenant, /version:\s*'1\.0\.0-rc\.1'/, 'v1 release candidate version missing');
 for (const gate of [
   "['lab.html', []]",
+  "['container-lab.html', []]",
+  "['api-lab.html', []]",
   "['onboarding.html', ['learner']]",
   "['teacher.html', ['instructor','coordinator','admin']]",
   "['users.html', ['coordinator','admin']]",
@@ -66,10 +72,22 @@ assert.match(privacyHardening, /mentor_question/, 'mentor privacy migration miss
 assert.doesNotMatch(vercel, /rawgit|githack|raw\.githubusercontent|jsdelivr/i, 'production depends on external raw-code proxy');
 assert.match(vercel, /Content-Security-Policy/, 'CSP header missing');
 assert.match(vercel, /X-Content-Type-Options/, 'nosniff header missing');
-assert.match(sw, /cca-shell-v20-v1-release-candidate/, 'v1 service worker namespace missing');
-for (const file of ['onboarding.html','teacher.html','privacy-hardening.js','certificate.html']) assert.ok(sw.includes(`/${file}`), `service worker missing ${file}`);
+assert.match(sw, /cca-shell-v21-container-labs/, 'v1 service worker namespace missing');
+for (const file of ['onboarding.html','teacher.html','privacy-hardening.js','certificate.html','container-lab.html','api-lab.html']) assert.ok(sw.includes(`/${file}`), `service worker missing ${file}`);
 assert.match(build, /showcase\.html[\s\S]*index\.html/, 'production builder must promote the public showcase to root');
 assert.match(build, /lab\.html/, 'production builder must preserve the legacy lab shell separately');
+
+assert.equal(containerLabs.runtimeEnabled, false, 'vulnerable container runtime must remain disabled in public RC');
+assert.equal(containerLabs.labs.length, 2, 'expected two preview container labs');
+for (const lab of containerLabs.labs) {
+  assert.equal(lab.ephemeral, true, `${lab.id} must be ephemeral`);
+  assert.equal(lab.networkPolicy, 'deny-egress', `${lab.id} must deny egress`);
+  assert.equal(lab.status, 'preview-only', `${lab.id} must remain preview-only`);
+}
+assert.match(catalogJs, /OWASP Juice Shop/, 'Academy catalog must expose Juice Shop');
+assert.match(catalogJs, /VAmPI/, 'Academy catalog must expose VAmPI');
+assert.match(catalogJs, /container-lab\.html/, 'Academy catalog missing Juice Shop route');
+assert.match(catalogJs, /api-lab\.html/, 'Academy catalog missing VAmPI route');
 
 const htmlFiles = required.filter(file => file.endsWith('.html'));
 for (const htmlFile of htmlFiles) {
