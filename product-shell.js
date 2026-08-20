@@ -1,7 +1,15 @@
 (() => {
   const auth = window.CCAAuth;
   const session = auth?.current?.();
-  if (!session?.authenticated) return;
+  if (!session?.authenticated || document.querySelector('.product-shell-sidebar')) return;
+
+  if (!document.querySelector('link[data-product-shell]')) {
+    const style = document.createElement('link');
+    style.rel = 'stylesheet';
+    style.href = './product-shell.css';
+    style.dataset.productShell = 'true';
+    document.head.appendChild(style);
+  }
 
   const route = location.pathname.split('/').filter(Boolean).pop() || 'dashboard';
   const normalized = route.replace('.html','');
