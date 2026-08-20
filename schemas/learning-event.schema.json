@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://crohnoz.example/schemas/learning-event.schema.json",
+  "title": "Crohnoz Learning Event",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["type", "at", "tenant", "source"],
+  "properties": {
+    "type": {
+      "type": "string",
+      "enum": [
+        "view_opened", "phishing_correct", "phishing_retry", "range_completed", "range_retry",
+        "certificate_unlocked", "achievement_unlocked", "mentor_topic", "assignment_created", "evidence_exported"
+      ]
+    },
+    "at": { "type": "string", "format": "date-time" },
+    "tenant": { "type": "string", "maxLength": 80 },
+    "source": { "type": "string", "enum": ["learner", "instructor", "system"] },
+    "module": { "type": "string", "maxLength": 80 },
+    "lab": { "type": "string", "maxLength": 80 },
+    "result": { "type": "string", "enum": ["correct", "retry", "completed", "unlocked"] },
+    "readiness_band": { "type": "string", "enum": ["foundation", "developing", "ready", "advanced", "unknown"] },
+    "topic_category": { "type": "string", "enum": ["web", "phishing", "api", "osint", "general"] }
+  }
+}
