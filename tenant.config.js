@@ -17,9 +17,9 @@ window.CCA_CONFIG = Object.freeze({
     mode: 'white-label'
   },
   product: {
-    version: '0.7.1-public-showcase-preview',
+    version: '0.8.0-premium-polish-preview',
     northStar: 'Learn → Practice → Attack/Defend → Explain → Score → Certify',
-    modules: ['public-showcase', 'mission-control', 'unified-product-shell', 'immersive-learning', 'visual-academy', 'academy', 'phishing', 'range', 'mentor', 'achievements', 'account', 'identity-ops', 'student-360']
+    modules: ['premium-polish', 'public-showcase', 'mission-control', 'unified-product-shell', 'immersive-learning', 'visual-academy', 'academy', 'phishing', 'range', 'mentor', 'achievements', 'account', 'identity-ops', 'student-360']
   },
   academyCore: {
     provider: 'crohnoz-academy',
@@ -77,6 +77,14 @@ window.CCA_CONFIG = Object.freeze({
       if (!session) return;
       document.documentElement.style.visibility = '';
 
+      if (!document.querySelector('link[data-premium-ui]')) {
+        const premiumStyle = document.createElement('link');
+        premiumStyle.rel = 'stylesheet';
+        premiumStyle.href = './premium-ui.css';
+        premiumStyle.dataset.premiumUi = 'true';
+        document.head.appendChild(premiumStyle);
+      }
+
       if (['catalog.html','course.html','lesson.html'].includes(file)) {
         await import('./product-shell.js');
       }
@@ -86,6 +94,14 @@ window.CCA_CONFIG = Object.freeze({
         theme.href = './instructor-unified.css';
         theme.dataset.instructorUnified = 'true';
         document.head.appendChild(theme);
+      }
+
+      if (!document.querySelector('script[data-premium-ui]')) {
+        const premiumScript = document.createElement('script');
+        premiumScript.src = './premium-ui.js';
+        premiumScript.defer = true;
+        premiumScript.dataset.premiumUi = 'true';
+        document.body.appendChild(premiumScript);
       }
 
       setTimeout(() => {
