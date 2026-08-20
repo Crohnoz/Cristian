@@ -16,8 +16,15 @@ assert.match(html, /id="previewOutline"/);
 assert.match(html, /id="loadCore"/);
 assert.match(html, /id="syncCourse"/);
 assert.match(html, /id="submitReview"/);
-assert.match(html, /academy-core\.adapter\.js/);
-assert.match(html, /auth\.session\.js/);
+assert.match(html, /telemetry\.js/);
+assert.match(html, /tenant\.config\.js/);
+assert.doesNotMatch(html, /<script[^>]+academy-core\.adapter\.js/);
+assert.doesNotMatch(html, /<script[^>]+auth\.session\.js/);
+assert.doesNotMatch(html, /<script[^>]+studio\.js/);
+
+assert.match(tenant, /\['studio\.html',\s*\['author',\s*'coordinator',\s*'admin'\]\]/);
+assert.match(tenant, /if \(file === 'studio\.html'\) \{\s*await import\('\.\/studio\.js'\);/s, 'Studio must execute only after central auth bootstrap');
+assert.match(tenant, /contentTenantScoped:\s*false/, 'Remote content synchronization must remain release-gated by tenant scoping');
 
 assert.match(js, /requireAuth\(\{ roles: \['author', 'coordinator', 'admin'\]/);
 assert.match(js, /cca:content-studio:v1:/);
@@ -38,7 +45,6 @@ assert.doesNotMatch(js, /transitionStudioCourse\([^\n]+['"]approved['"]/, 'Studi
 assert.doesNotMatch(js, /\.insertAdjacentHTML\(/);
 assert.doesNotMatch(js, /document\.write\(/);
 
-assert.match(tenant, /contentTenantScoped:\s*false/, 'Remote content synchronization must remain release-gated by tenant scoping');
 assert.match(instructor, /contentStudioLink/);
 assert.match(instructor, /\.\/studio\.html/);
 assert.match(sw, /\/studio\.html/);
