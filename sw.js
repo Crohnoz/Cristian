@@ -1,4 +1,4 @@
-const CACHE = 'cca-shell-v20-v1-release-candidate';
+const CACHE = 'cca-shell-v21-container-labs';
 const SHELL = [
   '/',
   '/dashboard.html',
@@ -46,6 +46,14 @@ const SHELL = [
   '/catalog.html',
   '/catalog.css',
   '/catalog.js',
+  '/container-catalog.css',
+  '/container-lab.html',
+  '/container-lab.css',
+  '/container-lab.js',
+  '/api-lab.html',
+  '/api-lab.css',
+  '/api-lab.js',
+  '/content/container-labs.json',
   '/course.html',
   '/course.css',
   '/course.js',
