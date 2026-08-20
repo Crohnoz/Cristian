@@ -79,6 +79,11 @@
   q('progressBar').style.width = `${course.progress}%`;
   safeText(q('evidenceScore'), course.score);
 
+  document.querySelectorAll('[data-lesson-mode]').forEach(link => {
+    const mode = link.dataset.lessonMode;
+    link.href = `./lesson.html?course=${encodeURIComponent(key)}&mode=${encodeURIComponent(mode)}`;
+  });
+
   const awarenessCard = q('awarenessCard');
   if (awarenessCard && !course.showAwareness) awarenessCard.hidden = true;
 
