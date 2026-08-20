@@ -37,12 +37,17 @@
     {
       href:'./container-lab.html', visual:'🧃', visualClass:'', kicker:'WEB SECURITY · OWASP',
       name:'OWASP Juice Shop', description:'E-commerce deliberadamente vulnerable para aprender superficie web, OWASP Top 10 y mitigaciones dentro de un workspace guiado.',
-      tags:['45 MIN','WEB APP','CONTAINER'], runtime:'bkimminich/juice-shop'
+      tags:['45 MIN','WEB APP','EXPLORATORY'], runtime:'bkimminich/juice-shop:20.2.0'
     },
     {
       href:'./api-lab.html', visual:'API', visualClass:'api', kicker:'API SECURITY · OPENAPI 3',
       name:'VAmPI', description:'API vulnerable con interfaz tipo Swagger para razonar sobre autenticación, autorización, objetos y controles de API Security.',
-      tags:['40 MIN','OPENAPI','CONTAINER'], runtime:'brightsec/vampi'
+      tags:['40 MIN','OPENAPI','API LAB'], runtime:'brightsec/vampi:latest'
+    },
+    {
+      href:'./webgoat-lab.html', visual:'WG', visualClass:'guided', kicker:'GUIDED WEB SECURITY · OWASP',
+      name:'OWASP WebGoat', description:'Lecciones progresivas sobre vulnerabilidades web con WebGoat + WebWolf, envueltas por objetivos, evidencia y supervisión de Academy.',
+      tags:['50 MIN','GUIDED','WEBGOAT + WEBWOLF'], runtime:'webgoat/webgoat:v2025.3'
     }
   ];
 
