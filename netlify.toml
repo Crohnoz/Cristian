@@ -8,6 +8,24 @@
   pretty_urls = true
 
 [[redirects]]
+  from = "/login"
+  to = "/auth.html"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/account"
+  to = "/account.html"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/reset-password"
+  to = "/reset-password.html"
+  status = 200
+  force = true
+
+[[redirects]]
   from = "/instructor"
   to = "/instructor.html"
   status = 200
