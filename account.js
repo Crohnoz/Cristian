@@ -52,11 +52,13 @@
     button.disabled = true;
     try {
       await auth.changePassword({ current_password, new_password });
-      event.currentTarget.reset();
-      feedback.className = 'feedback good'; feedback.textContent = 'Contraseña actualizada. Vuelve a iniciar sesión si el backend lo requiere.';
+      await auth.logout();
+      location.replace('./auth.html?password=changed');
+      return;
     } catch (error) {
       feedback.textContent = error.code === 'DEMO_PASSWORD_CHANGE_DISABLED'
-        ? 'Preview: el cambio real se habilita al conectar Academy Core. No almacenamos una contraseña demo nueva en el navegador.'
+        ? 'Las dos cuentas sintéticas base mantienen credenciales fijas. Las cuentas creadas por invitación sí permiten cambio de contraseña.'
+        : error.code === 'INVALID_CURRENT_PASSWORD' ? 'La contraseña actual no es correcta.'
         : error.code === 'WEAK_PASSWORD' ? 'La contraseña no cumple el mínimo requerido.' : 'No pudimos cambiar la contraseña.';
     } finally { button.disabled = false; }
   });
