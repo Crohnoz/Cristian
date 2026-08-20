@@ -8,7 +8,17 @@
   const loginFeedback = document.getElementById('loginFeedback');
   const resetFeedback = document.getElementById('resetFeedback');
   const demoBox = document.getElementById('demoBox');
-  const next = new URLSearchParams(location.search).get('next') || './index.html';
+
+  function safeNext(raw) {
+    const allowed = new Set(['/', '/index.html', '/instructor.html', '/certificate.html', '/account.html']);
+    try {
+      const url = new URL(raw || '/index.html', location.origin);
+      if (url.origin !== location.origin || !allowed.has(url.pathname)) return '/index.html';
+      return `${url.pathname}${url.search}${url.hash}`;
+    } catch { return '/index.html'; }
+  }
+
+  const next = safeNext(new URLSearchParams(location.search).get('next'));
 
   function setMode(mode) {
     const login = mode === 'login';
@@ -39,7 +49,9 @@
       const session = await auth.login(form.get('username'), form.get('password'));
       loginFeedback.className = 'feedback good';
       loginFeedback.textContent = `Acceso concedido · ${session.user.display_name || session.user.username}`;
-      const destination = session.user.role === 'instructor' && next === './index.html' ? './instructor.html' : next;
+      let destination = next;
+      if (next === '/instructor.html' && session.user.role !== 'instructor') destination = '/index.html';
+      if ((next === '/index.html' || next === '/') && session.user.role === 'instructor') destination = '/instructor.html';
       location.replace(destination);
     } catch (error) {
       loginFeedback.textContent = error.code === 'NETWORK_ERROR'
@@ -78,6 +90,11 @@
     document.getElementById('password').focus();
   }));
 
-  if (auth.current()?.authenticated) location.replace(next);
+  const existing = auth.current();
+  if (existing?.authenticated) {
+    const destination = next === '/instructor.html' && existing.user?.role !== 'instructor' ? '/index.html' : next;
+    location.replace(destination);
+    return;
+  }
   setMode('login');
 })();
