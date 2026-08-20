@@ -8,14 +8,24 @@
   const loginFeedback = document.getElementById('loginFeedback');
   const resetFeedback = document.getElementById('resetFeedback');
   const demoBox = document.getElementById('demoBox');
+  const teachingRoles = new Set(['instructor', 'coordinator', 'admin']);
+  const userAdminRoles = new Set(['coordinator', 'admin']);
 
   function safeNext(raw) {
-    const allowed = new Set(['/', '/index.html', '/instructor.html', '/certificate.html', '/account.html']);
+    const allowed = new Set(['/', '/index.html', '/instructor.html', '/users.html', '/certificate.html', '/account.html']);
     try {
       const url = new URL(raw || '/index.html', location.origin);
       if (url.origin !== location.origin || !allowed.has(url.pathname)) return '/index.html';
       return `${url.pathname}${url.search}${url.hash}`;
     } catch { return '/index.html'; }
+  }
+
+  function destinationFor(session, requested) {
+    const role = session?.user?.role;
+    if (requested === '/users.html' && !userAdminRoles.has(role)) return '/index.html';
+    if (requested === '/instructor.html' && !teachingRoles.has(role)) return '/index.html';
+    if ((requested === '/index.html' || requested === '/') && teachingRoles.has(role)) return '/instructor.html';
+    return requested;
   }
 
   const next = safeNext(new URLSearchParams(location.search).get('next'));
@@ -49,10 +59,7 @@
       const session = await auth.login(form.get('username'), form.get('password'));
       loginFeedback.className = 'feedback good';
       loginFeedback.textContent = `Acceso concedido · ${session.user.display_name || session.user.username}`;
-      let destination = next;
-      if (next === '/instructor.html' && session.user.role !== 'instructor') destination = '/index.html';
-      if ((next === '/index.html' || next === '/') && session.user.role === 'instructor') destination = '/instructor.html';
-      location.replace(destination);
+      location.replace(destinationFor(session, next));
     } catch (error) {
       loginFeedback.textContent = error.code === 'NETWORK_ERROR'
         ? 'El servicio académico no está disponible en este momento.'
@@ -84,16 +91,15 @@
   });
 
   document.querySelectorAll('[data-demo]').forEach(button => button.addEventListener('click', () => {
-    const instructor = button.dataset.demo === 'instructor';
-    document.getElementById('username').value = instructor ? 'cristian.demo' : 'alumno.demo';
-    document.getElementById('password').value = instructor ? 'InstructorDemo2026!' : 'CyberDemo2026!';
+    const coordinator = button.dataset.demo === 'instructor';
+    document.getElementById('username').value = coordinator ? 'cristian.demo' : 'alumno.demo';
+    document.getElementById('password').value = coordinator ? 'InstructorDemo2026!' : 'CyberDemo2026!';
     document.getElementById('password').focus();
   }));
 
   const existing = auth.current();
   if (existing?.authenticated) {
-    const destination = next === '/instructor.html' && existing.user?.role !== 'instructor' ? '/index.html' : next;
-    location.replace(destination);
+    location.replace(destinationFor(existing, next));
     return;
   }
   setMode('login');
