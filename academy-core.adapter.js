@@ -21,11 +21,7 @@
 
     let response;
     try {
-      response = await fetch(`${baseUrl}${path}`, {
-        credentials: 'omit',
-        ...options,
-        headers
-      });
+      response = await fetch(`${baseUrl}${path}`, { credentials: 'omit', ...options, headers });
     } catch (cause) {
       const error = new Error('ACADEMY_CORE_NETWORK_ERROR');
       error.code = 'NETWORK_ERROR';
@@ -61,13 +57,9 @@
   }
 
   async function logout() {
-    try {
-      if (token()) await post('/api/v1/auth/logout/');
-    } catch (error) {
-      console.warn('[CCA] Academy Core logout could not be confirmed', error);
-    } finally {
-      clearToken('logout');
-    }
+    try { if (token()) await post('/api/v1/auth/logout/'); }
+    catch (error) { console.warn('[CCA] Academy Core logout could not be confirmed', error); }
+    finally { clearToken('logout'); }
   }
 
   const api = {
@@ -79,7 +71,6 @@
     me: () => get('/api/v1/me/'),
     updateMe: data => patch('/api/v1/me/', data),
 
-    // Learner academic core.
     courses: () => get('/api/v1/courses/'),
     learningPaths: () => get('/api/v1/learning-paths/'),
     enrollments: () => get('/api/v1/enrollments/'),
@@ -88,7 +79,6 @@
     certificates: () => get('/api/v1/certificates/'),
     verifyCertificate: code => get(`/api/v1/certificates/verify/${encodeURIComponent(code)}/`),
 
-    // Identity and account lifecycle.
     login,
     logout,
     changePassword: data => post('/api/v1/auth/change-password/', data),
@@ -99,9 +89,10 @@
     createInvitation: data => post('/api/v1/ops/invitations/', data),
     revokeInvitation: id => post(`/api/v1/ops/invitations/${encodeURIComponent(id)}/revoke/`, {}),
 
-    // Academic operations / tenant administration.
     opsProfiles: () => get('/api/v1/ops/profiles/'),
     updateOpsProfile: (id, data) => patch(`/api/v1/ops/profiles/${encodeURIComponent(id)}/`, data),
+    suspendOpsProfile: id => post(`/api/v1/ops/profiles/${encodeURIComponent(id)}/suspend/`, {}),
+    reactivateOpsProfile: id => post(`/api/v1/ops/profiles/${encodeURIComponent(id)}/reactivate/`, {}),
     opsCohorts: () => get('/api/v1/ops/cohorts/'),
     createCohort: data => post('/api/v1/ops/cohorts/', data),
     updateCohort: (id, data) => patch(`/api/v1/ops/cohorts/${encodeURIComponent(id)}/`, data),
@@ -113,7 +104,6 @@
     opsCertificates: () => get('/api/v1/ops/certificates/'),
     opsAuditEvents: () => get('/api/v1/ops/audit-events/'),
 
-    // Content operations useful to coordinator/admin surfaces.
     studioCourses: () => get('/api/v1/studio/courses/'),
     studioLearningPaths: () => get('/api/v1/studio/learning-paths/')
   };
