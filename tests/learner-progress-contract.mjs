@@ -1,0 +1,18 @@
+import fs from 'node:fs';
+import assert from 'node:assert/strict';
+const read = file => fs.readFileSync(new URL(`../${file}`, import.meta.url), 'utf8');
+const html = read('progress.html');
+const css = read('progress.css');
+const config = read('tenant.config.js');
+const shell = read('product-shell.js');
+const clarity = read('clarity-ui.js');
+assert.match(html,/MI PROGRESO/);
+assert.match(html,/SIGUIENTE MEJOR ACCIÓN/);
+assert.match(html,/SKILL GRAPH/);
+assert.match(config,/\['progress\.html', \[\]\]/);
+assert.match(config,/progress\.html'\]/);
+assert.match(shell,/href="\.\/progress\.html"/);
+assert.match(clarity,/role !== 'learner'/);
+assert.match(clarity,/\.\/progress\.html/);
+assert.match(css,/\.progress-overview/);
+console.log('learner-progress-contract: ok');
