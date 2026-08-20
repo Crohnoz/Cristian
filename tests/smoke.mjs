@@ -21,6 +21,8 @@ assert.match(app, /phishingCorrect/, 'phishing outcomes should be tracked');
 assert.match(app, /rangeCorrect/, 'range outcomes should be tracked');
 assert.match(app, /certificateUnlocked/, 'certificate gate should exist');
 assert.match(instructorJs, /events/, 'instructor console should expose learning telemetry');
+assert.doesNotMatch(instructorJs, /\.innerHTML\s*=/, 'instructor telemetry must not render localStorage data via innerHTML');
+assert.match(instructorJs, /textContent/, 'instructor telemetry should use textContent for untrusted local state');
 assert.match(certificateJs, /readiness >= 75/, 'certificate should require readiness threshold');
 
 const externalTrainingDomains = [...app.matchAll(/[a-z0-9.-]+\.example/gi)].map(m => m[0]);
@@ -40,3 +42,4 @@ assert.match(security, /credenciales reales/i, 'security policy should prohibit 
 
 console.log('✓ Cristian Cyber Academy smoke tests passed');
 console.log(`✓ ${externalTrainingDomains.length} reserved training-domain references validated`);
+console.log('✓ Instructor telemetry avoids data-driven innerHTML');
