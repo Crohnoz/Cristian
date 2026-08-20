@@ -163,3 +163,33 @@ Mantener como mínimo:
 ---
 
 **Cierre de laboratorio 01:39:** código, arquitectura, showcase pública, preview autocontenida y bitácora quedan persistidos en GitHub. El producto no tiene un bloqueo funcional para continuar; el único bloqueo para URL canónica pública es la vinculación del proyecto en Vercel. Se da por cerrada la jornada sin mergear PRs ni activar capacidades de mayor riesgo.
+
+## 2026-08-20 — Pase adicional v0.8.0 Premium Polish
+
+A solicitud de elevar la percepción de valor antes del próximo deploy, se realizó un pase transversal enfocado en orden, profesionalismo, reactividad y ergonomía visual.
+
+### Cambios incorporados
+
+- nueva capa compartida `premium-ui.css` para superficies, profundidad, hover/focus y microestados;
+- nuevo sistema `premium-layout.css` para aumentar respiración, legibilidad, proporción de sidebar/topbar y jerarquía tipográfica;
+- nueva capa `premium-ui.js` sin dependencias externas;
+- Command Palette real con `Ctrl/Cmd + K`;
+- navegación móvil inferior persistente;
+- aparición progresiva de tarjetas mediante `IntersectionObserver`;
+- barras de progreso animadas al cargar;
+- iluminación contextual sutil de tarjetas siguiendo el puntero;
+- feedback visual/toast en acciones relevantes;
+- estados de foco visibles para navegación por teclado;
+- soporte de `prefers-reduced-motion`;
+- retorno de foco al cerrar Command Palette;
+- acceso por teclado a la búsqueda del shell;
+- Mission Control recibió escala tipográfica y spacing más generosos;
+- el shell compartido de Academy/Course/Lesson recibió las mismas proporciones premium;
+- Instructor Console hereda las nuevas reglas de superficie/espaciado;
+- PWA avanzó a `cca-shell-v14-premium-polish` y cachea los nuevos assets;
+- `package.json` y tenant avanzaron a **v0.8.0**;
+- se agregó `tests/premium-polish-contract.mjs`.
+
+### QA
+
+Los contratos fueron escritos y agregados al comando `npm test`, pero **no se declara su ejecución** en este runner. Se mantiene como gate ejecutar la suite y hacer QA humano desktop/mobile antes de merge o producción.
