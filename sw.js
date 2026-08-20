@@ -1,4 +1,4 @@
-const CACHE = 'cca-shell-v9-visual-academy';
+const CACHE = 'cca-shell-v10-immersive-learning';
 const SHELL = [
   '/',
   '/index.html',
@@ -35,6 +35,11 @@ const SHELL = [
   '/art/course-web-security.svg',
   '/art/course-soc.svg',
   '/art/course-cloud-identity.svg',
+  '/art/lesson-phishing-inbox.svg',
+  '/art/lesson-live-class.svg',
+  '/art/lesson-video-replay.svg',
+  '/art/lesson-lab-workspace.svg',
+  '/art/lesson-quiz-signals.svg',
   '/instructor.html',
   '/instructor.css',
   '/instructor.js',
