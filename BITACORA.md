@@ -4,7 +4,7 @@
 
 ### Estado general
 
-La plataforma evolucionó desde una demo funcional de ciberseguridad hacia una experiencia de producto visual, white-label y navegable. El estado de trabajo de referencia es **v0.7.0 — Unified Product Experience** sobre la rama `feat/cyber-academy-mvp` y el PR #2.
+La plataforma evolucionó desde una demo funcional de ciberseguridad hacia una experiencia de producto visual, white-label y navegable. El estado de trabajo de referencia al cierre es **v0.7.1 — Public Showcase + Unified Product Experience** sobre la rama `feat/cyber-academy-mvp` y el PR #2.
 
 ### Avance material de hoy
 
@@ -30,8 +30,10 @@ La plataforma evolucionó desde una demo funcional de ciberseguridad hacia una e
 - Se mantuvieron Student 360, usuarios/cohortes, cuenta, privacidad y certificados como superficies existentes del producto.
 - Se mantuvo Academy Core como frontera reusable para identidad y datos académicos; el backend remoto sigue deshabilitado en preview público.
 - La PWA y el application shell fueron ampliados para cubrir las nuevas superficies.
-- Se agregaron contratos de regresión para Mission Control y el shell unificado. Los tests están escritos, pero no se declara ejecución en este runner.
+- Se agregaron contratos de regresión para Mission Control, shell unificado y vitrina pública. Los tests están escritos, pero no se declara ejecución en este runner.
 - GitHub Actions sigue sin utilizarse deliberadamente.
+- Se creó **`/showcase`** (`showcase.html` + `showcase.css`) como superficie pública sin bootstrap de autenticación de Academy, sin Student 360 y sin operaciones privadas.
+- Se documentó la topología definitiva en `docs/PLATFORM_ROLES.md`.
 
 ### Arquitectura de producto acordada al cierre
 
@@ -69,10 +71,13 @@ Regla: el sitio público y la intranet pueden compartir marca y design system, p
 - Se generó una showcase standalone v0.7 mediante carga directa a Vercel.
 - La integración de Vercel sigue presentando una inconsistencia: acepta deployments y entrega URL/alias/ID, pero luego no los resuelve correctamente desde sus herramientas de lectura y el team continúa mostrando 0 proyectos vinculados.
 - Pendiente crítico: importar/vincular `Crohnoz/Cristian` como proyecto real de Vercel para obtener Project ID, previews por commit, logs, control de Deployment Protection y alias canónico.
+- La nueva ruta pública `/showcase` ya está en GitHub, pero no se declara publicada/validada en Vercel hasta resolver el vínculo de proyecto o realizar un bundle directo que pueda verificarse externamente.
 
 ### Acceso público
 
 Decisión de producto: **la vitrina/demo compartible debe ser pública y no requerir cuenta de Vercel ni autenticación de Academy**. El acceso de estudiantes/profesores sí debe permanecer protegido.
+
+La ruta `/showcase` fue construida precisamente bajo esa regla: no carga `auth.session.js`, `users.js`, `student.js` ni `instructor.js`. Su CTA deriva al campus autenticado.
 
 Mientras no exista un Project ID de Vercel vinculado, no se considera cerrada la validación de Deployment Protection a nivel plataforma. La demo standalone fue diseñada sin autenticación de aplicación, pero la configuración de protección de Vercel debe validarse cuando el proyecto quede enlazado.
 
@@ -114,16 +119,17 @@ Formalizar:
 
 ### 3. Vitrina pública
 
-Construir una landing comercial compartible con:
-- hero;
-- propuesta de valor;
-- instructor;
+La primera versión ya existe en `/showcase`. Próximo pase:
+- navegación pública completa;
+- instructor y propuesta de valor;
 - catálogo público de cursos;
 - metodología visual;
 - tipos de clase;
 - ejemplos de labs;
 - certificaciones;
-- CTA de ingreso/solicitud de acceso.
+- CTA de ingreso/solicitud de acceso;
+- responsive/human QA;
+- dominio/alias público canónico.
 
 ### 4. Roles y permisos
 
@@ -140,9 +146,9 @@ Mantener como mínimo:
 - confirmar demo pública sin Vercel Authentication;
 - ejecutar suite Node local/capable runner;
 - QA desktop/mobile;
-- revisar README/CHANGELOG para reflejar v0.7+;
+- revisar README/CHANGELOG para reflejar v0.7.1+;
 - no mergear PR #2 ni Academy Core #37 sin revisión y tests.
 
 ---
 
-**Cierre:** la demo ya permite mostrar no solo una Academy vacía, sino una visión creíble de cómo Cristian podría impartir cursos, clases sincrónicas/asincrónicas, laboratorios y seguimiento académico bajo una plataforma propia de Crohnoz Labs.
+**Cierre:** la demo ya permite mostrar no solo una Academy vacía, sino una visión creíble de cómo Cristian podría impartir cursos, clases sincrónicas/asincrónicas, laboratorios y seguimiento académico bajo una plataforma propia de Crohnoz Labs; además, la separación entre vitrina pública y campus autenticado ya quedó definida e iniciada en código.
