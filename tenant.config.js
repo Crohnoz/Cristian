@@ -17,9 +17,9 @@ window.CCA_CONFIG = Object.freeze({
     mode: 'white-label'
   },
   product: {
-    version: '0.3.3-learner-intelligence-preview',
+    version: '0.4.0-visual-academy-preview',
     northStar: 'Learn → Practice → Attack/Defend → Explain → Score → Certify',
-    modules: ['academy', 'phishing', 'range', 'mentor', 'achievements', 'account', 'identity-ops', 'student-360']
+    modules: ['visual-academy', 'academy', 'phishing', 'range', 'mentor', 'achievements', 'account', 'identity-ops', 'student-360']
   },
   academyCore: {
     provider: 'crohnoz-academy',
