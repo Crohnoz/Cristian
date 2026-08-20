@@ -1,4 +1,4 @@
-const CACHE = 'cca-shell-v21-container-labs';
+const CACHE = 'cca-shell-v22-webgoat-lab';
 const SHELL = [
   '/',
   '/dashboard.html',
@@ -53,6 +53,9 @@ const SHELL = [
   '/api-lab.html',
   '/api-lab.css',
   '/api-lab.js',
+  '/webgoat-lab.html',
+  '/webgoat-lab.css',
+  '/webgoat-lab.js',
   '/content/container-labs.json',
   '/course.html',
   '/course.css',
