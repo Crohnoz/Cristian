@@ -1,0 +1,149 @@
+openapi: 3.1.0
+info:
+  title: Crohnoz Cyber Range Orchestrator
+  version: 0.1.0
+  description: >-
+    Contract for isolated training lab sessions. The API deliberately accepts a
+    catalog lab_id, never an arbitrary hostname, URL, IP address, credential or command.
+servers:
+  - url: https://range.internal.example
+    description: Placeholder only; production endpoint is environment-managed.
+security:
+  - bearerAuth: []
+paths:
+  /v1/lab-sessions:
+    post:
+      operationId: createLabSession
+      summary: Create one authorized ephemeral lab session
+      description: >-
+        Resolves a pre-approved lab manifest server-side, checks tenant entitlement,
+        quota and feature gate, then creates an isolated session with deny-egress.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateLabSessionRequest'
+      responses:
+        '201':
+          description: Session created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LabSession'
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '409': { $ref: '#/components/responses/QuotaExceeded' }
+  /v1/lab-sessions/{session_id}:
+    parameters:
+      - $ref: '#/components/parameters/SessionId'
+    get:
+      operationId: getLabSession
+      summary: Read status for the caller's authorized session
+      responses:
+        '200':
+          description: Session status
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LabSession'
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+    delete:
+      operationId: destroyLabSession
+      summary: Destroy the caller's authorized ephemeral session
+      responses:
+        '204': { description: Session destroyed }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  parameters:
+    SessionId:
+      name: session_id
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+  schemas:
+    CreateLabSessionRequest:
+      type: object
+      additionalProperties: false
+      required: [lab_id]
+      properties:
+        lab_id:
+          type: string
+          pattern: '^[a-z0-9-]{3,80}$'
+          description: Identifier from the approved server-side lab catalog.
+        assignment_id:
+          type: string
+          format: uuid
+          description: Optional assignment that authorized this lab.
+      description: >-
+        Intentionally has no target, host, URL, IP, command, payload, credential,
+        image name, network or environment override fields.
+    LabSession:
+      type: object
+      additionalProperties: false
+      required: [id, lab_id, state, isolation, created_at, expires_at]
+      properties:
+        id: { type: string, format: uuid }
+        lab_id: { type: string }
+        state:
+          type: string
+          enum: [provisioning, ready, stopping, destroyed, expired, failed]
+        isolation:
+          type: object
+          additionalProperties: false
+          required: [target_type, network_policy, secrets]
+          properties:
+            target_type: { const: synthetic }
+            network_policy: { const: isolated-no-egress }
+            secrets: { const: none }
+        learner_entrypoint:
+          type: string
+          format: uri
+          description: Short-lived same-platform entrypoint; never a raw infrastructure address.
+        created_at: { type: string, format: date-time }
+        expires_at: { type: string, format: date-time }
+    Error:
+      type: object
+      additionalProperties: false
+      required: [code, message]
+      properties:
+        code: { type: string }
+        message: { type: string, maxLength: 240 }
+  responses:
+    BadRequest:
+      description: Invalid catalog/session request
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/Error' }
+    Unauthorized:
+      description: Authentication required
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/Error' }
+    Forbidden:
+      description: Tenant, role, assignment or feature gate denied the request
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/Error' }
+    NotFound:
+      description: Session is not visible to this actor
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/Error' }
+    QuotaExceeded:
+      description: Tenant/user concurrent lab quota reached
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/Error' }
